@@ -28,6 +28,9 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea
+*.iws
+*.iml
+*.ipr
 
 ### Eclipse ###
 .apt_generated
@@ -53,3 +56,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+HELP.md
+target/
+logs/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+init_db.sh
