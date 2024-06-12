@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionXpathFilter Experimental Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2_xpath_experimental.dtd">
+
+<suppressions>
+    <suppress-xpath checks="HideUtilityClassConstructor"
+                    query="//CLASS_DEF[.//ANNOTATION/IDENT[@text='SpringBootApplication']]"/>
+
+    <suppress-xpath checks="HideUtilityClassConstructor"
+                    query="//CLASS_DEF[.//ANNOTATION/IDENT[@text='UtilityClass']]"/>
+    <suppress-xpath checks=".*"
+                    files="service-client/src/main/java/com/vetcity/serviceclient/service/sms/SmsSenderImpl.java"
+                    query="//CLASS_DEF | //METHOD_DEF"/>
+</suppressions>
