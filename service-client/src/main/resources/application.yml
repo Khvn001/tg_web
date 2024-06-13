@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: service-client
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://
+    username:
+    password:
+  flyway:
+    out-of-order: true
+    validateOnMigrate: false
+  mail:
+    host:
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+          ssl:
+            protocols: TLSv1.2
+        imap:
+          trust: '*'
+          store-uri:
+          max-fetch-size: 10
+  task:
+    execution:
+      thread-name-prefix: autohost-task-
+      pool:
+        core-size: 2
+        max-size: 200
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: mail-receiver-
+      pool:
+        size: 2
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
+      max-request-size: 30MB
+bot:
+  name:
+  token:
+filesize:
+  photo: 3145728
+  video: 15728640
+attempts:
+scheduler:
+logging:
+  level:
+    com.telegrambot.marketplace: TRACE
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+server:
+  port: 8080
+  base-url:
+  api-url:

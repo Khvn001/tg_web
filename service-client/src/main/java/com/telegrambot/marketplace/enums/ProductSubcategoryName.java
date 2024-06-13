@@ -1,0 +1,30 @@
+package com.telegrambot.marketplace.enums;
+
+public enum ProductSubcategoryName {
+    CANNABIS("Марихуана"),
+    COCAINE("Кокаин"),
+    OPIOIDS("Опиаты"),
+    HEROIN("Героин"),
+    MDMA("MDMA (Экстази)"),
+    METHEDRONE("Мефедрон"),
+    METHAMPHETAMINE("Метамфетамин"),
+    AMPHETAMINE("Амфетамин"),
+    LSD("LSD (Марка)"),
+    PSILOCYBIN("Псилоцибин(Грибы)"),
+    BENZODIAZEPINES("Бензодиазепины"),
+    KETAMINE("Кетамин"),
+    PCP("PCP (Фенциклидин)"),
+    GHB("GHB (Бутираты)"),
+    INHALANTS("Inhalants");
+
+    private final String subcategory;
+
+    ProductSubcategoryName(String subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public String getSubcategory() {
+        return subcategory;
+    }
+
+}
