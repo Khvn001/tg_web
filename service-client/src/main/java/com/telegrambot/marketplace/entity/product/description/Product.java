@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,9 @@ public class Product {
 
     @Column(name = "photo_url")
     private String photoUrl;
+
+    @Column
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();

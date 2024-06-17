@@ -64,9 +64,6 @@ public class User {
     @Column(unique = true)
     private String userName;
 
-    @Column(unique = true)
-    private String memoNick;
-
     @Column
     private String password;
 
@@ -82,9 +79,8 @@ public class User {
     @ToString.Exclude
     private User referrer;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Basket> baskets = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Basket basket = new Basket();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude

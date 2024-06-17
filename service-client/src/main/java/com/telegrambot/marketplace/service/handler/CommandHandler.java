@@ -3,8 +3,8 @@ package com.telegrambot.marketplace.service.handler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.TelegramType;
-import com.telegrambot.marketplace.service.update.ClassifiedUpdate;
-import com.telegrambot.marketplace.service.command.Command;
+import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.command.Command;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

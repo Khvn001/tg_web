@@ -1,6 +1,6 @@
 package com.telegrambot.marketplace.service.handler;
 
-import com.telegrambot.marketplace.service.command.Command;
+import com.telegrambot.marketplace.command.Command;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.MappedSuperclass;
 import org.springframework.beans.factory.annotation.Autowired;

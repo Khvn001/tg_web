@@ -12,6 +12,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,14 +49,8 @@ public class Basket {
     @Column(name = "total_sum", nullable = false)
     private BigDecimal totalSum;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "buy_date")
-    private LocalDate buyDate;
-
-    @Column(name = "buy_time")
-    private LocalDateTime buyTime;
 
 }

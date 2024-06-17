@@ -1,0 +1,27 @@
+package com.telegrambot.marketplace.service.entity.impl;
+
+import com.telegrambot.marketplace.entity.location.Country;
+import com.telegrambot.marketplace.enums.CountryName;
+import com.telegrambot.marketplace.repository.CountryRepository;
+import com.telegrambot.marketplace.service.entity.CountryService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+public class CountryServiceImpl implements CountryService {
+    private final CountryRepository countryRepository;
+
+    @Override
+    public Country findByCountryName(CountryName countryName) {
+        return countryRepository.findByNameAndAllowedIsTrue(countryName).orElse(null);
+    }
+
+    @Override
+    public List<Country> findAllByAllowedIsTrue() {
+        return countryRepository.findAllByAllowedIsTrue();
+    }
+}

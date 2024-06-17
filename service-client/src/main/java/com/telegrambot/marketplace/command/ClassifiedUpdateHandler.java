@@ -1,7 +1,8 @@
-package com.telegrambot.marketplace.service.update;
+package com.telegrambot.marketplace.command;
 
 import com.telegrambot.marketplace.dto.Answer;
-import com.telegrambot.marketplace.service.UserService;
+import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.service.entity.UserService;
 import com.telegrambot.marketplace.service.handler.HandlersMap;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

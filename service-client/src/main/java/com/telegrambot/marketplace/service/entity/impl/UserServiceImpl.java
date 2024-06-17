@@ -1,22 +1,27 @@
-package com.telegrambot.marketplace.service;
+package com.telegrambot.marketplace.service.entity.impl;
 
 import com.telegrambot.marketplace.entity.user.State;
 import com.telegrambot.marketplace.entity.user.User;
+import com.telegrambot.marketplace.enums.StateType;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.repository.StateRepository;
 import com.telegrambot.marketplace.repository.UserRepository;
-import com.telegrambot.marketplace.service.update.ClassifiedUpdate;
+import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     private final StateRepository stateRepository;
 
+    @Override
     public User findUserByUpdate(ClassifiedUpdate classifiedUpdate) {
 
         // Проверим, существует ли этот пользователь.
@@ -41,11 +46,13 @@ public class UserService {
             User user = new User();
             user.setName(classifiedUpdate.getName());
             user.setPermissions(UserType.DEFAULT);
+            user.setBalance(BigDecimal.valueOf(0));
+            user.setDiscount(0L);
             user.setChatId(classifiedUpdate.getUserId());
             user.setUserName(classifiedUpdate.getUserName());
 
             State state = new State();
-            state.setStateValue(null);
+            state.setStateType(StateType.CREATE_PASSWORD);
             state.setUser(user);
 
             stateRepository.save(state);
@@ -59,5 +66,15 @@ public class UserService {
         }
 
         return null;
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User findByChatId(String chatId) {
+        return userRepository.findByChatId(chatId).orElse(null);
     }
 }

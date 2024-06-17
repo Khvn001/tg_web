@@ -3,6 +3,7 @@ package com.telegrambot.marketplace.entity.inventory;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.location.District;
+import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
@@ -24,6 +25,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product_portions",
@@ -46,6 +48,10 @@ public class ProductPortion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
@@ -71,15 +77,23 @@ public class ProductPortion {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
+    //TODO change in SQL
     @Column(nullable = false, precision = 19, scale = 2)
-    private BigDecimal quantity;
+    private BigDecimal amount;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal latitude;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal longitude;
 
-    @Column(name = "photo_url")
+    @Column(name = "photo_url", nullable = false)
     private String photoUrl;
+
+    //TODO in SQL
+    @Column(nullable = false)
+    private boolean reserved;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

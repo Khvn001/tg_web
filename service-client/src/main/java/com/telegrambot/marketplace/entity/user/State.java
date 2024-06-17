@@ -1,5 +1,6 @@
 package com.telegrambot.marketplace.entity.user;
 
+import com.telegrambot.marketplace.enums.StateType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,11 +32,14 @@ public class State {
     @Id
     private Long id;
 
-    @Column(name = "value")
-    private String stateValue;
+    @Column(name = "state_type", nullable = false)
+    private StateType stateType;
+
+    @Column
+    private String value;
 
     public boolean inState() {
-        return stateValue != null;
+        return stateType != null;
     }
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

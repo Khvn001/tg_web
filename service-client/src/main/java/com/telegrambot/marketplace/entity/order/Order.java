@@ -1,5 +1,6 @@
 package com.telegrambot.marketplace.entity.order;
 
+import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.location.District;
@@ -7,6 +8,7 @@ import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +28,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders",
@@ -90,4 +96,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id")
     private Basket basket;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ProductPortion> productPortions = new ArrayList<>();
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
