@@ -8,8 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.IOException;
-
 @Component
 @AllArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
@@ -26,11 +24,11 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {
+    public void onUpdateReceived(final Update update) {
 
     }
 
-    private void startCommandReceived(Long chatId, String name) {
+    private void startCommandReceived(final Long chatId, final String name) {
         String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
                 "Enter the currency whose official exchange rate" + "\n" +
                 "you want to know in relation to BYN." + "\n" +
@@ -38,7 +36,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage(chatId, answer);
     }
 
-    private void sendMessage(Long chatId, String textToSend){
+    private void sendMessage(final Long chatId, final String textToSend) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText(textToSend);

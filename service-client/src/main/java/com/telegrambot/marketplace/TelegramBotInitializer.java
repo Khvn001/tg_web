@@ -1,7 +1,6 @@
 package com.telegrambot.marketplace;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -15,11 +14,11 @@ public class TelegramBotInitializer {
     private final TelegramBot telegramBot;
 
     @EventListener({ContextRefreshedEvent.class})
-    public void init() throws TelegramApiException{
+    public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        try{
+        try {
             telegramBotsApi.registerBot(telegramBot);
-        } catch (TelegramApiException ignored){
+        } catch (TelegramApiException ignored) {
 
         }
     }

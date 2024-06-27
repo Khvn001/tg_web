@@ -32,6 +32,10 @@ public class CategoryCommand implements Command {
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
 
+    private static final int ONE_NUMBER = 1;
+    private static final int TWO_NUMBER = 2;
+    private static final int THREE_NUMBER = 3;
+
     @Override
     public Class handler() {
         return CommandHandler.class;
@@ -44,11 +48,11 @@ public class CategoryCommand implements Command {
 
     @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String[] parts = update.getCommandName().split("_");
-        ProductCategory category = productCategoryService.findByName(parts[1]);
-        Long cityId = Long.parseLong(parts[2]);
-        CountryName countryName = CountryName.valueOf(parts[3]);
+        ProductCategory category = productCategoryService.findByName(parts[ONE_NUMBER]);
+        Long cityId = Long.parseLong(parts[TWO_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER]);
         City city = cityService.findById(cityId);
 
         Map<ProductSubcategory, List<ProductInventoryCity>> availableSubcategories = productInventoryCityService
@@ -57,14 +61,22 @@ public class CategoryCommand implements Command {
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Available subcategories in " + category + " category:")
-                .buttons(getProductButtons(availableSubcategories.keySet(), String.valueOf(category.getName()), cityId, countryName))
+                .buttons(
+                        getProductButtons(
+                        availableSubcategories.keySet(), String.valueOf(category.getName()), cityId, countryName))
                 .build();
     }
 
-    private List<InlineKeyboardButton> getProductButtons(Set<ProductSubcategory> productSubcategories, String categoryName, Long cityId, CountryName countryName) {
+    private List<InlineKeyboardButton> getProductButtons(
+            final Set<ProductSubcategory> productSubcategories, final String categoryName,
+            final Long cityId, final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         for (ProductSubcategory productSubcategory : productSubcategories) {
-            buttons.add(new InlineKeyboardButton(productSubcategory.getName(), "/subcategory_" + productSubcategory.getName() + "_" + categoryName + "_" + cityId + "_" + countryName));
+            buttons.add(InlineKeyboardButton.builder()
+                    .text(String.valueOf(productSubcategory.getName()))
+                    .callbackData("/subcategory_" + productSubcategory.getName() + "_" + categoryName
+                            + "_" + cityId + "_" + countryName)
+                    .build());
         }
         return buttons;
     }

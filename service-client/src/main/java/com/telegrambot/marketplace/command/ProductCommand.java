@@ -5,7 +5,6 @@ import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.product.description.Product;
-import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
@@ -31,12 +30,18 @@ import java.util.Set;
 
 @Component
 @AllArgsConstructor
-public class ProductCommand implements Command{
+public class ProductCommand implements Command {
     private final CityService cityService;
     private final ProductService productService;
     private final ProductPortionService productPortionService;
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
+
+    private static final int ONE_NUMBER = 1;
+    private static final int TWO_NUMBER = 2;
+    private static final int THREE_NUMBER = 3;
+    private static final int FOUR_NUMBER = 4;
+    private static final int FIVE_NUMBER = 5;
 
     @Override
     public Class handler() {
@@ -50,18 +55,19 @@ public class ProductCommand implements Command{
 
     @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String[] parts = update.getCommandName().split("_");
-        String productId = parts[1];
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[2]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[3]);
-        Long cityId = Long.parseLong(parts[4]);
-        CountryName countryName = CountryName.valueOf(parts[5]);
+        String productId = parts[ONE_NUMBER];
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER]);
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
+        Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER]);
         City city = cityService.findById(cityId);
         ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());
         Product product = productService.findById(Long.valueOf(productId));
 
-        Map<District, List<ProductPortion>> availableProducts = productPortionService.findAvailableDistrictsByMap(city, product);
+        Map<District, List<ProductPortion>> availableProducts = productPortionService
+                .findAvailableDistrictsByMap(city, product);
 
         if (availableProducts.isEmpty()) {
             return new SendMessageBuilder()
@@ -73,16 +79,24 @@ public class ProductCommand implements Command{
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Available products in " + subcategory.getName() + " subcategory:")
-                .buttons(getProductButtons(availableProducts.keySet(), product, subcategoryName, categoryName, cityId, countryName))
+                .buttons(getProductButtons(availableProducts.keySet(), product, subcategoryName,
+                        categoryName, cityId, countryName))
                 .build();
     }
 
-    private List<InlineKeyboardButton> getProductButtons(Set<District> districts, Product product, ProductSubcategoryName subcategoryName, ProductCategoryName categoryName, Long cityId, CountryName countryName) {
+    private List<InlineKeyboardButton> getProductButtons(final Set<District> districts,
+                                                         final Product product,
+                                                         final ProductSubcategoryName subcategoryName,
+                                                         final ProductCategoryName categoryName,
+                                                         final Long cityId,
+                                                         final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         for (District district : districts) {
-            buttons.add(new InlineKeyboardButton(district.getName(), "/district_" + district.getId() + "_" + product.getId() + "_" + subcategoryName + "_" + categoryName + "_" + cityId + "_" + countryName));
-        }
+            buttons.add(InlineKeyboardButton.builder()
+                    .text(district.getName())
+                    .callbackData("/district_" + district.getId() + "_" + product.getId() + "_" + subcategoryName
+                            + "_" + categoryName + "_" + cityId + "_" + countryName)
+                    .build());        }
         return buttons;
     }
 }
-

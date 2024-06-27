@@ -39,6 +39,13 @@ public class OrderCommand implements Command {
     private final ProductService productService;
     private final CityService cityService;
 
+    private static final int ZERO_NUMBER = 0;
+    private static final int ONE_NUMBER = 1;
+    private static final int TWO_NUMBER = 2;
+    private static final int THREE_NUMBER = 3;
+    private static final int FOUR_NUMBER = 4;
+    private static final int FIVE_NUMBER = 5;
+
     @Override
     public Class handler() {
         return CommandHandler.class;
@@ -51,29 +58,33 @@ public class OrderCommand implements Command {
 
     @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
-        if(StateType.ORDER.equals(user.getState().getStateType())) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (StateType.ORDER.equals(user.getState().getStateType())) {
             String[] parts = user.getState().getValue().split("_");
-            Long districtId = Long.parseLong(parts[0]);
+            Long districtId = Long.parseLong(parts[ZERO_NUMBER]);
             District district = districtService.findById(districtId);
-            Long productId = Long.parseLong(parts[1]);
+            Long productId = Long.parseLong(parts[ONE_NUMBER]);
             Product product = productService.findById(productId);
-            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[2]);
-            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[3]);
-            Long cityId = Long.parseLong(parts[4]);
-            CountryName countryName = CountryName.valueOf(parts[5]);
+            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER]);
+            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
+            Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
+            CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER]);
 
-            int requestedAmount = Integer.parseInt(update.getUpdate().getMessage().getText()); // Assuming the user's message contains only the amount
+            int requestedAmount = Integer.parseInt(update.getUpdate().getMessage().getText());
+            // Assuming the user's message contains only the amount
 
-            List<ProductPortion> productPortions = productPortionService.findAvailableByDistrictAndProductOrderByCreatedAt(district, product);
+            List<ProductPortion> productPortions = productPortionService
+                    .findAvailableByDistrictAndProductOrderByCreatedAt(district, product);
 
             int availableAmount = productPortions.size();
 
             if (availableAmount < requestedAmount) {
                 return new SendMessageBuilder()
                         .chatId(user.getChatId())
-                        .message("Requested amount is not available. The max available amount is " + availableAmount + ".")
-                        .buttons(getMaxAmountButtons(districtId, productId, subcategoryName, categoryName, cityId, countryName, BigDecimal.valueOf(availableAmount)))
+                        .message("Requested amount is not available. " +
+                                "The max available amount is " + availableAmount + ".")
+                        .buttons(getMaxAmountButtons(districtId, productId, subcategoryName, categoryName,
+                                cityId, countryName, BigDecimal.valueOf(availableAmount)))
                         .build();
             }
 
@@ -89,7 +100,8 @@ public class OrderCommand implements Command {
 
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Order created successfully and added to your basket. You have 30 minutes to buy this order. " +
+                    .message("Order created successfully and added to your basket. " +
+                            "You have 30 minutes to buy this order. " +
                             "Product is reserved for you for that time.")
                     .buttons(getBasketOptionsButtons(cityId, countryName))
                     .build();
@@ -97,17 +109,38 @@ public class OrderCommand implements Command {
         return null;
     }
 
-    private List<InlineKeyboardButton> getMaxAmountButtons(Long districtId, Long productId, ProductSubcategoryName subcategoryName, ProductCategoryName categoryName, Long cityId, CountryName countryName, BigDecimal availableAmount) {
+    private List<InlineKeyboardButton> getMaxAmountButtons(final Long districtId, final Long productId,
+                                                           final ProductSubcategoryName subcategoryName,
+                                                           final ProductCategoryName categoryName, final Long cityId,
+                                                           final CountryName countryName,
+                                                           final BigDecimal availableAmount) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        buttons.add(new InlineKeyboardButton("Add available amount to basket", "/district_" + districtId + "_" + productId + "_" + subcategoryName + "_" + categoryName + "_" + cityId + "_" + countryName + "_" + availableAmount));
-        buttons.add(new InlineKeyboardButton("Search in other districts", "/product_" + productId + "_" + subcategoryName + "_" + categoryName + "_" + cityId + "_" + countryName));
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Add available amount to basket")
+                .callbackData("/district_" + districtId + "_" + productId + "_" + subcategoryName
+                        + "_" + categoryName + "_" + cityId + "_" + countryName + "_" + availableAmount)
+                .build());
+
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Search in other districts")
+                .callbackData("/product_" + productId + "_" + subcategoryName + "_" + categoryName
+                        + "_" + cityId + "_" + countryName)
+                .build());
+
         return buttons;
     }
 
-    private List<InlineKeyboardButton> getBasketOptionsButtons(Long cityId, CountryName countryName) {
+    private List<InlineKeyboardButton> getBasketOptionsButtons(final Long cityId, final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        buttons.add(new InlineKeyboardButton("Show basket and purchase", "/basket"));
-        buttons.add(new InlineKeyboardButton("Continue shopping", "/city_" + cityId + "_" + countryName));
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Show basket and purchase")
+                .callbackData("/basket")
+                .build());
+
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Continue shopping")
+                .callbackData("/city_" + cityId + "_" + countryName)
+                .build());
         return buttons;
     }
 }

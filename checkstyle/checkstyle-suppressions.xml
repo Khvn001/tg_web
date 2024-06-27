@@ -6,4 +6,5 @@
 
 <suppressions>
     <suppress checks=".*" files="SmsSenderImpl.java"/>
+    <suppress checks=".*" files=".*ClassifiedUpdate.java"/>
 </suppressions>

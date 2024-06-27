@@ -2,10 +2,7 @@ package com.telegrambot.marketplace.command;
 
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
-import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.District;
-import com.telegrambot.marketplace.entity.order.Basket;
-import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
@@ -24,11 +21,6 @@ import com.telegrambot.marketplace.service.handler.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -40,6 +32,13 @@ public class DistrictCommand implements Command {
     private final ProductService productService;
     private final CityService cityService;
     private final StateRepository stateRepository;
+
+    private static final int ONE_NUMBER = 1;
+    private static final int TWO_NUMBER = 2;
+    private static final int THREE_NUMBER = 3;
+    private static final int FOUR_NUMBER = 4;
+    private static final int FIVE_NUMBER = 5;
+    private static final int SIX_NUMBER = 6;
 
     @Override
     public Class handler() {
@@ -53,16 +52,16 @@ public class DistrictCommand implements Command {
 
     @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String[] parts = update.getCommandName().split("_");
-        Long districtId = Long.parseLong(parts[1]);
+        Long districtId = Long.parseLong(parts[ONE_NUMBER]);
         District district = districtService.findById(districtId);
-        Long productId = Long.parseLong(parts[2]);
+        Long productId = Long.parseLong(parts[TWO_NUMBER]);
         Product product = productService.findById(productId);
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[3]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[4]);
-        Long cityId = Long.parseLong(parts[5]);
-        CountryName countryName = CountryName.valueOf(parts[6]);
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[THREE_NUMBER]);
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[FOUR_NUMBER]);
+        Long cityId = Long.parseLong(parts[FIVE_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[SIX_NUMBER]);
         user.getState().setStateType(StateType.ORDER);
         user.getState().setValue(String.format("%d_%d_%s_%s_%d_%s",
                 districtId, productId, subcategoryName, categoryName, cityId, countryName));

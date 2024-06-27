@@ -3,6 +3,7 @@ package com.telegrambot.marketplace.service.handler;
 import com.telegrambot.marketplace.command.Command;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.MappedSuperclass;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @MappedSuperclass
+@Slf4j
 public abstract class AbstractHandler implements Handler {
 
     protected final Map<Object, Command> allCommands = new HashMap<>();
@@ -25,10 +27,10 @@ public abstract class AbstractHandler implements Handler {
     private void init() {
         commands.forEach(c -> {
             allCommands.put(c.getFindBy(), c);
-            if(Objects.equals(c.handler().getName(), this.getClass().getName())) {
+            if (Objects.equals(c.handler().getName(), this.getClass().getName())) {
                 createMap().put(c.getFindBy(), c);
 
-                System.out.println(c.getClass().getSimpleName() + " was added for " + this.getClass().getSimpleName());
+                log.info("{} was added for {}", c.getClass().getSimpleName(), this.getClass().getSimpleName());
             }
         });
     }

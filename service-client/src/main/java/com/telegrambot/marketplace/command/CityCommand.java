@@ -6,6 +6,7 @@ import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
+import com.telegrambot.marketplace.repository.UserRepository;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
@@ -27,6 +28,7 @@ public class CityCommand implements Command {
 
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
+    private final UserRepository userRepository;
 
     @Override
     public Class handler() {
@@ -40,13 +42,16 @@ public class CityCommand implements Command {
 
     @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String[] parts = update.getCommandName().split("_");
         Long cityId = Long.parseLong(parts[1]);
         CountryName countryName = CountryName.valueOf(parts[2]);
         City city = cityService.findById(cityId);
+        user.setCity(city);
+        userRepository.save(user);
 
-        Map<ProductCategory, List<ProductInventoryCity>> availableCategories = productInventoryCityService.findAvailableProductCategories(city);
+        Map<ProductCategory, List<ProductInventoryCity>> availableCategories = productInventoryCityService
+                .findAvailableProductCategories(city);
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
@@ -55,13 +60,15 @@ public class CityCommand implements Command {
                 .build();
     }
 
-    private List<InlineKeyboardButton> getCategoryButtons(Set<ProductCategory> categories, Long cityId, CountryName countryName) {
+    private List<InlineKeyboardButton> getCategoryButtons(final Set<ProductCategory> categories,
+                                                          final Long cityId,
+                                                          final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         for (ProductCategory category : categories) {
-            buttons.add(new InlineKeyboardButton(category.getName(), "/category_" + category.getName() + "_" + cityId + "_" + countryName));
-        }
+            buttons.add(InlineKeyboardButton.builder()
+                    .text(String.valueOf(category.getName()))
+                    .callbackData("/category_" + category.getName() + "_" + cityId + "_" + countryName)
+                    .build());        }
         return buttons;
     }
-
-
 }

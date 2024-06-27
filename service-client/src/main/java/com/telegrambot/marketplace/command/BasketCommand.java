@@ -10,6 +10,7 @@ import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import com.telegrambot.marketplace.service.handler.CommandHandler;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -32,17 +33,18 @@ public class BasketCommand implements Command {
         return "/basket_";
     }
 
+    @SneakyThrows
     @Override
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String message = generateBasketContentMessage(user);
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message(message)
-                .buttons(getBasketOptionsButtons(user.getCityId(), user.getCountryName()))
+                .buttons(getBasketOptionsButtons(user.getCity().getId(), user.getCountry().getName()))
                 .build();
     }
 
-    private String generateBasketContentMessage(User user) {
+    private String generateBasketContentMessage(final User user) {
         Basket basket = basketService.getBasketByUser(user);
         StringBuilder message = new StringBuilder("Your basket contains:\n");
         for (Order order : basket.getOrders()) {
@@ -51,10 +53,24 @@ public class BasketCommand implements Command {
         return message.toString();
     }
 
-    private List<InlineKeyboardButton> getBasketOptionsButtons(Long cityId, CountryName countryName) {
+    private List<InlineKeyboardButton> getBasketOptionsButtons(final Long cityId, final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        buttons.add(new InlineKeyboardButton("Buy basket", "/buy_basket"));
-        buttons.add(new InlineKeyboardButton("Continue shopping", "/city_" + cityId + "_" + countryName));
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Spend balance to buy basket")
+                .callbackData("/buyBasket")
+                .build());
+
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Monitor orders")
+                .callbackData("/orders")
+                .build());
+
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Go back to category selection")
+                .callbackData("/city_" + cityId + "_" + countryName)
+                .build());
+
         return buttons;
     }
+
 }

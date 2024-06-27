@@ -15,12 +15,13 @@ public class CityServiceImpl implements CityService {
     private final CityRepository cityRepository;
 
     @Override
-    public List<City> findByCountryIdAndAllowed(Long countryId){
+    public List<City> findByCountryIdAndAllowed(final Long countryId) {
         return cityRepository.findAllByCountryIdAndAllowedIsTrue(countryId);
     }
 
     @Override
-    public City findById(Long countryId){
+    public City findById(final Long countryId) {
         return cityRepository.findByIdAndAllowedIsTrue(countryId).orElse(null);
     }
+
 }

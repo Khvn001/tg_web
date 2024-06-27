@@ -12,7 +12,7 @@ public class Coordinates {
     public static final double MAX_LONGITUDE = 180.0;
 
     // Constructor
-    public Coordinates(double latitude, double longitude) {
+    public Coordinates(final double latitude, final double longitude) {
         if (!isValidLatitude(latitude)) {
             throw new IllegalArgumentException("Invalid latitude: " + latitude);
         }
@@ -33,14 +33,14 @@ public class Coordinates {
     }
 
     // Setters with validation
-    public void setLatitude(double latitude) {
+    public void setLatitude(final double latitude) {
         if (!isValidLatitude(latitude)) {
             throw new IllegalArgumentException("Invalid latitude: " + latitude);
         }
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(final double longitude) {
         if (!isValidLongitude(longitude)) {
             throw new IllegalArgumentException("Invalid longitude: " + longitude);
         }
@@ -48,11 +48,11 @@ public class Coordinates {
     }
 
     // Validation methods
-    private boolean isValidLatitude(double latitude) {
+    private boolean isValidLatitude(final double latitude) {
         return latitude >= MIN_LATITUDE && latitude <= MAX_LATITUDE;
     }
 
-    private boolean isValidLongitude(double longitude) {
+    private boolean isValidLongitude(final double longitude) {
         return longitude >= MIN_LONGITUDE && longitude <= MAX_LONGITUDE;
     }
 

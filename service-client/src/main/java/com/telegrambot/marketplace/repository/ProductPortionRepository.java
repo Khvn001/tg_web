@@ -7,7 +7,6 @@ import com.telegrambot.marketplace.entity.product.description.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductPortionRepository extends JpaRepository<ProductPortion, Long> {
 
@@ -15,6 +14,7 @@ public interface ProductPortionRepository extends JpaRepository<ProductPortion, 
 
     List<ProductPortion> findAllByDistrictAndProduct(District district, Product product);
 
-    List<ProductPortion> findByDistrictAndProductAndReservedFalseOrderByCreatedAtAsc(District district, Product product);
+    List<ProductPortion> findByDistrictAndProductAndReservedFalseOrderByCreatedAtAsc(
+            District district, Product product);
 
 }

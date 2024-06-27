@@ -22,23 +22,25 @@ public class UserServiceImpl implements UserService {
     private final StateRepository stateRepository;
 
     @Override
-    public User findUserByUpdate(ClassifiedUpdate classifiedUpdate) {
+    public User findUserByUpdate(final ClassifiedUpdate classifiedUpdate) {
 
         // Проверим, существует ли этот пользователь.
-        if(userRepository.findByChatId(classifiedUpdate.getUserId()).isPresent()) {
+        if (userRepository.findByChatId(classifiedUpdate.getUserId()).isPresent()) {
             User user = userRepository.findByChatId(classifiedUpdate.getUserId()).get();
 
             // Если мы не смогли до этого записать имя пользователя, то запишем его.
-            if(user.getUserName() == null && classifiedUpdate.getUserName() != null)
+            if (user.getUserName() == null && classifiedUpdate.getUserName() != null) {
                 user.setUserName(classifiedUpdate.getUserName());
+            }
 
             // Проверим менял ли пользователя имя.
-            if(user.getUserName() != null)
-                if (!user.getUserName().equals(classifiedUpdate.getUserName()))
-                    user.setUserName(classifiedUpdate.getUserName());
+            if (user.getUserName() != null && !user.getUserName().equals(classifiedUpdate.getUserName())) {
+                user.setUserName(classifiedUpdate.getUserName());
+            }
 
-            if(!user.getName().equals(classifiedUpdate.getName()))
+            if (!user.getName().equals(classifiedUpdate.getName())) {
                 user.setName(classifiedUpdate.getName());
+            }
 
             return user;
         }
@@ -69,12 +71,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
+    public User save(final User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public User findByChatId(String chatId) {
+    public User findByChatId(final String chatId) {
         return userRepository.findByChatId(chatId).orElse(null);
     }
+
+    @Override
+    public void addUserBalance(final User user, final BigDecimal amount) {
+        user.setBalance(user.getBalance().add(amount));
+        userRepository.save(user);
+    }
+
 }

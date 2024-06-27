@@ -15,7 +15,7 @@ public class ClassifiedUpdateHandler {
 
     private final HandlersMap commandMap;
 
-    public Answer request(ClassifiedUpdate classifiedUpdate) {
+    public Answer request(final ClassifiedUpdate classifiedUpdate) {
         return commandMap.execute(classifiedUpdate,
                 userService.findUserByUpdate(classifiedUpdate));
     }

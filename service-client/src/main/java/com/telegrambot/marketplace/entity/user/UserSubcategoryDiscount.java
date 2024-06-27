@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -24,12 +23,12 @@ import java.math.BigDecimal;
 @Table(name = "user_subcategory_discounts",
         indexes = {
                 @Index(name = "idx_user_subcategory_discounts_user_id", columnList = "user_id"),
-                @Index(name = "idx_user_subcategory_discounts_product_subcategory_id", columnList = "product_subcategory_id")
+                @Index(name = "idx_user_subcategory_discounts_product_subcategory_id",
+                        columnList = "product_subcategory_id")
         })
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSubcategoryDiscount {

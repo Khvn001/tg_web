@@ -20,7 +20,6 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -28,7 +27,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_inventory_districts",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"country_id", "city_id", "district_id", "product_id", "product_subcategory_id"})},
+        uniqueConstraints =
+                {@UniqueConstraint(
+                        columnNames = {"country_id", "city_id", "district_id",
+                                "product_id", "product_subcategory_id"})},
         indexes = {
                 @Index(name = "idx_product_id", columnList = "product_id"),
                 @Index(name = "idx_product_subcategory_id", columnList = "product_subcategory_id"),
@@ -40,7 +42,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductInventoryDistrict {

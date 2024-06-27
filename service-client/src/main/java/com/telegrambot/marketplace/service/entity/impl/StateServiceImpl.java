@@ -12,7 +12,7 @@ public class StateServiceImpl implements StateService {
 
     private final StateRepository stateRepository;
     @Override
-    public State save(State state) {
+    public State save(final State state) {
         return stateRepository.save(state);
     }
 }

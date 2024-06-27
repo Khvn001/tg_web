@@ -4,6 +4,7 @@ import com.telegrambot.marketplace.entity.inventory.ProductInventoryDistrict;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
+import com.telegrambot.marketplace.entity.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,6 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -36,7 +36,6 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class City {
@@ -72,5 +71,9 @@ public class City {
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     List<ProductPortion> productPortions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    List<User> users = new ArrayList<>();
 
 }

@@ -21,7 +21,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class PasswordCommand implements Command{
+public class PasswordCommand implements Command {
     private final UserService userService;
     private final StateService stateService;
     private final CountryService countryService;
@@ -38,7 +38,7 @@ public class PasswordCommand implements Command{
 
     @Override
     @SneakyThrows
-    public Answer getAnswer(ClassifiedUpdate update, User user) {
+    public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         User newUser = userService.findUserByUpdate(update);
 
         if (StateType.CREATE_PASSWORD.equals(newUser.getState()) && newUser.getPassword() == null) {
@@ -64,8 +64,8 @@ public class PasswordCommand implements Command{
                     referrer.setReferals(referredUsersReferrals);
                     userService.save(referrer);
                     newUser.setReferrer(referrer);
-                    State userNewState = newUser.getState();
-                    stateService.save(userNewState);
+                    newUser.getState().setStateType(StateType.NONE);
+                    stateService.save(newUser.getState());
                     userService.save(newUser);
                     return new SendMessageBuilder()
                             .chatId(user.getChatId())
@@ -104,7 +104,10 @@ public class PasswordCommand implements Command{
         List<Country> countries = countryService.findAllByAllowedIsTrue();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         for (Country country : countries) {
-            buttons.add(new InlineKeyboardButton(country.getName(), "/country_" + country.getName()));
+            buttons.add(InlineKeyboardButton.builder()
+                    .text(String.valueOf(country.getName()))
+                    .callbackData("/country_" + country.getName())
+                    .build());
         }
         return buttons;
     }

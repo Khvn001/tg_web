@@ -21,7 +21,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -37,7 +36,6 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSubcategory {
@@ -52,17 +50,20 @@ public class ProductSubcategory {
     @Column(nullable = false)
     private boolean isAllowed;
 
-    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.EAGER)
     List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.EAGER)
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_id")
     private ProductCategory productCategory;
 
-    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     List<ProductInventoryCity> productInventoryCityList = new ArrayList<>();
 
@@ -70,11 +71,13 @@ public class ProductSubcategory {
     @ToString.Exclude
     List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     List<UserSubcategoryDiscount> userSubcategoryDiscounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     List<ProductPortion> productPortions = new ArrayList<>();
 }

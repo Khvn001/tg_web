@@ -206,7 +206,7 @@ public enum CountryName {
 
     private final String country;
 
-    CountryName(String country) {
+    CountryName(final String country) {
         this.country = country;
     }
 

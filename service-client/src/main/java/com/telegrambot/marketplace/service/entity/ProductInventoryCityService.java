@@ -15,8 +15,10 @@ public interface ProductInventoryCityService {
 
     Map<ProductCategory, List<ProductInventoryCity>> findAvailableProductCategories(City city);
 
-    Map<ProductSubcategory, List<ProductInventoryCity>> findAvailableProductSubcategoriesByCategory(City city, ProductCategory productCategory);
+    Map<ProductSubcategory, List<ProductInventoryCity>> findAvailableProductSubcategoriesByCategory(
+            City city, ProductCategory productCategory);
 
-    Map<Product, List<ProductInventoryCity>> findAvailableProductBySubcategoryAndCategory(City city, ProductSubcategory productSubcategory, ProductCategory productCategory);
+    Map<Product, List<ProductInventoryCity>> findAvailableProductBySubcategoryAndCategory(
+            City city, ProductSubcategory productSubcategory, ProductCategory productCategory);
 
 }

@@ -30,12 +30,12 @@ public class CommandHandler extends AbstractHandler {
     }
 
     @Override
-    public boolean condition(User user, ClassifiedUpdate update) {
+    public boolean condition(final User user, final ClassifiedUpdate update) {
         return hashMap.containsKey(update.getCommandName());
     }
 
     @Override
-    public Answer getAnswer(User user, ClassifiedUpdate update) {
+    public Answer getAnswer(final User user, final ClassifiedUpdate update) {
         return hashMap.get(update.getCommandName()).getAnswer(update, user);
     }
 }

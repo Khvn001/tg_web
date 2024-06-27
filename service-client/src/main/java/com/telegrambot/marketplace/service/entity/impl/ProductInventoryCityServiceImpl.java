@@ -21,12 +21,12 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
     private final ProductInventoryCityRepository repository;
 
     @Override
-    public List<ProductInventoryCity> findAvailableProducts(City city) {
+    public List<ProductInventoryCity> findAvailableProducts(final City city) {
         return repository.findAllByCityIdAndQuantityGreaterThanEqual(city.getId(), BigDecimal.valueOf(1));
     }
 
     @Override
-    public Map<ProductCategory, List<ProductInventoryCity>> findAvailableProductCategories(City city) {
+    public Map<ProductCategory, List<ProductInventoryCity>> findAvailableProductCategories(final City city) {
         List<ProductInventoryCity> availableProducts = findAvailableProducts(city);
         Map<ProductCategory, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().isAllowed())
@@ -35,40 +35,45 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
                 .collect(Collectors.groupingBy(ProductInventoryCity::getProductCategory));
 
         // Remove categories with less than 1 product
-        categoryMap.entrySet().removeIf(entry -> entry.getValue().size() < 1);
+        categoryMap.entrySet().removeIf(entry -> entry.getValue().isEmpty());
 
         return categoryMap;
     }
 
     @Override
-    public Map<ProductSubcategory, List<ProductInventoryCity>> findAvailableProductSubcategoriesByCategory(City city, ProductCategory productCategory) {
+    public Map<ProductSubcategory, List<ProductInventoryCity>> findAvailableProductSubcategoriesByCategory(
+            final City city, final ProductCategory productCategory) {
         List<ProductInventoryCity> availableProducts = findAvailableProducts(city);
         Map<ProductSubcategory, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
-                .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().equals(productCategory))
+                .filter(cityInventoryProductUnit ->
+                        cityInventoryProductUnit.getProductCategory().equals(productCategory))
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProduct().isAllowed())
                 .collect(Collectors.groupingBy(ProductInventoryCity::getProductSubcategory));
 
         // Remove subcategories with less than 1 product
-        categoryMap.entrySet().removeIf(entry -> entry.getValue().size() < 1);
+        categoryMap.entrySet().removeIf(entry -> entry.getValue().isEmpty());
 
         return categoryMap;
     }
 
     @Override
-    public Map<Product, List<ProductInventoryCity>> findAvailableProductBySubcategoryAndCategory(City city, ProductSubcategory productSubcategory, ProductCategory productCategory) {
+    public Map<Product, List<ProductInventoryCity>> findAvailableProductBySubcategoryAndCategory(
+            final City city, final ProductSubcategory productSubcategory, final ProductCategory productCategory) {
         List<ProductInventoryCity> availableProducts = findAvailableProducts(city);
         Map<Product, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
-                .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().equals(productCategory))
-                .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().equals(productSubcategory))
+                .filter(cityInventoryProductUnit ->
+                        cityInventoryProductUnit.getProductCategory().equals(productCategory))
+                .filter(cityInventoryProductUnit ->
+                        cityInventoryProductUnit.getProductSubcategory().equals(productSubcategory))
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProduct().isAllowed())
                 .collect(Collectors.groupingBy(ProductInventoryCity::getProduct));
 
         // Remove subcategories with less than 1 product
-        categoryMap.entrySet().removeIf(entry -> entry.getValue().size() < 1);
+        categoryMap.entrySet().removeIf(entry -> entry.getValue().isEmpty());
 
         return categoryMap;
     }

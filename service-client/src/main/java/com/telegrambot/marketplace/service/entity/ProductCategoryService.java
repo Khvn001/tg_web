@@ -4,6 +4,6 @@ import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 
 public interface ProductCategoryService {
 
-    ProductCategory findByName(String productCategoryName) ;
+    ProductCategory findByName(String productCategoryName);
 
 }

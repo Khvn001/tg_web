@@ -6,7 +6,7 @@ public enum ProductCategoryName {
 
     private final String category;
 
-    ProductCategoryName(String category) {
+    ProductCategoryName(final String category) {
         this.category = category;
     }
 

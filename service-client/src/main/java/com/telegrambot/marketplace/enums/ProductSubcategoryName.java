@@ -19,7 +19,7 @@ public enum ProductSubcategoryName {
 
     private final String subcategory;
 
-    ProductSubcategoryName(String subcategory) {
+    ProductSubcategoryName(final String subcategory) {
         this.subcategory = subcategory;
     }
 

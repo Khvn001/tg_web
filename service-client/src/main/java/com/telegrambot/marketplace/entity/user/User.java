@@ -1,5 +1,7 @@
 package com.telegrambot.marketplace.entity.user;
 
+import com.telegrambot.marketplace.entity.location.City;
+import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.enums.UserType;
@@ -19,7 +21,6 @@ import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -36,7 +37,6 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -53,6 +53,14 @@ public class User {
 
     @Column(nullable = false)
     private UserType permissions;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cityId")
+    private City city;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn

@@ -24,17 +24,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public Order createOrder(User user, List<ProductPortion> productPortions) {
+    public Order createOrder(final User user, final List<ProductPortion> productPortions) {
         if (productPortions.isEmpty()) {
             throw new IllegalArgumentException("Product portions list cannot be empty.");
         }
 
-        Product product = productPortions.get(0).getProduct();
-        ProductSubcategory productSubcategory = productPortions.get(0).getProductSubcategory();
-        ProductCategory productCategory = productPortions.get(0).getProductCategory();
-        Country country = productPortions.get(0).getCountry();
-        City city = productPortions.get(0).getCity();
-        District district = productPortions.get(0).getDistrict();
+        Product product = productPortions.getFirst().getProduct();
+        ProductSubcategory productSubcategory = productPortions.getFirst().getProductSubcategory();
+        ProductCategory productCategory = productPortions.getFirst().getProductCategory();
+        Country country = productPortions.getFirst().getCountry();
+        City city = productPortions.getFirst().getCity();
+        District district = productPortions.getFirst().getDistrict();
 
         Order order = new Order();
         order.setUser(user);

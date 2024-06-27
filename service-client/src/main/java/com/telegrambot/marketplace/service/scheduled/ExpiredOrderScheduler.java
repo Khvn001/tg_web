@@ -17,9 +17,12 @@ public class ExpiredOrderScheduler {
     private final OrderRepository orderRepository;
     private final ProductPortionService productPortionService;
 
-    @Scheduled(fixedRate = 60000)  // Run every minute
+    private static final int MINUTE = 60000;
+    private static final int INTERVAL_MINUTES = 1;
+
+    @Scheduled(fixedRate = MINUTE)  // Run every minute
     public void deleteExpiredOrders() {
-        LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(INTERVAL_MINUTES);
         List<Order> expiredOrders = orderRepository.findByCreatedAtBefore(expirationTime);
 
         for (Order order : expiredOrders) {

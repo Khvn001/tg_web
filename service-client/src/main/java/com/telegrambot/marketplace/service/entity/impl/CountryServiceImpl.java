@@ -5,7 +5,6 @@ import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.repository.CountryRepository;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
 
     @Override
-    public Country findByCountryName(CountryName countryName) {
+    public Country findByCountryName(final CountryName countryName) {
         return countryRepository.findByNameAndAllowedIsTrue(countryName).orElse(null);
     }
 
@@ -25,3 +24,4 @@ public class CountryServiceImpl implements CountryService {
         return countryRepository.findAllByAllowedIsTrue();
     }
 }
+

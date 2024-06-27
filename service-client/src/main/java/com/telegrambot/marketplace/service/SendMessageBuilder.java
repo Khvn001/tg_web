@@ -16,17 +16,17 @@ import java.util.List;
 public class SendMessageBuilder {
     private SendMessage sendMessage;
 
-    public SendMessageBuilder chatId(Long chatId) {
+    public SendMessageBuilder chatId(final Long chatId) {
         this.sendMessage.setChatId(chatId);
         return this;
     }
 
-    public SendMessageBuilder message(String message) {
+    public SendMessageBuilder message(final String message) {
         this.sendMessage.setText(message);
         return this;
     }
 
-    public SendMessageBuilder buttons(List<InlineKeyboardButton> buttons) {
+    public SendMessageBuilder buttons(final List<InlineKeyboardButton> buttons) {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         for (InlineKeyboardButton button : buttons) {
@@ -39,8 +39,9 @@ public class SendMessageBuilder {
 
 
     public Answer build() throws Exception {
-        if(sendMessage.getChatId() == null)
+        if (sendMessage.getChatId() == null) {
             throw new Exception("Id must be not null");
+        }
 
         Answer answer = new Answer();
         answer.setBotApiMethod(sendMessage);

@@ -5,7 +5,6 @@ import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.product.description.Product;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
