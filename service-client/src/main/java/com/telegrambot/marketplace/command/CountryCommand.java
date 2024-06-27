@@ -64,7 +64,8 @@ public class CountryCommand implements Command {
             buttons.add(InlineKeyboardButton.builder()
                     .text(city.getName())
                     .callbackData("/city_" + city.getId() + "_" + countryName)
-                    .build());        }
+                    .build());
+        }
         return buttons;
     }
 }

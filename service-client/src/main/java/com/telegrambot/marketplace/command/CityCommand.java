@@ -68,7 +68,8 @@ public class CityCommand implements Command {
             buttons.add(InlineKeyboardButton.builder()
                     .text(String.valueOf(category.getName()))
                     .callbackData("/category_" + category.getName() + "_" + cityId + "_" + countryName)
-                    .build());        }
+                    .build());
+        }
         return buttons;
     }
 }

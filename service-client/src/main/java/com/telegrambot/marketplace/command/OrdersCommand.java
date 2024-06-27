@@ -43,8 +43,8 @@ public class OrdersCommand implements Command {
                 .build());
         for (Order order : basket.getOrders()) {
             buttons.add(InlineKeyboardButton.builder()
-                    .text("Delete Order " + order.getId() + "_" + order.getProductSubcategory().getName()
-                            + "_" + order.getProduct().getName() + "_" + order.getAmount() + "_" + order.getTotalSum())
+                    .text("Delete Order " + order.getId() + " " + order.getProductSubcategory().getName()
+                            + " " + order.getProduct().getName() + " " + order.getAmount() + " " + order.getTotalSum())
                     .callbackData("/delete_order_" + order.getId())
                     .build());
         }
