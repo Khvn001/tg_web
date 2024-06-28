@@ -1,5 +1,6 @@
-package com.telegrambot.marketplace.command;
+package com.telegrambot.marketplace.command.user.pathway;
 
+import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
 import com.telegrambot.marketplace.entity.location.City;
@@ -48,6 +49,7 @@ public class CityCommand implements Command {
         CountryName countryName = CountryName.valueOf(parts[2]);
         City city = cityService.findById(cityId);
         user.setCity(city);
+        user.setCountry(city.getCountry());
         userRepository.save(user);
 
         Map<ProductCategory, List<ProductInventoryCity>> availableCategories = productInventoryCityService
@@ -56,18 +58,29 @@ public class CityCommand implements Command {
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Please select a product category:")
-                .buttons(getCategoryButtons(availableCategories.keySet(), cityId, countryName))
+                .buttons(getCategoryButtons(user, availableCategories.keySet()))
                 .build();
     }
 
-    private List<InlineKeyboardButton> getCategoryButtons(final Set<ProductCategory> categories,
-                                                          final Long cityId,
-                                                          final CountryName countryName) {
+    private List<InlineKeyboardButton> getCategoryButtons(final User user,
+                                                          final Set<ProductCategory> categories) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
+        buttons.add(InlineKeyboardButton
+                .builder()
+                .text("Go back to countries")
+                .callbackData("/country_" + user.getCountry().getName())
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Go back to city selection")
+                .callbackData("/city_" + user.getCity().getId() + "_" + user.getCountry().getName())
+                .build()
+        );
         for (ProductCategory category : categories) {
             buttons.add(InlineKeyboardButton.builder()
                     .text(String.valueOf(category.getName()))
-                    .callbackData("/category_" + category.getName() + "_" + cityId + "_" + countryName)
+                    .callbackData("/category_" + category.getName()
+                            + "_" + user.getCity().getId()
+                            + "_" + user.getCountry().getName())
                     .build());
         }
         return buttons;

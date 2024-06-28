@@ -1,15 +1,13 @@
-package com.telegrambot.marketplace.command;
+package com.telegrambot.marketplace.command.user.pathway;
 
+import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
 import com.telegrambot.marketplace.entity.location.City;
-import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
-import com.telegrambot.marketplace.enums.ProductCategoryName;
-import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.ProductCategoryService;
@@ -29,7 +27,7 @@ import java.util.Set;
 
 @Component
 @AllArgsConstructor
-public class SubcategoryCommand implements Command {
+public class CategoryCommand implements Command {
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductCategoryService productCategoryService;
@@ -38,7 +36,6 @@ public class SubcategoryCommand implements Command {
     private static final int ONE_NUMBER = 1;
     private static final int TWO_NUMBER = 2;
     private static final int THREE_NUMBER = 3;
-    private static final int FOUR_NUMBER = 4;
 
     @Override
     public Class handler() {
@@ -47,50 +44,39 @@ public class SubcategoryCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/subcategory_";
+        return "/category_";
     }
 
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         String[] parts = update.getCommandName().split("_");
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER]);
-        Long cityId = Long.parseLong(parts[THREE_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[FOUR_NUMBER]);
+        ProductCategory category = productCategoryService.findByName(parts[ONE_NUMBER]);
+        Long cityId = Long.parseLong(parts[TWO_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER]);
         City city = cityService.findById(cityId);
-        ProductCategory category = productCategoryService.findByName(categoryName.toString());
-        ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());
 
-        Map<Product, List<ProductInventoryCity>> availableProducts = productInventoryCityService
-                .findAvailableProductBySubcategoryAndCategory(city, subcategory, category);
-
-        if (availableProducts.isEmpty()) {
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("No products available in this subcategory.")
-                    .build();
-        }
+        Map<ProductSubcategory, List<ProductInventoryCity>> availableSubcategories = productInventoryCityService
+                .findAvailableProductSubcategoriesByCategory(city, category);
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Available products in " + subcategory.getName() + " subcategory:")
-                .buttons(getProductButtons(availableProducts.keySet(), subcategoryName,
-                        categoryName, cityId, countryName))
+                .message("Available subcategories in " + category + " category:")
+                .buttons(
+                        getProductButtons(
+                        availableSubcategories.keySet(), String.valueOf(category.getName()), cityId, countryName))
                 .build();
     }
 
-    private List<InlineKeyboardButton> getProductButtons(final Set<Product> products,
-                                                         final ProductSubcategoryName subcategoryName,
-                                                         final ProductCategoryName categoryName,
-                                                         final Long cityId,
-                                                         final CountryName countryName) {
+    private List<InlineKeyboardButton> getProductButtons(
+            final Set<ProductSubcategory> productSubcategories, final String categoryName,
+            final Long cityId, final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        for (Product product : products) {
+        for (ProductSubcategory productSubcategory : productSubcategories) {
             buttons.add(InlineKeyboardButton.builder()
-                    .text(product.getName())
-                    .callbackData("/product_" + product.getId() + "_" + subcategoryName
-                            + "_" + categoryName + "_" + cityId + "_" + countryName)
+                    .text(String.valueOf(productSubcategory.getName()))
+                    .callbackData("/subcategory_" + productSubcategory.getName() + "_" + categoryName
+                            + "_" + cityId + "_" + countryName)
                     .build());
         }
         return buttons;

@@ -10,4 +10,5 @@ public interface BasketService {
     Basket getBasketByUser(User user);
     void completePurchase(User user);
     void deleteOrderFromBasket(User user, Long orderId);
+    void deleteAllOrdersFromBasket(User user);
 }

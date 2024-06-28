@@ -4,16 +4,19 @@ import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.repository.BasketRepository;
+import com.telegrambot.marketplace.repository.OrderRepository;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
 public class BasketServiceImpl implements BasketService {
     private final BasketRepository basketRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public Basket addOrderToBasket(final User user, final Order order) {
@@ -38,6 +41,7 @@ public class BasketServiceImpl implements BasketService {
     public void completePurchase(final User user) {
         Basket basket = user.getBasket();
         basket.getOrders().clear();
+        orderRepository.deleteAllByUser(user);
         basket.setTotalSum(BigDecimal.ZERO);
         basketRepository.save(basket);
     }
@@ -53,7 +57,16 @@ public class BasketServiceImpl implements BasketService {
             basket.getOrders().remove(orderToRemove);
             basket.setTotalSum(basket.getTotalSum().subtract(orderToRemove.getTotalSum()));
             basketRepository.save(basket);
+            orderRepository.delete(orderToRemove);
         }
+    }
+
+    @Override
+    public void deleteAllOrdersFromBasket(final User user) {
+        Basket basket = user.getBasket();
+        basket.setOrders(new ArrayList<>());
+        basketRepository.save(basket);
+        orderRepository.deleteAllByUser(user);
     }
 
 }

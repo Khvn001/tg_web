@@ -1,5 +1,6 @@
-package com.telegrambot.marketplace.command;
+package com.telegrambot.marketplace.command.user.pathway;
 
+import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
@@ -47,7 +48,7 @@ public class CountryCommand implements Command {
         userRepository.save(user);
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Please select a city:")
+                .message("Please select a city or go back:")
                 .buttons(getCityButtons(countryName))
                 .build();
     }
@@ -55,16 +56,22 @@ public class CountryCommand implements Command {
     private List<InlineKeyboardButton> getCityButtons(final CountryName countryName) {
         // Fetch cities from the database with boolean field is_allowed = true
         Country country = countryService.findByCountryName(countryName);
-        List<City> cities = cityService.findByCountryIdAndAllowed(country.getId());
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        for (City city : cities) {
-            if (productInventoryCityService.findAvailableProducts(city) == null) {
-                continue;
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Change Country")
+                .callbackData("/start")
+                .build());
+        if (country != null) {
+            List<City> cities = cityService.findByCountryIdAndAllowed(country.getId());
+            for (City city : cities) {
+                if (productInventoryCityService.findAvailableProducts(city) == null) {
+                    continue;
+                }
+                buttons.add(InlineKeyboardButton.builder()
+                        .text(city.getName())
+                        .callbackData("/city_" + city.getId() + "_" + countryName)
+                        .build());
             }
-            buttons.add(InlineKeyboardButton.builder()
-                    .text(city.getName())
-                    .callbackData("/city_" + city.getId() + "_" + countryName)
-                    .build());
         }
         return buttons;
     }

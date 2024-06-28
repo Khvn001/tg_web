@@ -1,5 +1,6 @@
 package com.telegrambot.marketplace.entity.user;
 
+import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.order.Basket;
@@ -94,4 +95,6 @@ public class User {
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProductPortion courierTemporaryProductPortion;
 }

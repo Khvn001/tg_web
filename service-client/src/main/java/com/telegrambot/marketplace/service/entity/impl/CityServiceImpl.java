@@ -1,6 +1,7 @@
 package com.telegrambot.marketplace.service.entity.impl;
 
 import com.telegrambot.marketplace.entity.location.City;
+import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.repository.CityRepository;
 import com.telegrambot.marketplace.service.entity.CityService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<City> findByCountryIdAndAllowed(final Long countryId) {
         return cityRepository.findAllByCountryIdAndAllowedIsTrue(countryId);
+    }
+
+    @Override
+    public City findByCountryAndName(final Country country, final String name) {
+        return cityRepository.findByCountryAndAllowedIsTrueAndName(country, name).orElse(null);
     }
 
     @Override

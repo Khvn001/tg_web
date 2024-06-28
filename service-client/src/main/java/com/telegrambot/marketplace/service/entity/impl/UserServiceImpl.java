@@ -47,7 +47,8 @@ public class UserServiceImpl implements UserService {
         try {
             User user = new User();
             user.setName(classifiedUpdate.getName());
-            user.setPermissions(UserType.DEFAULT);
+            user.setPassword("");
+            user.setPermissions(UserType.BRONZE);
             user.setBalance(BigDecimal.valueOf(0));
             user.setDiscount(0L);
             user.setChatId(classifiedUpdate.getUserId());

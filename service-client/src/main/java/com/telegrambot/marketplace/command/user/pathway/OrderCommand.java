@@ -1,5 +1,6 @@
-package com.telegrambot.marketplace.command;
+package com.telegrambot.marketplace.command.user.pathway;
 
+import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
@@ -134,7 +135,7 @@ public class OrderCommand implements Command {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         buttons.add(InlineKeyboardButton.builder()
                 .text("Show basket and purchase")
-                .callbackData("/basket")
+                .callbackData("/basket_")
                 .build());
 
         buttons.add(InlineKeyboardButton.builder()
