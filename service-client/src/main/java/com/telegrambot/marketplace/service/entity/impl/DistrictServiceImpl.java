@@ -23,4 +23,9 @@ public class DistrictServiceImpl implements DistrictService {
     public District findByCountryAndCityAndName(final Country country, final City city, final String name) {
         return districtRepository.findByCountryAndCityAndNameAndAllowedIsTrue(country, city, name).orElse(null);
     }
+
+    @Override
+    public District save(final District district) {
+        return districtRepository.save(district);
+    }
 }

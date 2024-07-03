@@ -4,8 +4,9 @@ import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.user.User;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -29,6 +30,15 @@ public class ProfileInfoViewCommand implements Command {
 
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (UserType.ADMIN.equals(user.getPermissions())
+                || UserType.COURIER.equals(user.getPermissions())
+                || UserType.MODERATOR.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission.")
+                    .build();
+        }
+
         String message = generateProfileContentMessage(user);
 
         List<InlineKeyboardButton> buttons = new ArrayList<>();

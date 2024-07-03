@@ -12,6 +12,7 @@ import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.repository.OrderRepository;
 import com.telegrambot.marketplace.service.entity.OrderService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
@@ -51,8 +53,9 @@ public class OrderServiceImpl implements OrderService {
         order.setProductPortions(productPortions);
         order.setCreatedAt(LocalDateTime.now());
 
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        log.info("Created order: {}", savedOrder);
+        return savedOrder;
     }
-
 
 }

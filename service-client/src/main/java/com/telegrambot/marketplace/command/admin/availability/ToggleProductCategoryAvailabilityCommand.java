@@ -1,23 +1,25 @@
-package com.telegrambot.marketplace.command.admin;
+package com.telegrambot.marketplace.command.admin.availability;
 
-import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.command.admin.AdminCommand;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
-import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
+import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
-import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.service.entity.ProductCategoryService;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class ToggleProductSubcategoryAvailabilityCommand implements Command {
+@Slf4j
+public class ToggleProductCategoryAvailabilityCommand implements AdminCommand {
 
-    private final ProductSubcategoryService productSubcategoryService;
+    private final ProductCategoryService productCategoryService;
 
     @Override
     public Class handler() {
@@ -26,7 +28,7 @@ public class ToggleProductSubcategoryAvailabilityCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/togglesubcategory";
+        return "/admin_toggle_category_availability_";
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ToggleProductSubcategoryAvailabilityCommand implements Command {
         if (!UserType.ADMIN.equals(user.getPermissions())) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("You do not have permission to toggle subcategory availability.")
+                    .message("You do not have permission to toggle category availability.")
                     .build();
         }
 
@@ -43,26 +45,29 @@ public class ToggleProductSubcategoryAvailabilityCommand implements Command {
         if (args.length < 1) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Usage: /togglesubcategory <subcategory>")
+                    .message("Usage: /admin_toggle_category_availability_ <category>")
                     .build();
         }
 
-        String subcategoryName = args[0];
-        ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName);
-        if (subcategoryName == null) {
+        String categoryName = args[0];
+        ProductCategory category = productCategoryService.findByName(categoryName);
+        if (category == null) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Subcategory not found.")
+                    .message("Category not found.")
                     .build();
         }
 
-        subcategory.setAllowed(!subcategory.isAllowed());
-        productSubcategoryService.save(subcategory);
+        category.setAllowed(!category.isAllowed());
+        productCategoryService.save(category);
 
-        String status = subcategory.isAllowed() ? "available" : "unavailable";
+        String status = category.isAllowed() ? "available" : "unavailable";
+
+        log.info("Category: {}. New Status: {}", category.getName(), status);
+
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Subcategory " + subcategoryName + " is now " + status + ".")
+                .message("Category " + categoryName + " is now " + status + ".")
                 .build();
     }
 }

@@ -1,6 +1,6 @@
-package com.telegrambot.marketplace.command.admin;
+package com.telegrambot.marketplace.command.admin.add;
 
-import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.command.admin.AdminCommand;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.location.City;
@@ -11,14 +11,16 @@ import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class AddCityCommand implements Command {
+@Slf4j
+public class AddCityCommand implements AdminCommand {
 
     private final CityService cityService;
     private final CountryService countryService;
@@ -30,7 +32,7 @@ public class AddCityCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/addcity";
+        return "/admin_add_city_";
     }
 
     @Override
@@ -47,30 +49,47 @@ public class AddCityCommand implements Command {
         if (args.length < 2) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Usage: /addcity <country> <city>")
+                    .message("Usage: /admin_add_city <country> <city>")
                     .build();
         }
 
         String countryName = args[0];
         String cityName = args[1];
 
-        Country country = countryService.findByCountryName(CountryName.valueOf(countryName));
-        if (country == null) {
+        try {
+            Country country = countryService.findByCountryName(CountryName.valueOf(countryName));
+            if (country == null) {
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("Country not found.")
+                        .build();
+            }
+
+            City city = cityService.findByCountryAndName(country, cityName);
+            if (city != null) {
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("City already exists.")
+                        .build();
+            }
+            city = new City();
+            city.setName(cityName);
+            city.setCountry(country);
+            city.setAllowed(true);
+            City savedCity = cityService.save(city);
+
+            log.info("Added city '{}' to country '{}'", cityName, countryName);
+
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Country not found.")
+                    .message("City " + savedCity.getName() + " added successfully to "
+                            + savedCity.getCountry().getName() + ".")
+                    .build();
+        } catch (IllegalArgumentException e) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Invalid country name: " + countryName)
                     .build();
         }
-
-        City city = new City();
-        city.setName(cityName);
-        city.setCountry(country);
-        City savedCity = cityService.save(city);
-
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("City " + savedCity.getName() + " added successfully to "
-                        + savedCity.getCountry().getName() + ".")
-                .build();
     }
 }

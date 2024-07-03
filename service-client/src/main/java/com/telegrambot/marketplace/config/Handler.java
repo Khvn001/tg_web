@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.service.handler;
+package com.telegrambot.marketplace.config;
 
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.user.User;

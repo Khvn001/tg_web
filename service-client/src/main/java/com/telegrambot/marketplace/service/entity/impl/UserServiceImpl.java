@@ -9,12 +9,14 @@ import com.telegrambot.marketplace.repository.UserRepository;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -42,6 +44,8 @@ public class UserServiceImpl implements UserService {
                 user.setName(classifiedUpdate.getName());
             }
 
+            log.debug("User found: {}", user.getChatId());
+
             return user;
         }
         try {
@@ -63,9 +67,11 @@ public class UserServiceImpl implements UserService {
             user.setState(state);
             userRepository.save(user);
 
+            log.info("New User: {}", user.getChatId());
+
             return user;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("USER NOT CREATED {}", e.getMessage());
         }
 
         return null;
@@ -85,6 +91,7 @@ public class UserServiceImpl implements UserService {
     public void addUserBalance(final User user, final BigDecimal amount) {
         user.setBalance(user.getBalance().add(amount));
         userRepository.save(user);
+        log.info("User: {}. Balance has been added. Amount: {}", user.getChatId(), amount);
     }
 
 }

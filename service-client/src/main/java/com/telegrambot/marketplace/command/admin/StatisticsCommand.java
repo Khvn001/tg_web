@@ -1,6 +1,5 @@
 package com.telegrambot.marketplace.command.admin;
 
-import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.location.City;
@@ -10,9 +9,10 @@ import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.StatisticsService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class StatisticsCommand implements Command {
+public class StatisticsCommand implements AdminCommand {
 
     private final StatisticsService statisticsService;
 
@@ -32,12 +32,18 @@ public class StatisticsCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/statistics_";
+        return "/admin_statistics_";
     }
 
     @Override
     @SneakyThrows
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (!UserType.ADMIN.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission to get statistics.")
+                    .build();
+        }
         String command = update.getCommandName();
         String message = switch (command) {
             case "/product_inventory_city_stats" -> generateProductInventoryCityStatsMessage();

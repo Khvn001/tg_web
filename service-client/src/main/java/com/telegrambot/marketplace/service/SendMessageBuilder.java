@@ -38,11 +38,7 @@ public class SendMessageBuilder {
     }
 
 
-    public Answer build() throws Exception {
-        if (sendMessage.getChatId() == null) {
-            throw new Exception("Id must be not null");
-        }
-
+    public Answer build() {
         Answer answer = new Answer();
         answer.setBotApiMethod(sendMessage);
 

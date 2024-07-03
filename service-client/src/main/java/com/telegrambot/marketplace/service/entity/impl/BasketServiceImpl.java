@@ -7,6 +7,7 @@ import com.telegrambot.marketplace.repository.BasketRepository;
 import com.telegrambot.marketplace.repository.OrderRepository;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BasketServiceImpl implements BasketService {
     private final BasketRepository basketRepository;
     private final OrderRepository orderRepository;
@@ -29,6 +31,7 @@ public class BasketServiceImpl implements BasketService {
 
         basket.getOrders().add(order);
         basket.setTotalSum(basket.getTotalSum().add(order.getTotalSum()));
+        log.debug("User: {}. Order {} was added to basket", user.getChatId(), order.getId());
         return basketRepository.save(basket);
     }
 
@@ -44,6 +47,7 @@ public class BasketServiceImpl implements BasketService {
         orderRepository.deleteAllByUser(user);
         basket.setTotalSum(BigDecimal.ZERO);
         basketRepository.save(basket);
+        log.info("User: {}. Basket was fully purchased", user.getChatId());
     }
 
     @Override
@@ -59,6 +63,7 @@ public class BasketServiceImpl implements BasketService {
             basketRepository.save(basket);
             orderRepository.delete(orderToRemove);
         }
+        log.info("User: {}. Order: {} was deleted", user.getChatId(), orderId);
     }
 
     @Override
@@ -67,6 +72,7 @@ public class BasketServiceImpl implements BasketService {
         basket.setOrders(new ArrayList<>());
         basketRepository.save(basket);
         orderRepository.deleteAllByUser(user);
+        log.info("User: {}. All Orders were deleted", user.getChatId());
     }
 
 }

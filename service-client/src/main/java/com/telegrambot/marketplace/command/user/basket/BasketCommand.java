@@ -6,9 +6,10 @@ import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -37,6 +38,15 @@ public class BasketCommand implements Command {
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (UserType.ADMIN.equals(user.getPermissions())
+                || UserType.COURIER.equals(user.getPermissions())
+                || UserType.MODERATOR.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission.")
+                    .build();
+        }
+
         String message = generateBasketContentMessage(user);
         return new SendMessageBuilder()
                 .chatId(user.getChatId())

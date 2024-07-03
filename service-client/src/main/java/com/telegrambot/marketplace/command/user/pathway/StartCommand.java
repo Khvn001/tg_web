@@ -25,7 +25,7 @@ import com.telegrambot.marketplace.service.entity.ProductService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
 import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -109,7 +109,7 @@ public class StartCommand implements Command {
         } else if (UserType.MODERATOR.equals(user.getPermissions())) {
             return null;
         } else if (UserType.ADMIN.equals(user.getPermissions())) {
-            return null;
+            return new SendMessageBuilder().chatId(user.getChatId()).message("Welcome Admin").build();
         }
         return null;
     }

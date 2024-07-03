@@ -1,6 +1,6 @@
-package com.telegrambot.marketplace.command.admin;
+package com.telegrambot.marketplace.command.admin.availability;
 
-import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.command.admin.AdminCommand;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.product.description.Product;
@@ -10,18 +10,17 @@ import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.ProductService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @AllArgsConstructor
-public class AddProductCommand implements Command {
+@Slf4j
+public class ToggleProductAvailabilityCommand implements AdminCommand {
 
-    private static final int ARGS_SIZE = 3;
     private final ProductService productService;
     private final ProductSubcategoryService productSubcategoryService;
 
@@ -32,7 +31,7 @@ public class AddProductCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/addproduct";
+        return "/admin_toggle_product_availability_";
     }
 
     @Override
@@ -41,51 +40,48 @@ public class AddProductCommand implements Command {
         if (!UserType.ADMIN.equals(user.getPermissions())) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("You do not have permission to add products.")
+                    .message("You do not have permission to toggle product availability.")
                     .build();
         }
 
         String[] args = update.getArgs().getFirst().split(" ");
-        if (args.length < ARGS_SIZE) {
+        if (args.length < 2) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Usage: /addproduct <subcategory> <name> <price>")
+                    .message("Usage: /admin_toggle_product_availability_ <subcategory> <product>")
                     .build();
         }
 
-        String subcategoryName = args[0];
+        String subcategoryProductName = args[0];
+        ProductSubcategory productSubcategory = productSubcategoryService.findByName(subcategoryProductName);
+        if (productSubcategory == null) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Product Subcategory not found.")
+                    .build();
+        }
+
         String productName = args[1];
-        double price;
-        try {
-            price = Double.parseDouble(args[2]);
-        } catch (NumberFormatException e) {
+        Product product = productService.findByName(productSubcategory.getProductCategory(),
+                productSubcategory,
+                productName);
+        if (product == null) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Invalid price format.")
+                    .message("Product not found.")
                     .build();
         }
 
-        ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName);
-        if (subcategory == null) {
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("Subcategory not found.")
-                    .build();
-        }
-
-        Product product = new Product();
-        product.setName(productName);
-        product.setAllowed(true);
-        product.setProductSubcategory(subcategory);
-        product.setProductCategory(subcategory.getProductCategory());
-        product.setDescription("");
-        product.setPhotoUrl("");
-        product.setPrice(BigDecimal.valueOf(price));
+        product.setAllowed(!product.isAllowed());
         productService.save(product);
+
+        String status = product.isAllowed() ? "available" : "unavailable";
+
+        log.info("Product: {}. New Status: {}", product.getName(), status);
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Product " + productName + " added successfully to category " + subcategoryName + ".")
+                .message("Product " + productName + " is now " + status + ".")
                 .build();
     }
 }

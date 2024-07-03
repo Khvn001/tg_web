@@ -7,11 +7,12 @@ import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.user.State;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.StateType;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,14 @@ public class PasswordCommand implements Command {
         User newUser = userService.findUserByUpdate(update);
 
         if (StateType.CREATE_PASSWORD.equals(newUser.getState()) && newUser.getPassword() == null) {
+            if (UserType.ADMIN.equals(user.getPermissions())
+                    || UserType.COURIER.equals(user.getPermissions())
+                    || UserType.MODERATOR.equals(user.getPermissions())) {
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("You do not have permission.")
+                        .build();
+            }
             // User is setting the password
             newUser.setPassword(update.getUpdate().getMessage().getText());
             State userNewState = newUser.getState();
@@ -55,6 +64,14 @@ public class PasswordCommand implements Command {
                     .message("Password set successfully! If you have referral, please type referral User's hashName:")
                     .build();
         } else if (StateType.ENTER_REFERRAL.equals(newUser.getState().getStateType())) {
+            if (UserType.ADMIN.equals(user.getPermissions())
+                    || UserType.COURIER.equals(user.getPermissions())
+                    || UserType.MODERATOR.equals(user.getPermissions())) {
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("You do not have permission.")
+                        .build();
+            }
             // User is entering referral
             String referralUsername = update.getUpdate().getMessage().getText();
             if (!"no".equalsIgnoreCase(referralUsername)) {

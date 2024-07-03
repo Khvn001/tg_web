@@ -12,6 +12,7 @@ import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.ProductCategoryName;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.StateType;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import com.telegrambot.marketplace.service.entity.CityService;
@@ -19,7 +20,7 @@ import com.telegrambot.marketplace.service.entity.DistrictService;
 import com.telegrambot.marketplace.service.entity.OrderService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.ProductService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,15 @@ public class OrderCommand implements Command {
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (UserType.ADMIN.equals(user.getPermissions())
+                || UserType.COURIER.equals(user.getPermissions())
+                || UserType.MODERATOR.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission.")
+                    .build();
+        }
+
         if (StateType.ORDER.equals(user.getState().getStateType())) {
             String[] parts = user.getState().getValue().split("_");
             Long districtId = Long.parseLong(parts[ZERO_NUMBER]);

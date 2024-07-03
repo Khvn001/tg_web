@@ -9,4 +9,6 @@ public interface DistrictService {
     District findById(Long productId);
 
     District findByCountryAndCityAndName(Country country, City city, String name);
+
+    District save(District district);
 }

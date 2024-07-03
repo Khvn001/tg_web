@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.service.handler;
+package com.telegrambot.marketplace.config;
 
 import com.telegrambot.marketplace.command.Command;
 import jakarta.annotation.PostConstruct;

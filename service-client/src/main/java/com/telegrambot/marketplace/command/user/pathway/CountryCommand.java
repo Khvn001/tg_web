@@ -6,12 +6,13 @@ import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.repository.UserRepository;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -43,6 +44,15 @@ public class CountryCommand implements Command {
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (UserType.ADMIN.equals(user.getPermissions())
+                || UserType.COURIER.equals(user.getPermissions())
+                || UserType.MODERATOR.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission.")
+                    .build();
+        }
+
         CountryName countryName = CountryName.valueOf(update.getCommandName().split("_")[1]);
         user.setCountry(countryService.findByCountryName(countryName));
         userRepository.save(user);

@@ -11,12 +11,13 @@ import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.ProductCategoryName;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
+import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.ProductCategoryService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.service.handler.CommandHandler;
+import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -54,6 +55,15 @@ public class SubcategoryCommand implements Command {
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        if (UserType.ADMIN.equals(user.getPermissions())
+                || UserType.COURIER.equals(user.getPermissions())
+                || UserType.MODERATOR.equals(user.getPermissions())) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("You do not have permission.")
+                    .build();
+        }
+
         String[] parts = update.getCommandName().split("_");
         ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER]);
         ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER]);

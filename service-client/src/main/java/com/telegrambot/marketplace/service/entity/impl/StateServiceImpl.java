@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 public class StateServiceImpl implements StateService {
 
     private final StateRepository stateRepository;
+
     @Override
     public State save(final State state) {
         return stateRepository.save(state);
     }
+
 }
