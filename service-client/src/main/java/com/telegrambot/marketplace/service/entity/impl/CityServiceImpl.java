@@ -30,4 +30,14 @@ public class CityServiceImpl implements CityService {
         return cityRepository.findByIdAndAllowedIsTrue(countryId).orElse(null);
     }
 
+    @Override
+    public City save(final City city) {
+        return cityRepository.save(city);
+    }
+
+    @Override
+    public City findByName(final String cityName) {
+        return cityRepository.findByName(cityName).orElse(null);
+    }
+
 }

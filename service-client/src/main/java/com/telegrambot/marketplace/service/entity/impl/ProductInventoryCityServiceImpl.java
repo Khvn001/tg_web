@@ -78,4 +78,14 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
         return categoryMap;
     }
 
+    @Override
+    public ProductInventoryCity save(final ProductInventoryCity productInventoryCity) {
+        return repository.save(productInventoryCity);
+    }
+
+    @Override
+    public ProductInventoryCity findByCityAndProduct(final City city, final Product product) {
+        return repository.findByCityAndProduct(city, product);
+    }
+
 }

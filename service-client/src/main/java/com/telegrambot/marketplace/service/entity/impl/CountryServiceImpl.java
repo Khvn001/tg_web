@@ -23,5 +23,10 @@ public class CountryServiceImpl implements CountryService {
     public List<Country> findAllByAllowedIsTrue() {
         return countryRepository.findAllByAllowedIsTrue();
     }
+
+    @Override
+    public Country save(final Country country) {
+        return countryRepository.save(country);
+    }
 }
 

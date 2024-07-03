@@ -21,4 +21,7 @@ public interface ProductInventoryCityService {
     Map<Product, List<ProductInventoryCity>> findAvailableProductBySubcategoryAndCategory(
             City city, ProductSubcategory productSubcategory, ProductCategory productCategory);
 
+    ProductInventoryCity save(ProductInventoryCity productInventoryCity);
+
+    ProductInventoryCity findByCityAndProduct(City city, Product product);
 }

@@ -18,4 +18,9 @@ public class ProductSubcategoryServiceImpl implements ProductSubcategoryService 
                 .findByAllowedIsTrueAndName(ProductSubcategoryName.valueOf(productCategoryName))
                 .orElse(null);
     }
+
+    @Override
+    public ProductSubcategory save(final ProductSubcategory subcategory) {
+        return productSubcategoryRepository.save(subcategory);
+    }
 }

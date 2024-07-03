@@ -6,4 +6,5 @@ public interface ProductSubcategoryService {
 
     ProductSubcategory findByName(String productCategoryName);
 
+    ProductSubcategory save(ProductSubcategory subcategory);
 }

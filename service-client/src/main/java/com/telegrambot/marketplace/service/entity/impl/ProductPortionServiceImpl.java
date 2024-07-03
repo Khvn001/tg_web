@@ -1,5 +1,7 @@
 package com.telegrambot.marketplace.service.entity.impl;
 
+import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
+import com.telegrambot.marketplace.entity.inventory.ProductInventoryDistrict;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
@@ -9,7 +11,10 @@ import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.repository.ProductPortionRepository;
+import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
+import com.telegrambot.marketplace.service.entity.ProductInventoryDistrictService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,9 @@ import java.util.stream.Collectors;
 public class ProductPortionServiceImpl implements ProductPortionService {
 
     private final ProductPortionRepository productPortionRepository;
+    private final ProductInventoryCityService productInventoryCityService;
+    private final ProductInventoryDistrictService productInventoryDistrictService;
+    private final UserService userService;
 
     @Override
     public List<ProductPortion> findAvailableProducts(final City city, final Product product) {
@@ -60,11 +68,28 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     public void reserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(true);
         productPortionRepository.save(productPortion);
+        ProductInventoryCity productInventoryCity = productInventoryCityService
+                .findByCityAndProduct(productPortion.getCity(), productPortion.getProduct());
+        productInventoryCity.setQuantity(productInventoryCity.getQuantity().subtract(BigDecimal.valueOf(1)));
+        productInventoryCityService.save(productInventoryCity);
+
+        ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
+                .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
+        productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().subtract(BigDecimal.valueOf(1)));
+        productInventoryDistrictService.save(productInventoryDistrict);
     }
 
     @Override
     public void unreserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(false);
+        ProductInventoryCity productInventoryCity = productInventoryCityService
+                .findByCityAndProduct(productPortion.getCity(), productPortion.getProduct());
+        productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
+        productInventoryCityService.save(productInventoryCity);
+
+        ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
+                .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
+        productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
         productPortionRepository.save(productPortion);
     }
 
@@ -111,8 +136,19 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         productPortion.setReserved(false);
         // Persist the productPortion in the repository
         productPortionRepository.save(productPortion);
-        user.setCourierTemporaryProductPortion(null); // Clear the temporary storage
-    }
 
+        ProductInventoryCity productInventoryCity = productInventoryCityService
+                .findByCityAndProduct(productPortion.getCity(), productPortion.getProduct());
+        productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
+        productInventoryCityService.save(productInventoryCity);
+
+        ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
+                .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
+        productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
+        productInventoryDistrictService.save(productInventoryDistrict);
+
+        user.setCourierTemporaryProductPortion(null); // Clear the temporary storage
+        userService.save(user);
+    }
 
 }

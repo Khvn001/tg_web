@@ -11,4 +11,6 @@ public interface ProductService {
     Product findByName(ProductCategory productCategory,
                        ProductSubcategory productSubcategory,
                        String name);
+
+    Product save(Product product);
 }

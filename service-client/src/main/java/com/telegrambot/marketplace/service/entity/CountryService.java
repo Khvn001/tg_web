@@ -11,4 +11,5 @@ public interface CountryService {
 
     List<Country> findAllByAllowedIsTrue();
 
+    Country save(Country country);
 }

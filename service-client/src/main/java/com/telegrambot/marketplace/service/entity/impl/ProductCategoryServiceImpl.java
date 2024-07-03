@@ -18,4 +18,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
                 .orElse(null);
     }
 
+    @Override
+    public ProductCategory save(final ProductCategory category) {
+        return productCategoryRepository.save(category);
+    }
+
 }
