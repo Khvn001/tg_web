@@ -48,62 +48,62 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public List<Country> getAvailableCountries() {
-        return countryRepository.findByIsAllowedTrue();
+        return countryRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<Country> getUnavailableCountries() {
-        return countryRepository.findByIsAllowedFalse();
+        return countryRepository.findByAllowedIsFalse();
     }
 
     @Override
     public List<City> getAvailableCities() {
-        return cityRepository.findByIsAllowedTrue();
+        return cityRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<City> getUnavailableCities() {
-        return cityRepository.findByIsAllowedFalse();
+        return cityRepository.findByAllowedIsFalse();
     }
 
     @Override
     public List<District> getAvailableDistricts() {
-        return districtRepository.findByIsAllowedTrue();
+        return districtRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<District> getUnavailableDistricts() {
-        return districtRepository.findByIsAllowedFalse();
+        return districtRepository.findByAllowedIsFalse();
     }
 
     @Override
     public List<ProductCategory> getAvailableProductCategories() {
-        return productCategoryRepository.findByIsAllowedTrue();
+        return productCategoryRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<ProductCategory> getUnavailableProductCategories() {
-        return productCategoryRepository.findByIsAllowedFalse();
+        return productCategoryRepository.findByAllowedIsFalse();
     }
 
     @Override
     public List<ProductSubcategory> getAvailableProductSubcategories() {
-        return productSubcategoryRepository.findByIsAllowedTrue();
+        return productSubcategoryRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<ProductSubcategory> getUnavailableProductSubcategories() {
-        return productSubcategoryRepository.findByIsAllowedFalse();
+        return productSubcategoryRepository.findByAllowedIsFalse();
     }
 
     @Override
     public List<Product> getAvailableProducts() {
-        return productRepository.findByIsAllowedTrue();
+        return productRepository.findByAllowedIsTrue();
     }
 
     @Override
     public List<Product> getUnavailableProducts() {
-        return productRepository.findByIsAllowedFalse();
+        return productRepository.findByAllowedIsFalse();
     }
 
     @Override

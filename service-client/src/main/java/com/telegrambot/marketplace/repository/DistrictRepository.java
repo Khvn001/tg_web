@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface DistrictRepository extends JpaRepository<District, Long> {
     Optional<District> findByCountryAndCityAndNameAndAllowedIsTrue(Country country, City city, String name);
 
-    List<District> findByIsAllowedFalse();
+    List<District> findByAllowedIsFalse();
 
-    List<District> findByIsAllowedTrue();
+    List<District> findByAllowedIsTrue();
 }

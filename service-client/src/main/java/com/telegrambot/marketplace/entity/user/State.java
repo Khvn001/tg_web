@@ -36,11 +36,11 @@ public class State {
     @Column
     private String value;
 
-    public boolean inState() {
-        return stateType != null;
-    }
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn
     private User user;
+
+    public boolean inState() {
+        return stateType != null;
+    }
 }

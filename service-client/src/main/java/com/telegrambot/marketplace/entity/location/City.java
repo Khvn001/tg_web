@@ -47,7 +47,7 @@ public class City {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "is_allowed", nullable = false)
     private boolean isAllowed;
 
     @ManyToOne(fetch = FetchType.EAGER)

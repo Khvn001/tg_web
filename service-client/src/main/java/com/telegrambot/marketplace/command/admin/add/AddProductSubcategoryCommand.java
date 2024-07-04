@@ -54,8 +54,8 @@ public class AddProductSubcategoryCommand implements AdminCommand {
                     .build();
         }
 
-        String categoryName = args[0];
-        String subcategoryName = args[1];
+        String categoryName = args[0].toUpperCase();
+        String subcategoryName = args[1].toUpperCase();
 
         try {
             ProductCategory category = productCategoryService.findByName(categoryName);

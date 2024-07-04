@@ -75,7 +75,6 @@ public class ProductPortion {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    //TODO change in SQL
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
@@ -88,7 +87,6 @@ public class ProductPortion {
     @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
-    //TODO in SQL
     @Column(nullable = false)
     private boolean reserved;
 

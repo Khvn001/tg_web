@@ -8,13 +8,12 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 
 @Component
 public class HandlersMap {
-    private final HashMap<TelegramType, List<Handler>> hashMap = new HashMap<>();
+    private final EnumMap<TelegramType, List<Handler>> hashMap = new EnumMap<>(TelegramType.class);
     private final List<Handler> handlers;
 
     // Тут точно также находим все обработчики, просто в первом случае я использовал
@@ -32,12 +31,7 @@ public class HandlersMap {
             hashMap.get(handler.getHandleType()).add(handler);
         }
 
-        hashMap.values().forEach(h -> h.sort(new Comparator<Handler>() {
-            @Override
-            public int compare(final Handler o1, final Handler o2) {
-                return o2.priority() - o1.priority();
-            }
-        }));
+        hashMap.values().forEach(h -> h.sort((o1, o2) -> o2.priority() - o1.priority()));
     }
 
     public Answer execute(final ClassifiedUpdate classifiedUpdate, final User user) {

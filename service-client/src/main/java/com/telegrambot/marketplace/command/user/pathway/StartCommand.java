@@ -156,7 +156,7 @@ public class StartCommand implements Command {
         };
     }
 
-    private Answer handleCountryCityDistrictStep(final ClassifiedUpdate update, final User user) throws Exception {
+    private Answer handleCountryCityDistrictStep(final ClassifiedUpdate update, final User user) {
         if (update.getTelegramType() == TelegramType.TEXT) {
             String[] parts = update.getArgs().getFirst().split(" ");
             if (parts.length != ARGS_SIZE) {
@@ -165,7 +165,7 @@ public class StartCommand implements Command {
                         .message("Please provide the country, city, and district separated by spaces.")
                         .build();
             }
-            Country country = countryService.findByCountryName(CountryName.valueOf(parts[0]));
+            Country country = countryService.findByCountryName(CountryName.valueOf(parts[0].toUpperCase()));
             City city = cityService.findByCountryAndName(country, parts[1]);
             District district = districtService.findByCountryAndCityAndName(country, city, parts[2]);
             if (country == null || city == null || district == null) {
@@ -193,8 +193,7 @@ public class StartCommand implements Command {
     }
 
     private Answer handleCategorySubcategoryProductStep(final ClassifiedUpdate update,
-                                                        final User user)
-            throws Exception {
+                                                        final User user) {
         if (update.getTelegramType() == TelegramType.TEXT) {
             String[] parts = update.getArgs().getFirst().split(" ");
             if (parts.length != ARGS_SIZE) {
@@ -203,8 +202,8 @@ public class StartCommand implements Command {
                         .message("Please provide the product category, subcategory, and product separated by spaces.")
                         .build();
             }
-            ProductCategory category = productCategoryService.findByName(parts[0]);
-            ProductSubcategory subcategory = productSubcategoryService.findByName(parts[1]);
+            ProductCategory category = productCategoryService.findByName(parts[0].toUpperCase());
+            ProductSubcategory subcategory = productSubcategoryService.findByName(parts[1].toUpperCase());
             Product product = productService.findByName(category, subcategory, parts[2]);
             if (category == null || subcategory == null || product == null) {
                 return new SendMessageBuilder()
@@ -230,7 +229,7 @@ public class StartCommand implements Command {
                 .build();
     }
 
-    private Answer handleLatitudeLongitudeAmountStep(final ClassifiedUpdate update, final User user) throws Exception {
+    private Answer handleLatitudeLongitudeAmountStep(final ClassifiedUpdate update, final User user) {
         if (update.getTelegramType() == TelegramType.TEXT) {
             String[] parts = update.getArgs().getFirst().split(" ");
             if (parts.length != ARGS_SIZE) {
@@ -267,7 +266,7 @@ public class StartCommand implements Command {
                 .build();
     }
 
-    private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) throws Exception {
+    private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) {
         List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
         PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
 

@@ -54,7 +54,7 @@ public class District {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @Column(nullable = false)
+    @Column(name = "is_allowed", nullable = false)
     private boolean isAllowed;
 
     @OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

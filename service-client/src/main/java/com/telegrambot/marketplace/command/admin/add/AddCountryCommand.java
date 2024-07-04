@@ -50,7 +50,7 @@ public class AddCountryCommand implements AdminCommand {
                     .build();
         }
 
-        String countryName = args[0];
+        String countryName = args[0].toUpperCase();
 
         try {
             Country country = countryService.findByCountryName(CountryName.valueOf(countryName));

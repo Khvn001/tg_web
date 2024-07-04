@@ -61,9 +61,9 @@ public class CategoryCommand implements Command {
         }
 
         String[] parts = update.getCommandName().split("_");
-        ProductCategory category = productCategoryService.findByName(parts[ONE_NUMBER]);
+        ProductCategory category = productCategoryService.findByName(parts[ONE_NUMBER].toUpperCase());
         Long cityId = Long.parseLong(parts[TWO_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
 
         Map<ProductSubcategory, List<ProductInventoryCity>> availableSubcategories = productInventoryCityService

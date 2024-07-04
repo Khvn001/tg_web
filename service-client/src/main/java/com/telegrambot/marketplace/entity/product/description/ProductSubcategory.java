@@ -31,7 +31,7 @@ import java.util.List;
 @Table(name = "product_subcategories",
         indexes = {
                 @Index(name = "idx_product_subcategories_name", columnList = "name"),
-                @Index(name = "idx_product_subcategories_isAllowed", columnList = "isAllowed")
+                @Index(name = "idx_product_subcategories_is_allowed", columnList = "is_allowed")
         })
 @Getter
 @Setter
@@ -47,7 +47,7 @@ public class ProductSubcategory {
     @Column(nullable = false, unique = true)
     private ProductSubcategoryName name;
 
-    @Column(nullable = false)
+    @Column(name = "is_allowed", nullable = false)
     private boolean isAllowed;
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,

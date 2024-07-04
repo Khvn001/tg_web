@@ -76,10 +76,10 @@ public class OrderCommand implements Command {
             District district = districtService.findById(districtId);
             Long productId = Long.parseLong(parts[ONE_NUMBER]);
             Product product = productService.findById(productId);
-            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER]);
-            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
+            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
+            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
             Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
-            CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER]);
+            CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER].toUpperCase());
 
             int requestedAmount = Integer.parseInt(update.getUpdate().getMessage().getText());
             // Assuming the user's message contains only the amount

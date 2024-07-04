@@ -69,10 +69,10 @@ public class DistrictCommand implements Command {
         District district = districtService.findById(districtId);
         Long productId = Long.parseLong(parts[TWO_NUMBER]);
         Product product = productService.findById(productId);
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[THREE_NUMBER]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[FOUR_NUMBER]);
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[FOUR_NUMBER].toUpperCase());
         Long cityId = Long.parseLong(parts[FIVE_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[SIX_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[SIX_NUMBER].toUpperCase());
         user.getState().setStateType(StateType.ORDER);
         user.getState().setValue(String.format("%d_%d_%s_%s_%d_%s",
                 districtId, productId, subcategoryName, categoryName, cityId, countryName));

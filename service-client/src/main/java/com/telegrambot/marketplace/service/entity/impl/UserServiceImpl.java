@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByChatId(final String chatId) {
-        return userRepository.findByChatId(chatId).orElse(null);
+        return userRepository.findByChatId(Long.valueOf(chatId)).orElse(null);
     }
 
     @Override

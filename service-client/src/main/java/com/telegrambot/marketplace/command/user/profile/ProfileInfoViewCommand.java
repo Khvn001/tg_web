@@ -8,6 +8,7 @@ import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -29,6 +30,7 @@ public class ProfileInfoViewCommand implements Command {
     }
 
     @Override
+    @SneakyThrows
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         if (UserType.ADMIN.equals(user.getPermissions())
                 || UserType.COURIER.equals(user.getPermissions())
@@ -41,21 +43,12 @@ public class ProfileInfoViewCommand implements Command {
 
         String message = generateProfileContentMessage(user);
 
-        List<InlineKeyboardButton> buttons = new ArrayList<>();
-        buttons.add(InlineKeyboardButton.builder()
-                .text("Back to Basket")
-                .callbackData("/basket_")
-                .build());
-        buttons.addAll(getButtons(user));
-
-        try {
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message(message)
-                    .build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        List<InlineKeyboardButton> buttons = new ArrayList<>(getButtons(user));
+        return new SendMessageBuilder()
+                .chatId(user.getChatId())
+                .message(message)
+                .buttons(buttons)
+                .build();
     }
 
     private String generateProfileContentMessage(final User user) {
@@ -63,7 +56,7 @@ public class ProfileInfoViewCommand implements Command {
                 "Balance: " + user.getBalance() + "\n" +
                 "hashName: " + user.getChatId() + "\n" +
                 "Personal Discount: " + user.getDiscount() + "\n" +
-                "Number of referrals: " + (long) user.getReferals().size() + "\n";
+                "Number of referrals: " + (long) user.getReferrals().size() + "\n";
     }
 
     private List<InlineKeyboardButton> getButtons(final User user) {

@@ -32,8 +32,8 @@ import java.util.List;
 @Entity
 @Table(name = "users",
         indexes = {
-                @Index(name = "idx_users_chat_id", columnList = "chatId"),
-                @Index(name = "idx_users_userName", columnList = "userName")
+                @Index(name = "idx_users_chat_id", columnList = "chat_id"),
+                @Index(name = "idx_users_user_name", columnList = "user_name")
         })
 @Getter
 @Setter
@@ -60,7 +60,7 @@ public class User {
     private Country country;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cityId")
+    @JoinColumn(name = "city_id")
     private City city;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -70,7 +70,7 @@ public class User {
     @Column(nullable = false)
     private Long discount;
 
-    @Column(unique = true)
+    @Column(name = "user_name", unique = true)
     private String userName;
 
     @Column
@@ -81,7 +81,7 @@ public class User {
 
     @OneToMany(mappedBy = "referrer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<User> referals = new ArrayList<>();
+    private List<User> referrals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referrer_id")

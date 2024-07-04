@@ -55,7 +55,7 @@ public class AddProductCommand implements AdminCommand {
                     .build();
         }
 
-        String subcategoryName = args[0];
+        String subcategoryName = args[0].toUpperCase();
         String productName = args[1];
         double price;
         try {

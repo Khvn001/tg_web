@@ -52,7 +52,7 @@ public class ProductCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/subcategory_";
+        return "/product_";
     }
 
     @SneakyThrows
@@ -69,10 +69,10 @@ public class ProductCommand implements Command {
 
         String[] parts = update.getCommandName().split("_");
         String productId = parts[ONE_NUMBER];
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
         Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
         ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());
         Product product = productService.findById(Long.valueOf(productId));

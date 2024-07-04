@@ -43,7 +43,7 @@ public class Country {
     @Column(nullable = false, unique = true)
     private CountryName name;
 
-    @Column(nullable = false)
+    @Column(name = "is_allowed", nullable = false)
     private boolean isAllowed;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

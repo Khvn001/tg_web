@@ -53,7 +53,7 @@ public class AddCityCommand implements AdminCommand {
                     .build();
         }
 
-        String countryName = args[0];
+        String countryName = args[0].toUpperCase();
         String cityName = args[1];
 
         try {

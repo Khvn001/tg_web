@@ -57,7 +57,7 @@ public class AddDistrictCommand implements AdminCommand {
                     .build();
         }
 
-        String countryName = args[0];
+        String countryName = args[0].toUpperCase();
         String cityName = args[1];
         String districtName = args[2];
 

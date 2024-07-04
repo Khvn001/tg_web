@@ -51,11 +51,11 @@ public class AddProductCategoryCommand implements AdminCommand {
                     .build();
         }
 
-        String categoryNameString = args[0];
+        String categoryNameString = args[0].toUpperCase();
 
         ProductCategoryName categoryName;
         try {
-            categoryName = ProductCategoryName.valueOf(categoryNameString.toUpperCase());
+            categoryName = ProductCategoryName.valueOf(categoryNameString);
         } catch (IllegalArgumentException e) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())

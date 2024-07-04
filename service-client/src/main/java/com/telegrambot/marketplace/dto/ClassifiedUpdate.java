@@ -85,26 +85,32 @@ public class ClassifiedUpdate {
 
     //Достанем userId, имя и username из любого типа сообщений.
     private Long handleUserId() {
-        if (telegramType == TelegramType.PRE_CHECKOUT_QUERY) {
-            name = getNameByUser(update.getPreCheckoutQuery().getFrom());
-            userName = update.getPreCheckoutQuery().getFrom().getUserName();
-            return update.getPreCheckoutQuery().getFrom().getId();
-        } else if (telegramType == TelegramType.CHAT_JOIN_REQUEST) {
-            name = getNameByUser(update.getChatJoinRequest().getUser());
-            userName = update.getChatJoinRequest().getUser().getUserName();
-            return update.getChatJoinRequest().getUser().getId();
-        } else if (telegramType == TelegramType.CALL_BACK) {
-            name = getNameByUser(update.getCallbackQuery().getFrom());
-            userName = update.getCallbackQuery().getFrom().getUserName();
-            return update.getCallbackQuery().getFrom().getId();
-        } else if (telegramType == TelegramType.MY_CHAT_MEMBER) {
-            name = update.getMyChatMember().getChat().getTitle();
-            userName = update.getMyChatMember().getChat().getUserName();
-            return update.getMyChatMember().getFrom().getId();
-        } else {
-            name = getNameByUser(update.getMessage().getFrom());
-            userName = update.getMessage().getFrom().getUserName();
-            return update.getMessage().getFrom().getId();
+        switch (telegramType) {
+            case TelegramType.PRE_CHECKOUT_QUERY -> {
+                name = getNameByUser(update.getPreCheckoutQuery().getFrom());
+                userName = update.getPreCheckoutQuery().getFrom().getUserName();
+                return update.getPreCheckoutQuery().getFrom().getId();
+            }
+            case TelegramType.CHAT_JOIN_REQUEST -> {
+                name = getNameByUser(update.getChatJoinRequest().getUser());
+                userName = update.getChatJoinRequest().getUser().getUserName();
+                return update.getChatJoinRequest().getUser().getId();
+            }
+            case TelegramType.CALL_BACK -> {
+                name = getNameByUser(update.getCallbackQuery().getFrom());
+                userName = update.getCallbackQuery().getFrom().getUserName();
+                return update.getCallbackQuery().getFrom().getId();
+            }
+            case TelegramType.MY_CHAT_MEMBER -> {
+                name = update.getMyChatMember().getChat().getTitle();
+                userName = update.getMyChatMember().getChat().getUserName();
+                return update.getMyChatMember().getFrom().getId();
+            }
+            default -> {
+                name = getNameByUser(update.getMessage().getFrom());
+                userName = update.getMessage().getFrom().getUserName();
+                return update.getMessage().getFrom().getId();
+            }
         }
     }
 

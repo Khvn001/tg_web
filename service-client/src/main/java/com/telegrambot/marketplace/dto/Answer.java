@@ -14,7 +14,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendVideoNote;
 import org.telegram.telegrambots.meta.api.methods.send.SendVoice;
 import org.telegram.telegrambots.meta.api.methods.stickers.AddStickerToSet;
 import org.telegram.telegrambots.meta.api.methods.stickers.CreateNewStickerSet;
-import org.telegram.telegrambots.meta.api.methods.stickers.SetStickerSetThumb;
 import org.telegram.telegrambots.meta.api.methods.stickers.UploadStickerFile;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 
@@ -30,7 +29,6 @@ public class Answer {
     private SendMediaGroup sendMediaGroup;
     private SetChatPhoto setChatPhoto;
     private AddStickerToSet addStickerToSet;
-    private SetStickerSetThumb setStickerSetThumb;
     private CreateNewStickerSet createNewStickerSet;
     private UploadStickerFile uploadStickerFile;
     private EditMessageMedia editMessageMedia;

@@ -13,7 +13,7 @@ public interface ProductSubcategoryRepository extends JpaRepository<ProductSubca
 
     Optional<ProductSubcategory> findByAllowedIsTrueAndName(ProductSubcategoryName name);
 
-    List<ProductSubcategory> findByIsAllowedFalse();
+    List<ProductSubcategory> findByAllowedIsFalse();
 
-    List<ProductSubcategory> findByIsAllowedTrue();
+    List<ProductSubcategory> findByAllowedIsTrue();
 }

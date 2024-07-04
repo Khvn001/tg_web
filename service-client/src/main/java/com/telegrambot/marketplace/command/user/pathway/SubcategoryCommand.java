@@ -65,10 +65,10 @@ public class SubcategoryCommand implements Command {
         }
 
         String[] parts = update.getCommandName().split("_");
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER]);
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER]);
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
         Long cityId = Long.parseLong(parts[THREE_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[FOUR_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[FOUR_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
         ProductCategory category = productCategoryService.findByName(categoryName.toString());
         ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());

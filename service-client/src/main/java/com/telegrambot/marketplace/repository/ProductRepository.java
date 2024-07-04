@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                                                               ProductSubcategory productSubcategory,
                                                                               String name);
 
-    List<Product> findByIsAllowedFalse();
+    List<Product> findByAllowedIsFalse();
 
-    List<Product> findByIsAllowedTrue();
+    List<Product> findByAllowedIsTrue();
 }

@@ -76,7 +76,7 @@ public class CommandConfig {
         handler.registerUserCommand("/orders_", ordersCommand);
         handler.registerUserCommand("/category_", categoryCommand);
         handler.registerUserCommand("/subcategory_", subcategoryCommand);
-        handler.registerUserCommand("/subcategory_", productCommand);
+        handler.registerUserCommand("/product_", productCommand);
         handler.registerUserCommand("/country_", countryCommand);
         handler.registerUserCommand("/city_", cityCommand);
         handler.registerUserCommand("/district_", districtCommand);

@@ -53,7 +53,7 @@ public class CountryCommand implements Command {
                     .build();
         }
 
-        CountryName countryName = CountryName.valueOf(update.getCommandName().split("_")[1]);
+        CountryName countryName = CountryName.valueOf(update.getCommandName().split("_")[1].toUpperCase());
         user.setCountry(countryService.findByCountryName(countryName));
         userRepository.save(user);
         return new SendMessageBuilder()

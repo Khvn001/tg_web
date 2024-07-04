@@ -43,7 +43,7 @@ public class PasswordCommand implements Command {
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         User newUser = userService.findUserByUpdate(update);
 
-        if (StateType.CREATE_PASSWORD.equals(newUser.getState()) && newUser.getPassword() == null) {
+        if (StateType.CREATE_PASSWORD.equals(newUser.getState().getStateType()) && newUser.getPassword() == null) {
             if (UserType.ADMIN.equals(user.getPermissions())
                     || UserType.COURIER.equals(user.getPermissions())
                     || UserType.MODERATOR.equals(user.getPermissions())) {
@@ -77,9 +77,9 @@ public class PasswordCommand implements Command {
             if (!"no".equalsIgnoreCase(referralUsername)) {
                 User referrer = userService.findByChatId(referralUsername);
                 if (referrer != null) {
-                    List<User> referredUsersReferrals = referrer.getReferals();
+                    List<User> referredUsersReferrals = referrer.getReferrals();
                     referredUsersReferrals.add(newUser);
-                    referrer.setReferals(referredUsersReferrals);
+                    referrer.setReferrals(referredUsersReferrals);
                     userService.save(referrer);
                     newUser.setReferrer(referrer);
                     newUser.getState().setStateType(StateType.NONE);
