@@ -3,9 +3,9 @@ spring:
     name: service-client
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://
-    username:
-    password:
+    url: jdbc:postgresql://104.194.214.119:5432/db_name
+    username: postgres
+    password: postgres
   flyway:
     out-of-order: true
     validateOnMigrate: false
@@ -56,8 +56,6 @@ bot:
 filesize:
   photo: 3145728
   video: 15728640
-attempts:
-scheduler:
 logging:
   level:
     com.telegrambot.marketplace: TRACE
@@ -68,5 +66,3 @@ logging:
             CommonsRequestLoggingFilter: DEBUG
 server:
   port: 8080
-  base-url:
-  api-url:
