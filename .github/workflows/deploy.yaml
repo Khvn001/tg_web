@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "service-client/target/service-client-0.0.1-SNAPSHOT.jar"  # Adjust path based on your project structure
-          target: "bot/service-client-0.0.1-SNAPSHOT.jar"
+          target: "/usr/bot/service-client-0.0.1-SNAPSHOT.jar"
 
       - name: Execute SSH command
         uses: appleboy/ssh-action@v0.1.2
@@ -39,6 +39,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /bot
+            cd /usr/bot
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
