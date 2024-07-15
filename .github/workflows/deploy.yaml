@@ -10,36 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Set up JDK 22
       - name: Set up JDK 22
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '22'
 
+      # Build with Maven
       - name: Build with Maven
         run: mvn clean install
         # or for Gradle
         # run: ./gradlew build
 
-      - name: Copy files via SSH
-        uses: appleboy/scp-action@v0.1.1
+      # Set up SSH
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "service-client/target/service-client-0.0.1-SNAPSHOT.jar"  # Adjust path based on your project structure
-          target: "/usr/bot/service-client-0.0.1-SNAPSHOT.jar"
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
+      # Copy files via SSH
+      - name: Copy files via SSH
+        run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
+
+      # Execute SSH command
       - name: Execute SSH command
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             cd /usr/bot
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
+          EOF
