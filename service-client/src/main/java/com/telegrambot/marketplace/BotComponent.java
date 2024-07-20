@@ -21,6 +21,9 @@ public class BotComponent extends TelegramLongPollingBot {
     @Value("${bot.name}")
     private String botName;
 
+    @Value("${bot.token}")
+    private String botToken;
+
     @PostConstruct
     private void init() {
         try {
@@ -30,8 +33,7 @@ public class BotComponent extends TelegramLongPollingBot {
         }
     }
 
-    public BotComponent(final @Value("${bot.token}") String botToken) throws TelegramApiException {
-        super(botToken);
+    public BotComponent() throws TelegramApiException {
     }
 
     @Override

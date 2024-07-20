@@ -147,16 +147,26 @@
 
     <build>
         <plugins>
+
+            <!-- Spring Boot plugin to package the application as an executable JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <!-- Maven Jar Plugin to specify the main class and other JAR configurations -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+
+            <!-- Checkstyle plugin for code quality checks -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
 
+            <!-- Surefire plugin for running unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -165,6 +175,7 @@
     </build>
 
     <profiles>
+        <!-- Profile for integration tests using the Failsafe plugin -->
         <profile>
             <id>integration-tests</id>
             <build>
