@@ -45,3 +45,15 @@ jobs:
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
           EOF
+
+      - name: Set environment variables for application
+        run: |
+          echo "POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}" >> $GITHUB_ENV
+          echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+          echo "BOT_NAME=${{ secrets.BOT_NAME }}" >> $GITHUB_ENV
+          echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Run your application
+        run: |
+          java -jar service-client-0.0.1-SNAPSHOT.jar

@@ -3,32 +3,14 @@ spring:
     name: service-client
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://104.194.214.119:5432/db_name
-    username: postgres
-    password: postgres
+    url: ${POSTGRES_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
   flyway:
     out-of-order: true
     validateOnMigrate: false
-  mail:
-    host:
-    port: 587
-    username:
-    password:
-    properties:
-      mail:
-        smtp:
-          auth: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-          starttls:
-            enable: true
-          ssl:
-            protocols: TLSv1.2
-        imap:
-          trust: '*'
-          store-uri:
-          max-fetch-size: 10
   task:
     execution:
       thread-name-prefix: autohost-task-
@@ -50,12 +32,6 @@ spring:
       enabled: true
       max-file-size: 15MB
       max-request-size: 30MB
-bot:
-  name:
-  token:
-filesize:
-  photo: 3145728
-  video: 15728640
 logging:
   level:
     com.telegrambot.marketplace: TRACE
@@ -64,5 +40,18 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+aws:
+  s3:
+    publicEndpoint: https://104.194.214.119:9000
+    privateEndpoint: http://104.194.214.119:9000
+    bucketName: d
+    accessKey: marketplace420
+    secretKey: marketplace420
+bot:
+  name: ${BOT_NAME:BotName}
+  token: ${BOT_TOKEN:}
+filesize:
+  photo: 3145728
+  video: 15728640
 server:
   port: 8080
