@@ -46,6 +46,7 @@ jobs:
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
           EOF
 
+      # Set environment variables for application
       - name: Set environment variables for application
         run: |
           echo "POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}" >> $GITHUB_ENV
@@ -54,6 +55,10 @@ jobs:
           echo "BOT_NAME=${{ secrets.BOT_NAME }}" >> $GITHUB_ENV
           echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> $GITHUB_ENV
 
+      # Run your application
       - name: Run your application
         run: |
-          java -jar service-client-0.0.1-SNAPSHOT.jar
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd /usr/bot
+            java -jar service-client-0.0.1-SNAPSHOT.jar
+          EOF
