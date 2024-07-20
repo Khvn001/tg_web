@@ -54,11 +54,3 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
           echo "BOT_NAME=${{ secrets.BOT_NAME }}" >> $GITHUB_ENV
           echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> $GITHUB_ENV
-
-      # Run your application
-      - name: Run your application
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            cd /usr/bot
-            java -jar service-client-0.0.1-SNAPSHOT.jar
-          EOF
