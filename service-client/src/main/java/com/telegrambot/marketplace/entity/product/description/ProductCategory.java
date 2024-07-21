@@ -45,7 +45,7 @@ public class ProductCategory {
     private ProductCategoryName name;
 
     @Column(name = "is_allowed", nullable = false)
-    private boolean isAllowed;
+    private boolean allowed;
 
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<ProductSubcategory> productSubcategories = new ArrayList<>();

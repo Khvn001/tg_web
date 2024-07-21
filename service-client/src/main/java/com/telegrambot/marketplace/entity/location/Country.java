@@ -44,7 +44,7 @@ public class Country {
     private CountryName name;
 
     @Column(name = "is_allowed", nullable = false)
-    private boolean isAllowed;
+    private boolean allowed;
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<City> cities = new ArrayList<>();

@@ -8,9 +8,18 @@ spring:
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 10
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
   flyway:
-    out-of-order: true
-    validateOnMigrate: false
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    url: ${POSTGRES_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+    user: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
   task:
     execution:
       thread-name-prefix: autohost-task-
@@ -36,20 +45,20 @@ logging:
   level:
     com.telegrambot.marketplace: TRACE
     org:
-      springframework:
-        web:
-          filter:
-            CommonsRequestLoggingFilter: DEBUG
+      springframework: DEBUG
+      flywaydb: DEBUG
+#      hibernate: DEBUG
 aws:
   s3:
     publicEndpoint: https://104.194.214.119:9000
     privateEndpoint: http://104.194.214.119:9000
     bucketName: d
+    stuffPlaceFolder: productPortion
     accessKey: marketplace420
     secretKey: marketplace420
 bot:
   name: ${BOT_NAME:BotName}
-  token: ${BOT_TOKEN:}
+  token: ${BOT_TOKEN:BotToken}
 filesize:
   photo: 3145728
   video: 15728640

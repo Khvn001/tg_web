@@ -1,4 +1,4 @@
--- V1__create_tables.sql
+-- V1__Initial_setup.sql
 
 -- Create table for countries
 CREATE TABLE countries (

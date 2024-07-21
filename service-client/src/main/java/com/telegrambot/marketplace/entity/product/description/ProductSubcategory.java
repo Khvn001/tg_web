@@ -48,7 +48,7 @@ public class ProductSubcategory {
     private ProductSubcategoryName name;
 
     @Column(name = "is_allowed", nullable = false)
-    private boolean isAllowed;
+    private boolean allowed;
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.EAGER)

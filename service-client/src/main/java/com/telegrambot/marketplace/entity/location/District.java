@@ -55,7 +55,7 @@ public class District {
     private City city;
 
     @Column(name = "is_allowed", nullable = false)
-    private boolean isAllowed;
+    private boolean allowed;
 
     @OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude

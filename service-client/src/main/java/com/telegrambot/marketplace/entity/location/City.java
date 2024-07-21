@@ -48,7 +48,7 @@ public class City {
     private String name;
 
     @Column(name = "is_allowed", nullable = false)
-    private boolean isAllowed;
+    private boolean allowed;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id")
