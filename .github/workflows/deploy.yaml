@@ -41,8 +41,20 @@ jobs:
       - name: Execute SSH command
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            # Export environment variables
+            export POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}
+            export POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export BOT_NAME=${{ secrets.BOT_NAME }}
+            export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
+          
+            # Navigate to application directory
             cd /usr/bot
+          
+            # Kill existing application process
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
+          
+            # Start application with nohup
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
           EOF
 
