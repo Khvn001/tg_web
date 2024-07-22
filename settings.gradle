@@ -1,0 +1,3 @@
+rootProject.name = 'telegrambot-parent'
+// Include the submodules
+include 'service-client'

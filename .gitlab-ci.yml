@@ -3,31 +3,43 @@ stages:
   - deploy
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
-cache:
-  paths:
-    - .m2/repository
+  POSTGRES_JDBC_URL: $POSTGRES_JDBC_URL
+  POSTGRES_USERNAME: $POSTGRES_USERNAME
+  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  BOT_NAME: $BOT_NAME
+  BOT_TOKEN: $BOT_TOKEN
 
 build:
   stage: build
-  image: maven:3.9.8-eclipse-temurin-22-alpine
+  image: maven:3.8.5-jdk-22
   script:
     - mvn clean install
   artifacts:
     paths:
-      - service-client/target/service-client-0.0.1-SNAPSHOT.jar
+      - target/service-client-0.0.1-SNAPSHOT.jar
 
 deploy:
   stage: deploy
   image: alpine:latest
   before_script:
-    - apk add --no-cache openssh
+    - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - echo "$SERVER_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H $REMOTE_HOST >> ~/.ssh/known_hosts
+    - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
   script:
-    - scp service-client/target/service-client-0.0.1-SNAPSHOT.jar $REMOTE_USER@$REMOTE_HOST:/bot
-    - ssh $REMOTE_USER@$REMOTE_HOST 'pkill -f "java -jar service-client-0.0.1-SNAPSHOT.jar" || true'
-    - ssh $REMOTE_USER@$REMOTE_HOST 'nohup java -jar /bot/service-client-0.0.1-SNAPSHOT.jar > /bot/bot.log 2>&1 &'
+    - scp -o StrictHostKeyChecking=no target/service-client-0.0.1-SNAPSHOT.jar $SERVER_USER@$SERVER_HOST:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
+    - |
+      ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+        export POSTGRES_JDBC_URL=$POSTGRES_JDBC_URL
+        export POSTGRES_USERNAME=$POSTGRES_USERNAME
+        export POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+        export BOT_NAME=$BOT_NAME
+        export BOT_TOKEN=$BOT_TOKEN
+
+        cd /usr/bot
+
+        pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
+
+        nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
+      EOF
