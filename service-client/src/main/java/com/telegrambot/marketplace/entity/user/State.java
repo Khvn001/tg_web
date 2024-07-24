@@ -36,7 +36,7 @@ public class State {
     @Column
     private String value;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn
     @ToString.Exclude
     private User user;
