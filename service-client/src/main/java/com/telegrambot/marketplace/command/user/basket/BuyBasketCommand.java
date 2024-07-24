@@ -15,6 +15,7 @@ import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class BuyBasketCommand implements Command {
 
     @SneakyThrows
     @Override
+    @Transactional
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         if (UserType.ADMIN.equals(user.getPermissions())
                 || UserType.COURIER.equals(user.getPermissions())

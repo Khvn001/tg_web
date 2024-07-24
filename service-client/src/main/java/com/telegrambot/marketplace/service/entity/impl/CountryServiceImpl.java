@@ -6,6 +6,7 @@ import com.telegrambot.marketplace.repository.CountryRepository;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    @Transactional
     public Country save(final Country country) {
         return countryRepository.save(country);
     }

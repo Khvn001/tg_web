@@ -6,6 +6,7 @@ import com.telegrambot.marketplace.repository.ProductCategoryRepository;
 import com.telegrambot.marketplace.service.entity.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
+    @Transactional
     public ProductCategory save(final ProductCategory category) {
         return productCategoryRepository.save(category);
     }

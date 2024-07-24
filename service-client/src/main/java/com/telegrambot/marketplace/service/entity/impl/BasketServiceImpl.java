@@ -9,6 +9,7 @@ import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class BasketServiceImpl implements BasketService {
     private final OrderRepository orderRepository;
 
     @Override
+    @Transactional
     public Basket addOrderToBasket(final User user, final Order order) {
         Basket basket = user.getBasket();
         if (basket == null) {
@@ -41,6 +43,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void completePurchase(final User user) {
         Basket basket = user.getBasket();
         basket.getOrders().clear();
@@ -51,6 +54,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void deleteOrderFromBasket(final User user, final Long orderId) {
         Basket basket = user.getBasket();
         Order orderToRemove = basket.getOrders().stream()
@@ -67,6 +71,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void deleteAllOrdersFromBasket(final User user) {
         Basket basket = user.getBasket();
         basket.setOrders(new ArrayList<>());

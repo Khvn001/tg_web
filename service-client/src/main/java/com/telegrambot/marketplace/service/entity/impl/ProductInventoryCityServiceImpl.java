@@ -9,6 +9,7 @@ import com.telegrambot.marketplace.repository.ProductInventoryCityRepository;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,6 +80,7 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
     }
 
     @Override
+    @Transactional
     public ProductInventoryCity save(final ProductInventoryCity productInventoryCity) {
         return repository.save(productInventoryCity);
     }

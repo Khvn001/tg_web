@@ -7,6 +7,7 @@ import com.telegrambot.marketplace.repository.DistrictRepository;
 import com.telegrambot.marketplace.service.entity.DistrictService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,7 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
+    @Transactional
     public District save(final District district) {
         return districtRepository.save(district);
     }

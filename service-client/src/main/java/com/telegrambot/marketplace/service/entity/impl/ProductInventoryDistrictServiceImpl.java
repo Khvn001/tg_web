@@ -7,6 +7,7 @@ import com.telegrambot.marketplace.repository.ProductInventoryDistrictRepository
 import com.telegrambot.marketplace.service.entity.ProductInventoryDistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class ProductInventoryDistrictServiceImpl implements ProductInventoryDist
     private final ProductInventoryDistrictRepository repository;
 
     @Override
+    @Transactional
     public ProductInventoryDistrict save(final ProductInventoryDistrict productInventoryDistrict) {
         return repository.save(productInventoryDistrict);
     }

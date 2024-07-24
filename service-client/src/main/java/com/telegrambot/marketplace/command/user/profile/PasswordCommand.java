@@ -16,6 +16,7 @@ import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class PasswordCommand implements Command {
 
     @Override
     @SneakyThrows
+    @Transactional
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         User newUser = userService.findUserByUpdate(update);
 

@@ -14,6 +14,7 @@ import com.telegrambot.marketplace.service.entity.OrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     @Override
+    @Transactional
     public Order createOrder(final User user, final List<ProductPortion> productPortions) {
         if (productPortions.isEmpty()) {
             throw new IllegalArgumentException("Product portions list cannot be empty.");

@@ -17,6 +17,7 @@ import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -65,6 +66,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void reserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(true);
         productPortionRepository.save(productPortion);
@@ -80,6 +82,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void unreserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(false);
         ProductInventoryCity productInventoryCity = productInventoryCityService
@@ -94,6 +97,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void saveCountryCityDistrict(final User user,
                                         final Country country,
                                         final City city,
@@ -107,6 +111,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void saveCategorySubcategoryProduct(final User user,
                                                final ProductCategory category,
                                                final ProductSubcategory subcategory,
@@ -118,6 +123,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void saveLatitudeLongitudeAmount(final User user,
                                             final BigDecimal latitude,
                                             final BigDecimal longitude,
@@ -129,6 +135,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void savePhoto(final User user, final String photoUrl) {
         ProductPortion productPortion = user.getCourierTemporaryProductPortion();
         productPortion.setPhotoUrl(photoUrl);

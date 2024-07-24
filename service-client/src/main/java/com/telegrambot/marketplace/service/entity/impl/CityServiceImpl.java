@@ -6,6 +6,7 @@ import com.telegrambot.marketplace.repository.CityRepository;
 import com.telegrambot.marketplace.service.entity.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional
     public City save(final City city) {
         return cityRepository.save(city);
     }

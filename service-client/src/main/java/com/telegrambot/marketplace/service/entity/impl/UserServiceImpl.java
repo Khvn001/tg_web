@@ -13,6 +13,7 @@ import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final BasketRepository basketRepository;
 
     @Override
+    @Transactional
     public User findUserByUpdate(final ClassifiedUpdate classifiedUpdate) {
 
         // Проверим, существует ли этот пользователь.
@@ -61,31 +63,31 @@ public class UserServiceImpl implements UserService {
             user.setChatId(classifiedUpdate.getUserId());
             user.setUserName(classifiedUpdate.getUserName());
             log.info(user.toString());
-            User userRes = userRepository.save(user);
-            log.info(userRes.toString());
+            User savedUser = userRepository.save(user);
+            log.info(savedUser.toString());
 
             State state = new State();
             state.setStateType(StateType.CREATE_PASSWORD);
-            state.setUser(user);
+            state.setUser(savedUser);
             log.info(state.toString());
-            State stateRes = stateRepository.save(state);
-            log.info(stateRes.toString());
+            State savedState = stateRepository.save(state);
+            log.info(savedState.toString());
 
             Basket basket = new Basket();
             basket.setUser(user);
             basket.setTotalSum(BigDecimal.ZERO);
             log.info(basket.toString());
-            Basket basketRes = basketRepository.save(basket);
-            log.info(basketRes.toString());
+            Basket savedBasket = basketRepository.save(basket);
+            log.info(savedBasket.toString());
 
-            user.setState(state);
-            user.setBasket(basket);
-            User res = userRepository.save(user);
-            log.info(res.toString());
+            user.setState(savedState);
+            user.setBasket(savedBasket);
+            User finalUser = userRepository.save(savedUser);
+            log.info(finalUser.toString());
 
-            log.info("New User: {}", user.getChatId());
+            log.info("New User: {}", finalUser.getChatId());
 
-            return user;
+            return finalUser;
         } catch (Exception e) {
             log.error("USER NOT CREATED {}", e.getMessage());
         }
@@ -94,6 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User save(final User user) {
         return userRepository.save(user);
     }
@@ -104,6 +107,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void addUserBalance(final User user, final BigDecimal amount) {
         user.setBalance(user.getBalance().add(amount));
         userRepository.save(user);
