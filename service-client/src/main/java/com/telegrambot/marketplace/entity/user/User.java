@@ -49,7 +49,7 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(name= "chat_id", unique = true, nullable = false)
     private Long chatId;
 
     @Column(nullable = false)
