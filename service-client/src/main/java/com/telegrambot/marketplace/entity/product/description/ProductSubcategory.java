@@ -52,14 +52,17 @@ public class ProductSubcategory {
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_category_id")
+    @ToString.Exclude
     private ProductCategory productCategory;
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,

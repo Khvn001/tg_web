@@ -52,10 +52,12 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_category_id")
+    @ToString.Exclude
     private ProductCategory productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_subcategory_id")
+    @ToString.Exclude
     private ProductSubcategory productSubcategory;
 
     @Column(columnDefinition = "TEXT")
@@ -68,6 +70,7 @@ public class Product {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

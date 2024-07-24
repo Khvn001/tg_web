@@ -56,10 +56,12 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @ToString.Exclude
     private Product product;
 
     @Column(nullable = false)
@@ -67,22 +69,27 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_subcategory_id")
+    @ToString.Exclude
     private ProductSubcategory productSubcategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_category_id")
+    @ToString.Exclude
     private ProductCategory productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
+    @ToString.Exclude
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
+    @ToString.Exclude
     private City city;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")
+    @ToString.Exclude
     private District district;
 
     @Column(nullable = false)
@@ -93,9 +100,11 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "basket_id")
+    @ToString.Exclude
     private Basket basket;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<ProductPortion> productPortions = new ArrayList<>();
 
     @Column(name = "created_at")

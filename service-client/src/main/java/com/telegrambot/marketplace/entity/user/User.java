@@ -59,14 +59,17 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
+    @ToString.Exclude
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
+    @ToString.Exclude
     private City city;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn
+    @ToString.Exclude
     private State state;
 
     @Column(nullable = false)

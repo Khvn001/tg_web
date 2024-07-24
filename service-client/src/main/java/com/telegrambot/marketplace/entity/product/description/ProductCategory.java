@@ -48,9 +48,11 @@ public class ProductCategory {
     private boolean allowed;
 
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     List<ProductSubcategory> productSubcategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     List<ProductInventoryCity> productInventoryCityList = new ArrayList<>();
 
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

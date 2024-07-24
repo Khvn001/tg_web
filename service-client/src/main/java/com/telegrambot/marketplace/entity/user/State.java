@@ -38,6 +38,7 @@ public class State {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn
+    @ToString.Exclude
     private User user;
 
     public boolean inState() {

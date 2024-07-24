@@ -46,22 +46,27 @@ public class ProductInventoryCity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @ToString.Exclude
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_subcategory_id", nullable = false)
+    @ToString.Exclude
     private ProductSubcategory productSubcategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_category_id", nullable = false)
+    @ToString.Exclude
     private ProductCategory productCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
+    @ToString.Exclude
     private City city;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
+    @ToString.Exclude
     private Country country;
 
     @Column(nullable = false, precision = 19, scale = 2)

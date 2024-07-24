@@ -48,10 +48,12 @@ public class District {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
+    @ToString.Exclude
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
+    @ToString.Exclude
     private City city;
 
     @Column(name = "is_allowed", nullable = false)
