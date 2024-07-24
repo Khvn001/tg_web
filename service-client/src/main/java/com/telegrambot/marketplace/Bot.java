@@ -25,6 +25,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final @NotNull Update update) {
+        log.info("Update received:");
         //Проверим, работает ли наш бот.
         log.info(update.getMessage().getText());
     }

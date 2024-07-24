@@ -5,6 +5,7 @@ import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.TelegramType;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 @Component
+@Slf4j
 public class HandlersMap {
     private final EnumMap<TelegramType, List<Handler>> hashMap = new EnumMap<>(TelegramType.class);
     private final List<Handler> handlers;
@@ -30,11 +32,14 @@ public class HandlersMap {
             }
             hashMap.get(handler.getHandleType()).add(handler);
         }
+        log.info(hashMap.toString());
 
         hashMap.values().forEach(h -> h.sort((o1, o2) -> o2.priority() - o1.priority()));
     }
 
     public Answer execute(final ClassifiedUpdate classifiedUpdate, final User user) {
+        log.info(classifiedUpdate.getLog());
+        log.info(user.toString());
         if (!hashMap.containsKey(classifiedUpdate.getTelegramType())) {
             return new Answer();
         }

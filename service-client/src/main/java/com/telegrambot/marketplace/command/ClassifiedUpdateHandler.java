@@ -5,10 +5,12 @@ import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.service.entity.UserService;
 import com.telegrambot.marketplace.config.HandlersMap;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ClassifiedUpdateHandler {
 
     private final UserService userService;
@@ -16,6 +18,7 @@ public class ClassifiedUpdateHandler {
     private final HandlersMap commandMap;
 
     public Answer request(final ClassifiedUpdate classifiedUpdate) {
+        log.info(classifiedUpdate.getLog());
         return commandMap.execute(classifiedUpdate,
                 userService.findUserByUpdate(classifiedUpdate));
     }

@@ -28,10 +28,12 @@ import com.telegrambot.marketplace.command.user.pathway.StartCommand;
 import com.telegrambot.marketplace.command.user.pathway.SubcategoryCommand;
 import com.telegrambot.marketplace.command.user.profile.PasswordCommand;
 import com.telegrambot.marketplace.command.user.profile.ProfileInfoViewCommand;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Slf4j
 public class CommandConfig {
 
     @Bean
@@ -102,6 +104,8 @@ public class CommandConfig {
         handler.registerAdminCommand("/admin_statistics_", statisticsCommand);
 
         // Add other commands as needed
+
+        log.info(handler.toString());
 
         return handler;
     }

@@ -20,6 +20,7 @@ public class TelegramBotApplication {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(ctx.getBean("bot", Bot.class));
+            log.info("Bot started");
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }

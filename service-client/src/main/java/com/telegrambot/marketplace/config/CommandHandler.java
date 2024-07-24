@@ -9,6 +9,7 @@ import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class CommandHandler extends AbstractHandler {
 
     private final Map<String, AdminCommand> adminCommands = new HashMap<>();
@@ -25,7 +27,8 @@ public class CommandHandler extends AbstractHandler {
     @Override
     public Answer getAnswer(final User user, final ClassifiedUpdate update) {
         String command = update.getCommandName();
-
+        log.info(command);
+        log.info(user.toString());
         if (UserType.ADMIN.equals(user.getPermissions())) {
             AdminCommand adminCommand = adminCommands.get(command);
             if (adminCommand != null) {
@@ -60,6 +63,7 @@ public class CommandHandler extends AbstractHandler {
 
     @Override
     protected HashMap<Object, Command> createMap() {
+        log.info(String.valueOf(hashMap));
         return hashMap;
     }
 

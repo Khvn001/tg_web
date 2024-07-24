@@ -2,6 +2,7 @@ package com.telegrambot.marketplace.dto;
 
 import com.telegrambot.marketplace.enums.TelegramType;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Getter
+@Slf4j
 public class ClassifiedUpdate {
     private final TelegramType telegramType; // enum, чтобы всё выглядило красиво
 
@@ -157,7 +159,8 @@ public class ClassifiedUpdate {
 
     //Лог
     public String getLog() {
-
+        log.info("USER_ID : {}\nUSER_NAME : {}\nTYPE : {}\nARGS : {}\nCOMMAND_NAME : {}",
+                getUserId(), getName(), getTelegramType(), getArgs().toString(), getCommandName());
         return "USER_ID : " + getUserId() +
                 "\nUSER_NAME : " + getName() +
                 "\nTYPE : " + getTelegramType() +
