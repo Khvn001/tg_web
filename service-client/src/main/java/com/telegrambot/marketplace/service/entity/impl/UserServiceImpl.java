@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
             State state = new State();
             state.setStateType(StateType.CREATE_PASSWORD);
             state.setUser(user);
-
             stateRepository.save(state);
 
             Basket basket = new Basket();
