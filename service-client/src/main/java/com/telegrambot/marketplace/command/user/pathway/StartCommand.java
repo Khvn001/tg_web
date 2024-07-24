@@ -29,6 +29,7 @@ import com.telegrambot.marketplace.config.CommandHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,7 @@ import java.util.Objects;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class StartCommand implements Command {
 
     private final UserService userService;
@@ -72,6 +74,7 @@ public class StartCommand implements Command {
     @SneakyThrows
     @Override
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        log.info("/start command pressed");
         User newOrExistingUser = userService.findUserByUpdate(update);
 
         if (Objects.equals(newOrExistingUser.getPassword(), "")) {
