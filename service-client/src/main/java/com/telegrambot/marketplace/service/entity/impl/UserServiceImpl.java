@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
             user.setDiscount(0L);
             user.setChatId(classifiedUpdate.getUserId());
             user.setUserName(classifiedUpdate.getUserName());
+            userRepository.save(user);
 
             State state = new State();
             state.setStateType(StateType.CREATE_PASSWORD);
