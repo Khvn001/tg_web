@@ -1,5 +1,6 @@
 package com.telegrambot.marketplace.config;
 
+import com.telegrambot.marketplace.command.TextCommand;
 import com.telegrambot.marketplace.command.admin.StatisticsCommand;
 import com.telegrambot.marketplace.command.admin.add.AddCityCommand;
 import com.telegrambot.marketplace.command.admin.add.AddCountryCommand;
@@ -22,11 +23,9 @@ import com.telegrambot.marketplace.command.user.pathway.CategoryCommand;
 import com.telegrambot.marketplace.command.user.pathway.CityCommand;
 import com.telegrambot.marketplace.command.user.pathway.CountryCommand;
 import com.telegrambot.marketplace.command.user.pathway.DistrictCommand;
-import com.telegrambot.marketplace.command.user.pathway.OrderCommand;
 import com.telegrambot.marketplace.command.user.pathway.ProductCommand;
 import com.telegrambot.marketplace.command.user.pathway.StartCommand;
 import com.telegrambot.marketplace.command.user.pathway.SubcategoryCommand;
-import com.telegrambot.marketplace.command.user.profile.PasswordCommand;
 import com.telegrambot.marketplace.command.user.profile.ProfileInfoViewCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -63,8 +62,7 @@ public class CommandConfig {
             final CategoryCommand categoryCommand,
             final SubcategoryCommand subcategoryCommand,
             final ProductCommand productCommand,
-            final OrderCommand orderCommand,
-            final PasswordCommand passwordCommand,
+            final TextCommand textCommand,
             final ProfileInfoViewCommand profileInfoViewCommand) {
 
         CommandHandler handler = new CommandHandler();
@@ -82,8 +80,7 @@ public class CommandConfig {
         handler.registerUserCommand("/country_", countryCommand);
         handler.registerUserCommand("/city_", cityCommand);
         handler.registerUserCommand("/district_", districtCommand);
-        handler.registerUserCommand("TEXT", orderCommand);
-        handler.registerUserCommand("TEXT", passwordCommand);
+        handler.registerUserCommand("TEXT", textCommand);
         handler.registerUserCommand("/profile_", profileInfoViewCommand);
 
         // Register admin commands

@@ -1,12 +1,14 @@
-package com.telegrambot.marketplace.command.user.pathway;
+package com.telegrambot.marketplace.command;
 
-import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
+import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.product.description.Product;
+import com.telegrambot.marketplace.entity.user.State;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.ProductCategoryName;
@@ -15,15 +17,17 @@ import com.telegrambot.marketplace.enums.StateType;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
-import com.telegrambot.marketplace.service.entity.CityService;
+import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.DistrictService;
 import com.telegrambot.marketplace.service.entity.OrderService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.ProductService;
-import com.telegrambot.marketplace.config.CommandHandler;
+import com.telegrambot.marketplace.service.entity.StateService;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.math.BigDecimal;
@@ -32,14 +36,15 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class OrderCommand implements Command {
-
+public class TextCommand implements Command {
+    private final UserService userService;
+    private final StateService stateService;
+    private final CountryService countryService;
     private final ProductPortionService productPortionService;
     private final OrderService orderService;
     private final BasketService basketService;
     private final DistrictService districtService;
     private final ProductService productService;
-    private final CityService cityService;
 
     private static final int ZERO_NUMBER = 0;
     private static final int ONE_NUMBER = 1;
@@ -58,9 +63,12 @@ public class OrderCommand implements Command {
         return "TEXT";
     }
 
-    @SneakyThrows
     @Override
+    @SneakyThrows
+    @Transactional
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
+        User newUser = userService.findUserByUpdate(update);
+
         if (UserType.ADMIN.equals(user.getPermissions())
                 || UserType.COURIER.equals(user.getPermissions())
                 || UserType.MODERATOR.equals(user.getPermissions())) {
@@ -70,7 +78,56 @@ public class OrderCommand implements Command {
                     .build();
         }
 
-        if (StateType.ORDER.equals(user.getState().getStateType())) {
+        if (StateType.CREATE_PASSWORD.equals(newUser.getState().getStateType()) && newUser.getPassword() == null) {
+            // User is setting the password
+            newUser.setPassword(update.getUpdate().getMessage().getText());
+            State userNewState = newUser.getState();
+            userNewState.setStateType(StateType.ENTER_REFERRAL);
+            stateService.save(userNewState);
+            userService.save(newUser);
+
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Password set successfully! If you have referral, please type referral User's hashName:")
+                    .build();
+        } else if (StateType.ENTER_REFERRAL.equals(newUser.getState().getStateType())) {
+            // User is entering referral
+            String referralUsername = update.getUpdate().getMessage().getText();
+            if (!"no".equalsIgnoreCase(referralUsername)) {
+                User referrer = userService.findByChatId(referralUsername);
+                if (referrer != null) {
+                    List<User> referredUsersReferrals = referrer.getReferrals();
+                    referredUsersReferrals.add(newUser);
+                    referrer.setReferrals(referredUsersReferrals);
+                    userService.save(referrer);
+                    newUser.setReferrer(referrer);
+                    newUser.getState().setStateType(StateType.NONE);
+                    stateService.save(newUser.getState());
+                    userService.save(newUser);
+                    return new SendMessageBuilder()
+                            .chatId(user.getChatId())
+                            .message("Referral set successfully! Please select a country:")
+                            .buttons(getCountryButtons())
+                            .build();
+                } else {
+                    return new SendMessageBuilder()
+                            .chatId(user.getChatId())
+                            .message("Referral username not found. Please try again or type 'no' to skip.")
+                            .build();
+                }
+
+            } else {
+                newUser.getState().setStateType(StateType.NONE);
+                stateService.save(newUser.getState());
+                userService.save(newUser);
+
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("Referral skipped. Please select a country:")
+                        .buttons(getCountryButtons())
+                        .build();
+            }
+        } else if (StateType.ORDER.equals(user.getState().getStateType())) {
             String[] parts = user.getState().getValue().split("_");
             Long districtId = Long.parseLong(parts[ZERO_NUMBER]);
             District district = districtService.findById(districtId);
@@ -117,7 +174,25 @@ public class OrderCommand implements Command {
                     .buttons(getBasketOptionsButtons(cityId, countryName))
                     .build();
         }
-        return null;
+
+        // Default response
+        return new SendMessageBuilder()
+                .chatId(user.getChatId())
+                .message("Command not recognized.")
+                .build();
+    }
+
+    private List<InlineKeyboardButton> getCountryButtons() {
+        // Fetch cities from the database with boolean field is_allowed = true
+        List<Country> countries = countryService.findAllByAllowedIsTrue();
+        List<InlineKeyboardButton> buttons = new ArrayList<>();
+        for (Country country : countries) {
+            buttons.add(InlineKeyboardButton.builder()
+                    .text(String.valueOf(country.getName()))
+                    .callbackData("/country_" + country.getName())
+                    .build());
+        }
+        return buttons;
     }
 
     private List<InlineKeyboardButton> getMaxAmountButtons(final Long districtId, final Long productId,
@@ -154,4 +229,5 @@ public class OrderCommand implements Command {
                 .build());
         return buttons;
     }
+
 }
