@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SendMessageBuilder {
-    private SendMessage sendMessage;
+    private SendMessage sendMessage = new SendMessage();
 
     public SendMessageBuilder chatId(final Long chatId) {
         this.sendMessage.setChatId(chatId);
