@@ -39,7 +39,6 @@ public class HandlersMap {
 
     public Answer execute(final ClassifiedUpdate classifiedUpdate, final User user) {
         log.info(classifiedUpdate.getLog());
-        log.info(user.toString());
         if (!hashMap.containsKey(classifiedUpdate.getTelegramType())) {
             return new Answer();
         }
