@@ -60,21 +60,28 @@ public class UserServiceImpl implements UserService {
             user.setDiscount(0L);
             user.setChatId(classifiedUpdate.getUserId());
             user.setUserName(classifiedUpdate.getUserName());
-            userRepository.save(user);
+            log.info(user.toString());
+            User userRes = userRepository.save(user);
+            log.info(userRes.toString());
 
             State state = new State();
             state.setStateType(StateType.CREATE_PASSWORD);
             state.setUser(user);
-            stateRepository.save(state);
+            log.info(state.toString());
+            State stateRes = stateRepository.save(state);
+            log.info(stateRes.toString());
 
             Basket basket = new Basket();
             basket.setUser(user);
             basket.setTotalSum(BigDecimal.ZERO);
-            basketRepository.save(basket);
+            log.info(basket.toString());
+            Basket basketRes = basketRepository.save(basket);
+            log.info(basketRes.toString());
 
             user.setState(state);
             user.setBasket(basket);
-            userRepository.save(user);
+            User res = userRepository.save(user);
+            log.info(res.toString());
 
             log.info("New User: {}", user.getChatId());
 
