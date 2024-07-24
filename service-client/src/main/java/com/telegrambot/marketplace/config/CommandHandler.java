@@ -28,7 +28,7 @@ public class CommandHandler extends AbstractHandler {
     public Answer getAnswer(final User user, final ClassifiedUpdate update) {
         String command = update.getCommandName();
         log.info(command);
-        if (UserType.ADMIN.equals(user.getPermissions())) {
+        if (user != null && UserType.ADMIN.equals(user.getPermissions())) {
             AdminCommand adminCommand = adminCommands.get(command);
             if (adminCommand != null) {
                 return adminCommand.getAnswer(update, user);
