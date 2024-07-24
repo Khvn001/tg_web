@@ -65,7 +65,7 @@ public class User {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn
     private State state;
 

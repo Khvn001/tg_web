@@ -51,14 +51,14 @@ public class ProductSubcategory {
     private boolean allowed;
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
+            orphanRemoval = true, fetch = FetchType.LAZY)
     List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "productSubcategory", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
+            orphanRemoval = true, fetch = FetchType.LAZY)
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_category_id")
     private ProductCategory productCategory;
 

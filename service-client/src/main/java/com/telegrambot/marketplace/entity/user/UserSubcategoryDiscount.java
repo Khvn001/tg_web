@@ -37,11 +37,11 @@ public class UserSubcategoryDiscount {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_subcategory_id", nullable = false)
     private ProductSubcategory productSubcategory;
 
