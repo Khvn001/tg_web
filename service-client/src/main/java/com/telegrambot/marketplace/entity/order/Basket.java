@@ -42,7 +42,7 @@ public class Basket {
     private List<Order> orders;
 
     @Column(name = "total_sum", nullable = false)
-    private BigDecimal totalSum;
+    private BigDecimal totalSum = BigDecimal.ZERO;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
