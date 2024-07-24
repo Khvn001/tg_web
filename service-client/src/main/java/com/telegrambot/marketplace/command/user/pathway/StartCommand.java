@@ -76,6 +76,7 @@ public class StartCommand implements Command {
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
         log.info("/start command pressed");
         User newOrExistingUser = userService.findUserByUpdate(update);
+        log.info(newOrExistingUser.toString());
 
         if (Objects.equals(newOrExistingUser.getPassword(), "")) {
             // New user, ask to set a password
