@@ -47,7 +47,6 @@ public class Bot extends TelegramLongPollingBot {
 
             // Process the update
             Answer answer = updateHandler.request(classifiedUpdate);
-            log.info(answer.toString());
 
             // Send a response (assuming Answer contains a method to get the response text)
             sendMessage(answer);

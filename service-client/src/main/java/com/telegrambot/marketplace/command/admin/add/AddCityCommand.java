@@ -17,6 +17,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -46,10 +48,11 @@ public class AddCityCommand implements AdminCommand {
         }
 
         String[] args = update.getArgs().getFirst().split(" ");
+        log.info(Arrays.toString(args));
         if (args.length < 2) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Usage: /admin_add_city <country> <city>")
+                    .message("Usage: /admin_add_city_ <country> <city>")
                     .build();
         }
 
