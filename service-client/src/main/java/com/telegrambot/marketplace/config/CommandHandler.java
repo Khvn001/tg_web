@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @AllArgsConstructor
@@ -32,6 +33,8 @@ public class CommandHandler extends AbstractHandler {
             AdminCommand adminCommand = adminCommands.get(command);
             if (adminCommand != null) {
                 return adminCommand.getAnswer(update, user);
+            } else if (Objects.equals(command, "/start")) {
+                return userCommands.get("/start").getAnswer(update, user);
             } else {
                 return new SendMessageBuilder()
                         .chatId(user.getChatId())
