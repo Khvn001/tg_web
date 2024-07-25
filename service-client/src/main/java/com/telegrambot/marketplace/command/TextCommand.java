@@ -33,6 +33,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @AllArgsConstructor
@@ -78,7 +79,8 @@ public class TextCommand implements Command {
                     .build();
         }
 
-        if (StateType.CREATE_PASSWORD.equals(newUser.getState().getStateType()) && newUser.getPassword() == null) {
+        if (StateType.CREATE_PASSWORD.equals(newUser.getState().getStateType())
+                && Objects.equals(newUser.getPassword(), "")) {
             // User is setting the password
             newUser.setPassword(update.getUpdate().getMessage().getText());
             State userNewState = newUser.getState();
