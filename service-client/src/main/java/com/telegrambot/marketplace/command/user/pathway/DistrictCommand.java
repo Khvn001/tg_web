@@ -1,6 +1,7 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.config.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.location.District;
@@ -19,7 +20,6 @@ import com.telegrambot.marketplace.service.entity.DistrictService;
 import com.telegrambot.marketplace.service.entity.OrderService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.ProductService;
-import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class DistrictCommand implements Command {
 
     @Override
     public Class handler() {
-        return CommandHandler.class;
+        return CallbackHandler.class;
     }
 
     @Override

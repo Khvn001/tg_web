@@ -1,6 +1,7 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.config.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.City;
@@ -18,7 +19,6 @@ import com.telegrambot.marketplace.service.entity.ProductCategoryService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.ProductService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -47,7 +47,7 @@ public class ProductCommand implements Command {
 
     @Override
     public Class handler() {
-        return CommandHandler.class;
+        return CallbackHandler.class;
     }
 
     @Override

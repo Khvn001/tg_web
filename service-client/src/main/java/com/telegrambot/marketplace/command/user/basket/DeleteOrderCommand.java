@@ -1,13 +1,13 @@
 package com.telegrambot.marketplace.command.user.basket;
 
 import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.config.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
-import com.telegrambot.marketplace.config.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class DeleteOrderCommand implements Command {
 
     @Override
     public Class handler() {
-        return CommandHandler.class;
+        return CallbackHandler.class;
     }
 
     @Override

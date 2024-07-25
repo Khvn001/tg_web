@@ -1,6 +1,7 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
+import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
@@ -25,7 +26,6 @@ import com.telegrambot.marketplace.service.entity.ProductService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
 import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
-import com.telegrambot.marketplace.config.CommandHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
