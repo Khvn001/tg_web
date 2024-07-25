@@ -47,7 +47,7 @@ public class AddCityCommand implements AdminCommand {
                     .build();
         }
 
-        String[] args = update.getArgs().getFirst().split(" ");
+        String[] args = update.getArgs().toArray(new String[0]);
         log.info(Arrays.toString(args));
         if (args.length < 2) {
             return new SendMessageBuilder()

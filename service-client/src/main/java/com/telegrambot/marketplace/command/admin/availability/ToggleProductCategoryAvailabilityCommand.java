@@ -41,7 +41,7 @@ public class ToggleProductCategoryAvailabilityCommand implements AdminCommand {
                     .build();
         }
 
-        String[] args = update.getArgs().getFirst().split(" ");
+        String[] args = update.getArgs().toArray(new String[0]);
         if (args.length < 1) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())

@@ -47,7 +47,7 @@ public class AddProductCommand implements AdminCommand {
                     .build();
         }
 
-        String[] args = update.getArgs().getFirst().split(" ");
+        String[] args = update.getArgs().toArray(new String[0]);
         if (args.length < ARGS_SIZE) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())

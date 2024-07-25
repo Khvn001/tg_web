@@ -44,7 +44,7 @@ public class ToggleCityAvailabilityCommand implements AdminCommand {
                     .build();
         }
 
-        String[] args = update.getArgs().getFirst().split(" ");
+        String[] args = update.getArgs().toArray(new String[0]);
         if (args.length < 2) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId()).message("Usage: /admin_toggle_city_availability_ <country> <city>")

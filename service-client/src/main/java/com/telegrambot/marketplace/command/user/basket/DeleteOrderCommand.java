@@ -47,7 +47,7 @@ public class DeleteOrderCommand implements Command {
         }
 
         String[] parts = update.getCommandName().split("_");
-        Long orderId = Long.parseLong(parts[1]);
+        Long orderId = Long.parseLong(parts[2]);
         basketService.deleteOrderFromBasket(user, orderId);
         // Return to the menu with orders list (/orders)
         return new SendMessageBuilder()
