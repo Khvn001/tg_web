@@ -1,6 +1,6 @@
 package com.telegrambot.marketplace.command;
 
-import com.telegrambot.marketplace.config.CommandHandler;
+import com.telegrambot.marketplace.config.TextHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
@@ -55,7 +55,7 @@ public class TextCommand implements Command {
 
     @Override
     public Class handler() {
-        return CommandHandler.class;
+        return TextHandler.class;
     }
 
     @Override

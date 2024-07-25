@@ -65,45 +65,47 @@ public class CommandConfig {
             final TextCommand textCommand,
             final ProfileInfoViewCommand profileInfoViewCommand) {
 
-        CommandHandler handler = new CommandHandler();
+        CommandHandler commandHandler = new CommandHandler();
+        TextHandler textHandler = new TextHandler();
+
+        textHandler.registerTextCommand("TEXT", textCommand);
 
         // Register user commands
-        handler.registerUserCommand("/start", startCommand);
-        handler.registerUserCommand("/basket_", basketCommand);
-        handler.registerUserCommand("/buyBasket_", buyBasketCommand);
-        handler.registerUserCommand("/delete_order_", deleteOrderCommand);
-        handler.registerUserCommand("/delete_orders_", deleteOrdersCommand);
-        handler.registerUserCommand("/orders_", ordersCommand);
-        handler.registerUserCommand("/category_", categoryCommand);
-        handler.registerUserCommand("/subcategory_", subcategoryCommand);
-        handler.registerUserCommand("/product_", productCommand);
-        handler.registerUserCommand("/country_", countryCommand);
-        handler.registerUserCommand("/city_", cityCommand);
-        handler.registerUserCommand("/district_", districtCommand);
-        handler.registerUserCommand("TEXT", textCommand);
-        handler.registerUserCommand("/profile_", profileInfoViewCommand);
+        commandHandler.registerUserCommand("/start", startCommand);
+        commandHandler.registerUserCommand("/basket_", basketCommand);
+        commandHandler.registerUserCommand("/buyBasket_", buyBasketCommand);
+        commandHandler.registerUserCommand("/delete_order_", deleteOrderCommand);
+        commandHandler.registerUserCommand("/delete_orders_", deleteOrdersCommand);
+        commandHandler.registerUserCommand("/orders_", ordersCommand);
+        commandHandler.registerUserCommand("/category_", categoryCommand);
+        commandHandler.registerUserCommand("/subcategory_", subcategoryCommand);
+        commandHandler.registerUserCommand("/product_", productCommand);
+        commandHandler.registerUserCommand("/country_", countryCommand);
+        commandHandler.registerUserCommand("/city_", cityCommand);
+        commandHandler.registerUserCommand("/district_", districtCommand);
+        commandHandler.registerUserCommand("/profile_", profileInfoViewCommand);
 
         // Register admin commands
-        handler.registerAdminCommand("/admin_add_product_category_", addProductCategoryAdminCommand);
-        handler.registerAdminCommand("/admin_add_product_subcategory_", addProductSubcategoryAdminCommand);
-        handler.registerAdminCommand("/admin_add_product_", addProductCommand);
-        handler.registerAdminCommand("/admin_add_country_", addCountryCommand);
-        handler.registerAdminCommand("/admin_add_city_", addCityCommand);
-        handler.registerAdminCommand("/admin_add_district_", addDistrictCommand);
-        handler.registerAdminCommand("/admin_toggle_country_availability_", toggleCountryAvailabilityCommand);
-        handler.registerAdminCommand("/admin_toggle_city_availability_", toggleCityAvailabilityCommand);
-        handler.registerAdminCommand("/admin_toggle_district_availability_", toggleDistrictAvailabilityCommand);
-        handler.registerAdminCommand("/admin_toggle_category_availability_",
+        commandHandler.registerAdminCommand("/admin_add_product_category_", addProductCategoryAdminCommand);
+        commandHandler.registerAdminCommand("/admin_add_product_subcategory_", addProductSubcategoryAdminCommand);
+        commandHandler.registerAdminCommand("/admin_add_product_", addProductCommand);
+        commandHandler.registerAdminCommand("/admin_add_country_", addCountryCommand);
+        commandHandler.registerAdminCommand("/admin_add_city_", addCityCommand);
+        commandHandler.registerAdminCommand("/admin_add_district_", addDistrictCommand);
+        commandHandler.registerAdminCommand("/admin_toggle_country_availability_", toggleCountryAvailabilityCommand);
+        commandHandler.registerAdminCommand("/admin_toggle_city_availability_", toggleCityAvailabilityCommand);
+        commandHandler.registerAdminCommand("/admin_toggle_district_availability_", toggleDistrictAvailabilityCommand);
+        commandHandler.registerAdminCommand("/admin_toggle_category_availability_",
                 toggleProductCategoryAvailabilityCommand);
-        handler.registerAdminCommand("/admin_toggle_subcategory_availability_",
+        commandHandler.registerAdminCommand("/admin_toggle_subcategory_availability_",
                 toggleProductSubcategoryAvailabilityCommand);
-        handler.registerAdminCommand("/admin_toggle_product_availability_", toggleProductAvailabilityCommand);
-        handler.registerAdminCommand("/admin_statistics_", statisticsCommand);
+        commandHandler.registerAdminCommand("/admin_toggle_product_availability_", toggleProductAvailabilityCommand);
+        commandHandler.registerAdminCommand("/admin_statistics_", statisticsCommand);
 
         // Add other commands as needed
+        log.info(textHandler.toString());
+        log.info(commandHandler.toString());
 
-        log.info(handler.toString());
-
-        return handler;
+        return commandHandler;
     }
 }
