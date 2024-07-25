@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -35,12 +36,27 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(final @NotNull Update update) {
         log.info("Update received:");
         //Проверим, работает ли наш бот.
-        log.info(update.getMessage().getText());
-
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             log.info("Message text: " + messageText);
+
+            // Convert Telegram Update to ClassifiedUpdate
+            ClassifiedUpdate classifiedUpdate = new ClassifiedUpdate(update);
+            log.info(classifiedUpdate.toString());
+
+            // Process the update
+            Answer answer = updateHandler.request(classifiedUpdate);
+            log.info(answer.toString());
+
+            // Send a response (assuming Answer contains a method to get the response text)
+            sendMessage(answer);
+        }
+
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            String data = callbackQuery.getData();
+            log.info(data);
 
             // Convert Telegram Update to ClassifiedUpdate
             ClassifiedUpdate classifiedUpdate = new ClassifiedUpdate(update);
