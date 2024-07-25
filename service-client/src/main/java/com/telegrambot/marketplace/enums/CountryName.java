@@ -1,5 +1,8 @@
 package com.telegrambot.marketplace.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum CountryName {
     USA("United States of America"),
     AFGHANISTAN("Afghanistan"),
@@ -208,10 +211,6 @@ public enum CountryName {
 
     CountryName(final String country) {
         this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
     }
 
 }

@@ -8,6 +8,8 @@ import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.enums.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -55,6 +57,7 @@ public class User {
     private Long chatId;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserType permissions;
 
     @ManyToOne(fetch = FetchType.LAZY)

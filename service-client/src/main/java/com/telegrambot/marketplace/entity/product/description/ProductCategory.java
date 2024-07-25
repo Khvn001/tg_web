@@ -8,6 +8,8 @@ import com.telegrambot.marketplace.enums.ProductCategoryName;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,6 +44,7 @@ public class ProductCategory {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Enumerated(EnumType.STRING)
     private ProductCategoryName name;
 
     @Column(name = "is_allowed", nullable = false)

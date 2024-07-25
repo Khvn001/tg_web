@@ -1,5 +1,8 @@
 package com.telegrambot.marketplace.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ProductCategoryName {
     ORGANIC("Органика"),
     SYNTHETIC("Синтетика");
@@ -10,7 +13,4 @@ public enum ProductCategoryName {
         this.category = category;
     }
 
-    public String getCategory() {
-        return category;
-    }
 }

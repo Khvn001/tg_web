@@ -1,5 +1,8 @@
 package com.telegrambot.marketplace.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ProductSubcategoryName {
     CANNABIS("Марихуана"),
     COCAINE("Кокаин"),
@@ -21,10 +24,6 @@ public enum ProductSubcategoryName {
 
     ProductSubcategoryName(final String subcategory) {
         this.subcategory = subcategory;
-    }
-
-    public String getSubcategory() {
-        return subcategory;
     }
 
 }
