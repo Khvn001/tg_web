@@ -62,13 +62,9 @@ public class CommandConfig {
             final CategoryCommand categoryCommand,
             final SubcategoryCommand subcategoryCommand,
             final ProductCommand productCommand,
-            final TextCommand textCommand,
             final ProfileInfoViewCommand profileInfoViewCommand) {
 
         CommandHandler commandHandler = new CommandHandler();
-        TextHandler textHandler = new TextHandler();
-
-        textHandler.registerTextCommand("TEXT", textCommand);
 
         // Register user commands
         commandHandler.registerUserCommand("/start", startCommand);
@@ -103,9 +99,17 @@ public class CommandConfig {
         commandHandler.registerAdminCommand("/admin_statistics_", statisticsCommand);
 
         // Add other commands as needed
-        log.info(textHandler.toString());
         log.info(commandHandler.toString());
 
         return commandHandler;
+    }
+
+    @Bean
+    public TextHandler textHandler(final TextCommand textCommand) {
+        TextHandler textHandler = new TextHandler();
+        textHandler.registerTextCommand("TEXT", textCommand);
+        log.info(textHandler.toString());
+
+        return textHandler;
     }
 }
