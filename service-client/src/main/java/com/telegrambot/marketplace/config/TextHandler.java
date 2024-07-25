@@ -23,16 +23,7 @@ public class TextHandler extends AbstractHandler {
     public Answer getAnswer(final User user, final ClassifiedUpdate update) {
         String command = update.getCommandName();
         log.info(command);
-
-        Command textCommand = textCommands.get(0);
-        if (textCommand != null) {
-            return textCommand.getAnswer(update, user);
-        } else {
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("Unknown command or You do not have permission.")
-                    .build();
-        }
+        return textCommands.get("TEXT").getAnswer(update, user);
     }
 
     // Methods to register commands
