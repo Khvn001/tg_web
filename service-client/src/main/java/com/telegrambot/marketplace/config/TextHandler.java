@@ -5,7 +5,6 @@ import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.TelegramType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +22,7 @@ public class TextHandler extends AbstractHandler {
     public Answer getAnswer(final User user, final ClassifiedUpdate update) {
         String command = update.getCommandName();
         log.info(command);
+        log.info(user.getState().toString());
         return textCommands.get("TEXT").getAnswer(update, user);
     }
 
