@@ -46,46 +46,46 @@ public class StatisticsCommand implements AdminCommand {
         }
         String command = update.getCommandName();
         String message = switch (command) {
-            case "/product_inventory_city_stats" -> generateProductInventoryCityStatsMessage();
-            case "/product_inventory_district_stats" -> generateProductInventoryDistrictStatsMessage();
-            case "/available_countries" ->
+            case "product_inventory_city_stats" -> generateProductInventoryCityStatsMessage();
+            case "product_inventory_district_stats" -> generateProductInventoryDistrictStatsMessage();
+            case "available_countries" ->
                     generateCountryListMessage(statisticsService.getAvailableCountries(),
                             "Available Countries");
-            case "/unavailable_countries" ->
+            case "unavailable_countries" ->
                     generateCountryListMessage(statisticsService.getUnavailableCountries(),
                             "Unavailable Countries");
-            case "/available_cities" ->
+            case "available_cities" ->
                     generateCityListMessage(statisticsService.getAvailableCities(),
                             "Available Cities");
-            case "/unavailable_cities" ->
+            case "unavailable_cities" ->
                     generateCityListMessage(statisticsService.getUnavailableCities(),
                             "Unavailable Cities");
-            case "/available_districts" ->
+            case "available_districts" ->
                     generateDistrictListMessage(statisticsService.getAvailableDistricts(),
                             "Available Districts");
-            case "/unavailable_districts" ->
+            case "unavailable_districts" ->
                     generateDistrictListMessage(statisticsService.getUnavailableDistricts(),
                             "Unavailable Districts");
-            case "/available_product_categories" ->
+            case "available_product_categories" ->
                     generateProductCategoryListMessage(statisticsService.getAvailableProductCategories(),
                             "Available Product Categories");
-            case "/unavailable_product_categories" ->
+            case "unavailable_product_categories" ->
                     generateProductCategoryListMessage(statisticsService.getUnavailableProductCategories(),
                             "Unavailable Product Categories");
-            case "/available_product_subcategories" ->
+            case "available_product_subcategories" ->
                     generateProductSubcategoryListMessage(statisticsService.getAvailableProductSubcategories(),
                             "Available Product Subcategories");
-            case "/unavailable_product_subcategories" ->
+            case "unavailable_product_subcategories" ->
                     generateProductSubcategoryListMessage(statisticsService.getUnavailableProductSubcategories(),
                             "Unavailable Product Subcategories");
-            case "/available_products" ->
+            case "available_products" ->
                     generateProductListMessage(statisticsService.getAvailableProducts(),
                             "Available Products");
-            case "/unavailable_products" ->
+            case "unavailable_products" ->
                     generateProductListMessage(statisticsService.getUnavailableProducts(),
                             "Unavailable Products");
-            case "/user_count" -> "Number of all users: " + statisticsService.getUserCount();
-            case "/sum_user_balances" -> "Sum of all user balances: " + statisticsService.getSumOfUserBalances();
+            case "user_count" -> "Number of all users: " + statisticsService.getUserCount();
+            case "sum_user_balances" -> "Sum of all user balances: " + statisticsService.getSumOfUserBalances();
             default -> "Unknown statistics command.";
         };
         return new SendMessageBuilder()

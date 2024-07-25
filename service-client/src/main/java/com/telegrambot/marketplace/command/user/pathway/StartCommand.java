@@ -113,7 +113,35 @@ public class StartCommand implements Command {
         } else if (UserType.MODERATOR.equals(user.getPermissions())) {
             return null;
         } else if (UserType.ADMIN.equals(user.getPermissions())) {
-            return new SendMessageBuilder().chatId(user.getChatId()).message("Welcome Admin").build();
+            return new SendMessageBuilder().chatId(user.getChatId()).message("Welcome Admin! List of Commands: " +
+                    "/admin_add_country_ <country>, " +
+                    "/admin_add_city_ <country> <city>, " +
+                    "/admin_add_district_ <country> <city> <district>, " +
+                    "/admin_add_product_category_ <category>, " +
+                    "/admin_add_product_subcategory_ <category> <subcategory>, " +
+                    "/admin_add_product_ <subcategory> <name> <price>, " +
+                    "/admin_toggle_country_availability_ <country>, " +
+                    "/admin_toggle_city_availability_ <country> <city>, " +
+                    "/admin_toggle_district_availability_ <country> <city> <district>, " +
+                    "/admin_toggle_category_availability_ <category>, " +
+                    "/admin_toggle_subcategory_availability_ <subcategory>, " +
+                    "/admin_toggle_product_availability_ <subcategory> <product>, " +
+                    "/admin_statistics_product_inventory_city_stats," +
+                    "/admin_statistics_product_inventory_district_stats" +
+                    "/admin_statistics_available_countries" +
+                    "/admin_statistics_unavailable_countries" +
+                    "/admin_statistics_available_cities" +
+                    "/admin_statistics_unavailable_cities" +
+                    "/admin_statistics_available_districts" +
+                    "/admin_statistics_unavailable_districts" +
+                    "/admin_statistics_available_product_categories" +
+                    "/admin_statistics_unavailable_product_categories" +
+                    "/admin_statistics_available_product_subcategories" +
+                    "/admin_statistics_unavailable_product_subcategories" +
+                    "/admin_statistics_available_products" +
+                    "/admin_statistics_unavailable_products" +
+                    "/admin_statistics_user_count" +
+                    "/admin_statistics_sum_user_balances").build();
         }
         return null;
     }

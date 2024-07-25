@@ -16,6 +16,7 @@ import com.telegrambot.marketplace.config.CommandHandler;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CountryCommand implements Command {
 
     private final CountryService countryService;
@@ -54,6 +56,7 @@ public class CountryCommand implements Command {
         }
 
         CountryName countryName = CountryName.valueOf(update.getCommandName().split("_")[1].toUpperCase());
+        log.info(countryName.getCountry());
         user.setCountry(countryService.findByCountryName(countryName));
         userRepository.save(user);
         return new SendMessageBuilder()
@@ -73,6 +76,7 @@ public class CountryCommand implements Command {
                 .build());
         if (country != null) {
             List<City> cities = cityService.findByCountryIdAndAllowed(country.getId());
+            log.info("{} cities found", cities.size());
             for (City city : cities) {
                 if (productInventoryCityService.findAvailableProducts(city) == null) {
                     continue;
