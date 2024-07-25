@@ -23,6 +23,8 @@ public class TextHandler extends AbstractHandler {
         String command = update.getCommandName();
         log.info(command);
         log.info(user.getState().toString());
+        log.info(textCommands.keySet().toString());
+        log.info(textCommands.values().toString());
         return textCommands.get("TEXT").getAnswer(update, user);
     }
 
