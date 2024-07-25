@@ -50,36 +50,12 @@ public class CommandConfig {
             final ToggleProductSubcategoryAvailabilityCommand toggleProductSubcategoryAvailabilityCommand,
             final ToggleProductAvailabilityCommand toggleProductAvailabilityCommand,
             final StatisticsCommand statisticsCommand,
-            final StartCommand startCommand,
-            final BasketCommand basketCommand,
-            final BuyBasketCommand buyBasketCommand,
-            final DeleteOrderCommand deleteOrderCommand,
-            final DeleteOrdersCommand deleteOrdersCommand,
-            final OrdersCommand ordersCommand,
-            final CountryCommand countryCommand,
-            final CityCommand cityCommand,
-            final DistrictCommand districtCommand,
-            final CategoryCommand categoryCommand,
-            final SubcategoryCommand subcategoryCommand,
-            final ProductCommand productCommand,
-            final ProfileInfoViewCommand profileInfoViewCommand) {
+            final StartCommand startCommand) {
 
         CommandHandler commandHandler = new CommandHandler();
 
         // Register user commands
         commandHandler.registerUserCommand("/start", startCommand);
-        commandHandler.registerUserCommand("/basket_", basketCommand);
-        commandHandler.registerUserCommand("/buyBasket_", buyBasketCommand);
-        commandHandler.registerUserCommand("/delete_order_", deleteOrderCommand);
-        commandHandler.registerUserCommand("/delete_orders_", deleteOrdersCommand);
-        commandHandler.registerUserCommand("/orders_", ordersCommand);
-        commandHandler.registerUserCommand("/category_", categoryCommand);
-        commandHandler.registerUserCommand("/subcategory_", subcategoryCommand);
-        commandHandler.registerUserCommand("/product_", productCommand);
-        commandHandler.registerUserCommand("/country_", countryCommand);
-        commandHandler.registerUserCommand("/city_", cityCommand);
-        commandHandler.registerUserCommand("/district_", districtCommand);
-        commandHandler.registerUserCommand("/profile_", profileInfoViewCommand);
 
         // Register admin commands
         commandHandler.registerAdminCommand("/admin_add_product_category_", addProductCategoryAdminCommand);
@@ -111,5 +87,35 @@ public class CommandConfig {
         log.info(textHandler.toString());
 
         return textHandler;
+    }
+
+    @Bean
+    public CallbackHandler callbackHandler(final BasketCommand basketCommand,
+                                           final BuyBasketCommand buyBasketCommand,
+                                           final DeleteOrderCommand deleteOrderCommand,
+                                           final DeleteOrdersCommand deleteOrdersCommand,
+                                           final OrdersCommand ordersCommand,
+                                           final CountryCommand countryCommand,
+                                           final CityCommand cityCommand,
+                                           final DistrictCommand districtCommand,
+                                           final CategoryCommand categoryCommand,
+                                           final SubcategoryCommand subcategoryCommand,
+                                           final ProductCommand productCommand,
+                                           final ProfileInfoViewCommand profileInfoViewCommand) {
+        CallbackHandler callbackHandler = new CallbackHandler();
+        callbackHandler.registerCallbackCommand("/basket_", basketCommand);
+        callbackHandler.registerCallbackCommand("/buyBasket_", buyBasketCommand);
+        callbackHandler.registerCallbackCommand("/delete_order_", deleteOrderCommand);
+        callbackHandler.registerCallbackCommand("/delete_orders_", deleteOrdersCommand);
+        callbackHandler.registerCallbackCommand("/orders_", ordersCommand);
+        callbackHandler.registerCallbackCommand("/category_", categoryCommand);
+        callbackHandler.registerCallbackCommand("/subcategory_", subcategoryCommand);
+        callbackHandler.registerCallbackCommand("/product_", productCommand);
+        callbackHandler.registerCallbackCommand("/country_", countryCommand);
+        callbackHandler.registerCallbackCommand("/city_", cityCommand);
+        callbackHandler.registerCallbackCommand("/district_", districtCommand);
+        callbackHandler.registerCallbackCommand("/profile_", profileInfoViewCommand);
+        log.info(callbackHandler.toString());
+        return callbackHandler;
     }
 }
