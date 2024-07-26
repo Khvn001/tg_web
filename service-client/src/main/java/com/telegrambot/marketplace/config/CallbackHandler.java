@@ -51,7 +51,7 @@ public class CallbackHandler extends AbstractHandler {
         log.info(callbackCommands.keySet().toString());
         log.info(callbackCommands.values().toString());
 
-        if ("/start".equals(callbackData)) {
+        if (callbackData != null && callbackData.contains("/start")) {
             // Handle /start command here
             return new StartCommand(userService, stateService, countryService, cityService,
                     districtService, productCategoryService, productSubcategoryService,
