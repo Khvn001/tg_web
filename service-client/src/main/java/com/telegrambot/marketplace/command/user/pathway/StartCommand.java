@@ -51,15 +51,6 @@ public class StartCommand implements Command {
     private final UserService userService;
     private final StateService stateService;
     private final CountryService countryService;
-    private final CityService cityService;
-    private final DistrictService districtService;
-    private final ProductCategoryService productCategoryService;
-    private final ProductSubcategoryService productSubcategoryService;
-    private final ProductService productService;
-    private final ProductPortionService productPortionService;
-    private final S3Service s3Service;
-
-    private static final int ARGS_SIZE = 3;
 
     @Override
     public Class handler() {
@@ -102,7 +93,13 @@ public class StartCommand implements Command {
                     .build();
         } else if (UserType.COURIER.equals(user.getPermissions())) {
             if (StateType.ADD_PRODUCT_PORTION.equals(user.getState().getStateType())) {
-                return handleProductPortionForm(update, user);
+                user.getState().setStateType(StateType.PRODUCT_PORTION_COUNTRY_CITY_DISTRICT);
+                stateService.save(user.getState());
+                userService.save(user);
+                return new SendMessageBuilder()
+                        .chatId(user.getChatId())
+                        .message("Please provide the country, city, and district separated by spaces.")
+                        .build();
             } else {
                 return new SendMessageBuilder()
                         .chatId(user.getChatId())
@@ -171,177 +168,6 @@ public class StartCommand implements Command {
                 .callbackData("/start_productportion_form")
                 .build());
         return buttons;
-    }
-
-    private Answer handleProductPortionForm(final ClassifiedUpdate update, final User user) throws Exception {
-        StateType currentState = user.getState().getStateType();
-
-        return switch (currentState) {
-            case PRODUCT_PORTION_COUNTRY_CITY_DISTRICT -> handleCountryCityDistrictStep(update, user);
-            case PRODUCT_PORTION_CATEGORY_SUBCATEGORY_PRODUCT -> handleCategorySubcategoryProductStep(update, user);
-            case PRODUCT_PORTION_LATITUDE_LONGITUDE_AMOUNT -> handleLatitudeLongitudeAmountStep(update, user);
-            case PRODUCT_PORTION_PHOTO -> handlePhotoStep(update, user);
-            default -> new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("Please provide the required information for the ProductPortion.")
-                    .build();
-        };
-    }
-
-    private Answer handleCountryCityDistrictStep(final ClassifiedUpdate update, final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the country, city, and district separated by spaces.")
-                        .build();
-            }
-            Country country = countryService.findByCountryName(CountryName.valueOf(parts[0].toUpperCase()));
-            City city = cityService.findByCountryAndName(country, parts[1]);
-            District district = districtService.findByCountryAndCityAndName(country, city, parts[2]);
-            if (country == null || city == null || district == null) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid country, city, or district. Please try again.")
-                        .build();
-            }
-            productPortionService.saveCountryCityDistrict(user, country, city, district);
-
-            // Move to the next step
-            user.getState().setStateType(StateType.PRODUCT_PORTION_CATEGORY_SUBCATEGORY_PRODUCT);
-            stateService.save(user.getState());
-            userService.save(user);
-
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("Please provide the product category, subcategory, and product separated by spaces.")
-                    .build();
-        }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please provide the country, city, and district separated by spaces.")
-                .build();
-    }
-
-    private Answer handleCategorySubcategoryProductStep(final ClassifiedUpdate update,
-                                                        final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the product category, subcategory, and product separated by spaces.")
-                        .build();
-            }
-            ProductCategory category = productCategoryService.findByName(parts[0].toUpperCase());
-            ProductSubcategory subcategory = productSubcategoryService.findByName(parts[1].toUpperCase());
-            Product product = productService.findByName(category, subcategory, parts[2]);
-            if (category == null || subcategory == null || product == null) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid product category, subcategory, or product. Please try again.")
-                        .build();
-            }
-            productPortionService.saveCategorySubcategoryProduct(user, category, subcategory, product);
-
-            // Move to the next step
-            user.getState().setStateType(StateType.PRODUCT_PORTION_LATITUDE_LONGITUDE_AMOUNT);
-            stateService.save(user.getState());
-            userService.save(user);
-
-            return new SendMessageBuilder()
-                    .chatId(user.getChatId())
-                    .message("Please provide the latitude, longitude, and amount separated by spaces.")
-                    .build();
-        }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please provide the product category, subcategory, and product separated by spaces.")
-                .build();
-    }
-
-    private Answer handleLatitudeLongitudeAmountStep(final ClassifiedUpdate update, final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the latitude, longitude, and amount separated by spaces.")
-                        .build();
-            }
-            try {
-                BigDecimal latitude = new BigDecimal(parts[0]);
-                BigDecimal longitude = new BigDecimal(parts[1]);
-                BigDecimal amount = new BigDecimal(parts[2]);
-                productPortionService.saveLatitudeLongitudeAmount(user, latitude, longitude, amount);
-
-                // Move to the next step
-                user.getState().setStateType(StateType.PRODUCT_PORTION_PHOTO);
-                stateService.save(user.getState());
-                userService.save(user);
-
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please upload a photo.")
-                        .build();
-            } catch (NumberFormatException e) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid latitude, longitude, or amount. Please try again.")
-                        .build();
-            }
-        }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please provide the latitude, longitude, and amount separated by spaces.")
-                .build();
-    }
-
-    private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) {
-        List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
-        PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
-
-        if (largestPhoto != null) {
-            String fileId = largestPhoto.getFileId();
-            String photoUrl = downloadPhotoFromTelegram(fileId, "token");
-            if (photoUrl != null) {
-                productPortionService.savePhoto(user, photoUrl);
-
-                // Finish the form
-                user.getState().setStateType(StateType.NONE);
-                stateService.save(user.getState());
-                userService.save(user);
-
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("ProductPortion has been created successfully.")
-                        .build();
-            }
-        }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please upload a photo.")
-                .build();
-    }
-
-    private String downloadPhotoFromTelegram(final String fileId, final String botToken) {
-        RestTemplate restTemplate = new RestTemplate();
-        String filePathUrl = "https://api.telegram.org/bot" + botToken + "/getFile?file_id=" + fileId;
-        ResponseEntity<JsonNode> response = restTemplate.getForEntity(filePathUrl, JsonNode.class);
-
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            String filePath = response.getBody().get("result").get("file_path").asText();
-            String fileUrl = "https://api.telegram.org/file/bot" + botToken + "/" + filePath;
-
-            // Download the file from the fileUrl
-            byte[] fileBytes = restTemplate.getForObject(fileUrl, byte[].class);
-            if (fileBytes != null) {
-                // Upload to S3
-                return s3Service.uploadFile("photo.jpg", fileBytes);
-            }
-        }
-        return null;
     }
 
 }
