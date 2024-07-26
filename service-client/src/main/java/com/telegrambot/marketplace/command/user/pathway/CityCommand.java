@@ -54,9 +54,9 @@ public class CityCommand implements Command {
                     .build();
         }
 
-        String[] parts = update.getCommandName().split("_");
-        Long cityId = Long.parseLong(parts[1]);
-        CountryName countryName = CountryName.valueOf(parts[2].toUpperCase());
+        String[] parts = update.getArgs().toArray(new String[0]);
+        Long cityId = Long.parseLong(parts[0]);
+        CountryName countryName = CountryName.valueOf(parts[1].toUpperCase());
         City city = cityService.findById(cityId);
         user.setCity(city);
         user.setCountry(city.getCountry());

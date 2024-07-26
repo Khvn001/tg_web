@@ -34,9 +34,9 @@ public class CategoryCommand implements Command {
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
 
+    private static final int ZERO_NUMBER = 0;
     private static final int ONE_NUMBER = 1;
     private static final int TWO_NUMBER = 2;
-    private static final int THREE_NUMBER = 3;
 
     @Override
     public Class handler() {
@@ -60,10 +60,10 @@ public class CategoryCommand implements Command {
                     .build();
         }
 
-        String[] parts = update.getCommandName().split("_");
-        ProductCategory category = productCategoryService.findByName(parts[ONE_NUMBER].toUpperCase());
-        Long cityId = Long.parseLong(parts[TWO_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER].toUpperCase());
+        String[] parts = update.getArgs().toArray(new String[0]);
+        ProductCategory category = productCategoryService.findByName(parts[ZERO_NUMBER].toUpperCase());
+        Long cityId = Long.parseLong(parts[ONE_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[TWO_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
 
         Map<ProductSubcategory, List<ProductInventoryCity>> availableSubcategories = productInventoryCityService

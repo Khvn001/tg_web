@@ -39,11 +39,11 @@ public class ProductCommand implements Command {
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
 
+    private static final int ZERO_NUMBER = 0;
     private static final int ONE_NUMBER = 1;
     private static final int TWO_NUMBER = 2;
     private static final int THREE_NUMBER = 3;
     private static final int FOUR_NUMBER = 4;
-    private static final int FIVE_NUMBER = 5;
 
     @Override
     public Class handler() {
@@ -67,12 +67,12 @@ public class ProductCommand implements Command {
                     .build();
         }
 
-        String[] parts = update.getCommandName().split("_");
-        String productId = parts[ONE_NUMBER];
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
-        Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER].toUpperCase());
+        String[] parts = update.getArgs().toArray(new String[0]);
+        String productId = parts[ZERO_NUMBER];
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
+        Long cityId = Long.parseLong(parts[THREE_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[FOUR_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
         ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());
         Product product = productService.findById(Long.valueOf(productId));

@@ -35,12 +35,12 @@ public class DistrictCommand implements Command {
     private final CityService cityService;
     private final StateRepository stateRepository;
 
+    private static final int ZERO_NUMBER = 0;
     private static final int ONE_NUMBER = 1;
     private static final int TWO_NUMBER = 2;
     private static final int THREE_NUMBER = 3;
     private static final int FOUR_NUMBER = 4;
     private static final int FIVE_NUMBER = 5;
-    private static final int SIX_NUMBER = 6;
 
     @Override
     public Class handler() {
@@ -64,15 +64,15 @@ public class DistrictCommand implements Command {
                     .build();
         }
 
-        String[] parts = update.getCommandName().split("_");
-        Long districtId = Long.parseLong(parts[ONE_NUMBER]);
+        String[] parts = update.getArgs().toArray(new String[0]);
+        Long districtId = Long.parseLong(parts[ZERO_NUMBER]);
         District district = districtService.findById(districtId);
-        Long productId = Long.parseLong(parts[TWO_NUMBER]);
+        Long productId = Long.parseLong(parts[ONE_NUMBER]);
         Product product = productService.findById(productId);
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[FOUR_NUMBER].toUpperCase());
-        Long cityId = Long.parseLong(parts[FIVE_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[SIX_NUMBER].toUpperCase());
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER].toUpperCase());
+        Long cityId = Long.parseLong(parts[FOUR_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[FIVE_NUMBER].toUpperCase());
         user.getState().setStateType(StateType.ORDER);
         user.getState().setValue(String.format("%d_%d_%s_%s_%d_%s",
                 districtId, productId, subcategoryName, categoryName, cityId, countryName));

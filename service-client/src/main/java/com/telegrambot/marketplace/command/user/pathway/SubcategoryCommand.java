@@ -37,10 +37,10 @@ public class SubcategoryCommand implements Command {
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
 
+    private static final int ZERO_NUMBER = 0;
     private static final int ONE_NUMBER = 1;
     private static final int TWO_NUMBER = 2;
     private static final int THREE_NUMBER = 3;
-    private static final int FOUR_NUMBER = 4;
 
     @Override
     public Class handler() {
@@ -64,11 +64,11 @@ public class SubcategoryCommand implements Command {
                     .build();
         }
 
-        String[] parts = update.getCommandName().split("_");
-        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ONE_NUMBER].toUpperCase());
-        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[TWO_NUMBER].toUpperCase());
-        Long cityId = Long.parseLong(parts[THREE_NUMBER]);
-        CountryName countryName = CountryName.valueOf(parts[FOUR_NUMBER].toUpperCase());
+        String[] parts = update.getArgs().toArray(new String[0]);
+        ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[ZERO_NUMBER].toUpperCase());
+        ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[ONE_NUMBER].toUpperCase());
+        Long cityId = Long.parseLong(parts[TWO_NUMBER]);
+        CountryName countryName = CountryName.valueOf(parts[THREE_NUMBER].toUpperCase());
         City city = cityService.findById(cityId);
         ProductCategory category = productCategoryService.findByName(categoryName.toString());
         ProductSubcategory subcategory = productSubcategoryService.findByName(subcategoryName.toString());
