@@ -46,7 +46,7 @@ public class ClassifiedUpdate {
             }
         }
         if (update.hasCallbackQuery()) {
-            return update.getCallbackQuery().getData().split("_")[0];
+            return update.getCallbackQuery().getData().split("_")[0] + "_";
         }
         return "";
     }
@@ -131,7 +131,7 @@ public class ClassifiedUpdate {
 
             return list;
         } else if (telegramType == TelegramType.CALL_BACK) {
-            String[] args = getUpdate().getCallbackQuery().getData().split(" ");
+            String[] args = getUpdate().getCallbackQuery().getData().split("_");
             Collections.addAll(list, args);
             list.removeFirst();
 
