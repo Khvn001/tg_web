@@ -53,9 +53,7 @@ public class CallbackHandler extends AbstractHandler {
 
         if (callbackData != null && callbackData.contains("/start")) {
             // Handle /start command here
-            return new StartCommand(userService, stateService, countryService, cityService,
-                    districtService, productCategoryService, productSubcategoryService,
-                    productService, productPortionService, s3Service).getAnswer(update, user);
+            return new StartCommand(userService, stateService, countryService).getAnswer(update, user);
         }
 
         Command callbackCommand = callbackCommands.get(callbackData);
