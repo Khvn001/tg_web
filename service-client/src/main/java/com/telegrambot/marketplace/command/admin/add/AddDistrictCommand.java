@@ -85,7 +85,7 @@ public class AddDistrictCommand implements AdminCommand {
                         .build();
             }
             district = new District();
-            district.setName(cityName);
+            district.setName(districtName);
             district.setCountry(country);
             district.setCity(city);
             district.setAllowed(true);

@@ -68,7 +68,7 @@ public class ToggleCountryAvailabilityCommand implements AdminCommand {
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("City " + countryName + " is now " + status + ".")
+                .message("Country " + countryName + " is now " + status + ".")
                 .build();
     }
 }

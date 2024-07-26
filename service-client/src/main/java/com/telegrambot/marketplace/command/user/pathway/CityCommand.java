@@ -75,16 +75,16 @@ public class CityCommand implements Command {
     private List<InlineKeyboardButton> getCategoryButtons(final User user,
                                                           final Set<ProductCategory> categories) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
-        buttons.add(InlineKeyboardButton
-                .builder()
-                .text("Go back to countries")
-                .callbackData("/country_" + user.getCountry().getName())
-                .build());
         buttons.add(InlineKeyboardButton.builder()
-                .text("Go back to city selection")
-                .callbackData("/city_" + user.getCity().getId() + "_" + user.getCountry().getName())
+                .text("Go back to country selection")
+                .callbackData("/start")
                 .build()
         );
+        buttons.add(InlineKeyboardButton
+                .builder()
+                .text("Go back to city selection")
+                .callbackData("/country_" + user.getCountry().getName())
+                .build());
         for (ProductCategory category : categories) {
             buttons.add(InlineKeyboardButton.builder()
                     .text(String.valueOf(category.getName()))
