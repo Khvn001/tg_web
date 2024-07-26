@@ -50,7 +50,7 @@ public class City {
     @Column(name = "is_allowed", nullable = false)
     private boolean allowed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id")
     @ToString.Exclude
     private Country country;

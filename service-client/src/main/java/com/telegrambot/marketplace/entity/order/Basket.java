@@ -45,7 +45,7 @@ public class Basket {
     @Column(name = "total_sum", nullable = false)
     private BigDecimal totalSum = BigDecimal.ZERO;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;

@@ -63,7 +63,7 @@ public class ProductSubcategory {
     @ToString.Exclude
     List<ProductInventoryDistrict> productInventoryDistrictList = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_id")
     @ToString.Exclude
     private ProductCategory productCategory;

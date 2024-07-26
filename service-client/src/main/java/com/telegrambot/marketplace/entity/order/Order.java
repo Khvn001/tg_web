@@ -54,12 +54,12 @@ public class Order {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @ToString.Exclude
     private Product product;
@@ -67,27 +67,27 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_subcategory_id")
     @ToString.Exclude
     private ProductSubcategory productSubcategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_id")
     @ToString.Exclude
     private ProductCategory productCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id")
     @ToString.Exclude
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     @ToString.Exclude
     private City city;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "district_id")
     @ToString.Exclude
     private District district;
@@ -98,7 +98,7 @@ public class Order {
     @Column(name = "total_sum", nullable = false)
     private BigDecimal totalSum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id")
     @ToString.Exclude
     private Basket basket;

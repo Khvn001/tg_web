@@ -50,12 +50,12 @@ public class Product {
     @Column(name = "is_allowed", nullable = false)
     private boolean allowed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_id")
     @ToString.Exclude
     private ProductCategory productCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_subcategory_id")
     @ToString.Exclude
     private ProductSubcategory productSubcategory;

@@ -37,12 +37,12 @@ public class UserSubcategoryDiscount {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_subcategory_id", nullable = false)
     @ToString.Exclude
     private ProductSubcategory productSubcategory;
