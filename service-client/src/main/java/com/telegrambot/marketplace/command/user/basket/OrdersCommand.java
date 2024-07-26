@@ -54,13 +54,13 @@ public class OrdersCommand implements Command {
                 .build());
         buttons.add(InlineKeyboardButton.builder()
                 .text("Delete All Orders")
-                .callbackData("/delete_orders_")
+                .callbackData("/deleteOrders_")
                 .build());
         for (Order order : basket.getOrders()) {
             buttons.add(InlineKeyboardButton.builder()
                     .text("Delete Order " + order.getId() + " " + order.getProductSubcategory().getName()
                             + " " + order.getProduct().getName() + " " + order.getAmount() + " " + order.getTotalSum())
-                    .callbackData("/delete_order_" + order.getId())
+                    .callbackData("/deleteOrder_" + order.getId())
                     .build());
         }
         return new SendMessageBuilder()

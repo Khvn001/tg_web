@@ -55,7 +55,7 @@ public class CountryCommand implements Command {
                     .build();
         }
 
-        CountryName countryName = CountryName.valueOf(update.getCommandName().split("_")[1].toUpperCase());
+        CountryName countryName = CountryName.valueOf(update.getArgs().getFirst().toUpperCase());
         log.info(countryName.getCountry());
         user.setCountry(countryService.findByCountryName(countryName));
         userRepository.save(user);

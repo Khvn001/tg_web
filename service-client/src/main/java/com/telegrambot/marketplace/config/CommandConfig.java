@@ -105,8 +105,8 @@ public class CommandConfig {
         CallbackHandler callbackHandler = new CallbackHandler();
         callbackHandler.registerCallbackCommand("/basket_", basketCommand);
         callbackHandler.registerCallbackCommand("/buyBasket_", buyBasketCommand);
-        callbackHandler.registerCallbackCommand("/delete_order_", deleteOrderCommand);
-        callbackHandler.registerCallbackCommand("/delete_orders_", deleteOrdersCommand);
+        callbackHandler.registerCallbackCommand("/deleteOrder_", deleteOrderCommand);
+        callbackHandler.registerCallbackCommand("/deleteOrders_", deleteOrdersCommand);
         callbackHandler.registerCallbackCommand("/orders_", ordersCommand);
         callbackHandler.registerCallbackCommand("/category_", categoryCommand);
         callbackHandler.registerCallbackCommand("/subcategory_", subcategoryCommand);

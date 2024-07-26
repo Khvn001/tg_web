@@ -30,7 +30,7 @@ public class DeleteOrdersCommand implements Command {
 
     @Override
     public Object getFindBy() {
-        return "/delete_orders_";
+        return "/deleteOrders_";
     }
 
     @SneakyThrows
