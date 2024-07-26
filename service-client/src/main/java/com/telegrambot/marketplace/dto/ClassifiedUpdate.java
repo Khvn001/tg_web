@@ -46,7 +46,7 @@ public class ClassifiedUpdate {
             }
         }
         if (update.hasCallbackQuery()) {
-            return update.getCallbackQuery().getData().split("_")[0];
+            return update.getCallbackQuery().getData().split("_")[0] + "_";
         }
         return "";
     }
