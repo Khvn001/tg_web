@@ -51,16 +51,15 @@ public class S3ServiceImpl implements S3Service {
     public String uploadFile(final String name, final byte[] photo) {
         AmazonS3 s3Client = initializeS3Client();
 
-        String objectKey = stuffPlaceFolder + "/" + name;
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(photo.length);
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(photo);
-        s3Client.putObject(bucketName, objectKey, inputStream, metadata);
-        log.info("Upload Service. Added file: " + objectKey + " to bucket: " + bucketName);
+        s3Client.putObject(bucketName, name, inputStream, metadata);
+        log.info("Upload Service. Added file: " + name + " to bucket: " + bucketName);
 
         // Получение ссылки на загруженный файл
-        return s3Client.getUrl(bucketName, objectKey).toExternalForm();
+        return s3Client.getUrl(bucketName, name).toExternalForm();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class S3ServiceImpl implements S3Service {
                 int threadFileNumber = fileNumber;
                 byte[] photo = photos.get(threadFileNumber);
                 Future<String> future = executorService.submit(() -> {
-                    String objectKey = stuffPlaceFolder + "/" + name.get(threadFileNumber);
+                    String objectKey = name.get(threadFileNumber);
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setContentLength(photo.length);
 

@@ -81,36 +81,40 @@ public class PhotoCommand implements Command {
 
     private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) {
         if (StateType.PRODUCT_PORTION_PHOTO.equals(user.getState().getStateType())) {
+
+            String stateValue = user.getState().getValue();
+            String[] parts = stateValue.split(" ");
+
+            CountryName countryName = CountryName.valueOf(parts[ZERO_NUMBER]);
+            String cityName = parts[ONE_NUMBER];
+            String districtName = parts[TWO_NUMBER];
+            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
+            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[FOUR_NUMBER]);
+            String productName = parts[FIVE_NUMBER];
+            BigDecimal latitude = new BigDecimal(parts[SIX_NUMBER]);
+            BigDecimal longitude = new BigDecimal(parts[SEVEN_NUMBER]);
+            BigDecimal amount = new BigDecimal(parts[EIGHT_NUMBER]);
+
+            Country country = countryService.findByCountryName(countryName);
+            City city = cityService.findByCountryAndName(country, cityName);
+            District district = districtService.findByCountryAndCityAndName(country, city, districtName);
+            ProductCategory category = productCategoryService.findByName(String.valueOf(categoryName));
+            ProductSubcategory subcategory = productSubcategoryService
+                    .findByName(String.valueOf(subcategoryName));
+            Product product = productService.findByName(category, subcategory, productName);
+
+            String photoName = "COURIER:" + user.getChatId() + "COUNTRY:" + countryName.name() + "CITY:" + cityName
+                    + "DISTRICT:" + districtName + "CATEGORY:" + categoryName.name()
+                    + "SUBCATEGORY:" + subcategoryName.name() + "PRODUCT:" + productName + "LATITUDE:" + latitude
+                    + "LONGITUDE:" + longitude + "AMOUNT:" + amount + "FILEID:";
+
             List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
             PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                     .orElse(null);
             if (largestPhoto != null) {
                 String fileId = largestPhoto.getFileId();
-                String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken());
+                String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken(), photoName);
                 if (photoUrl != null) {
-                    productPortionService.savePhoto(user, photoUrl);
-
-                    String stateValue = user.getState().getValue();
-                    String[] parts = stateValue.split(" ");
-
-                    CountryName countryName = CountryName.valueOf(parts[ZERO_NUMBER]);
-                    String cityName = parts[ONE_NUMBER];
-                    String districtName = parts[TWO_NUMBER];
-                    ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
-                    ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[FOUR_NUMBER]);
-                    String productName = parts[FIVE_NUMBER];
-                    BigDecimal latitude = new BigDecimal(parts[SIX_NUMBER]);
-                    BigDecimal longitude = new BigDecimal(parts[SEVEN_NUMBER]);
-                    BigDecimal amount = new BigDecimal(parts[EIGHT_NUMBER]);
-
-                    Country country = countryService.findByCountryName(countryName);
-                    City city = cityService.findByCountryAndName(country, cityName);
-                    District district = districtService.findByCountryAndCityAndName(country, city, districtName);
-                    ProductCategory category = productCategoryService.findByName(String.valueOf(categoryName));
-                    ProductSubcategory subcategory = productSubcategoryService
-                            .findByName(String.valueOf(subcategoryName));
-                    Product product = productService.findByName(category, subcategory, productName);
-
                     productPortionService.saveProductPortion(user, country, city, district, category, subcategory,
                             product, latitude, longitude, amount, photoUrl);
 
@@ -137,7 +141,7 @@ public class PhotoCommand implements Command {
                 .build();
     }
 
-    private String downloadPhotoFromTelegram(final String fileId, final String botToken) {
+    private String downloadPhotoFromTelegram(final String fileId, final String botToken, final String fileName) {
         RestTemplate restTemplate = new RestTemplate();
         String filePathUrl = "https://api.telegram.org/bot" + botToken + "/getFile?file_id=" + fileId;
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(filePathUrl, JsonNode.class);
@@ -150,7 +154,7 @@ public class PhotoCommand implements Command {
             byte[] fileBytes = restTemplate.getForObject(fileUrl, byte[].class);
             if (fileBytes != null) {
                 // Upload to S3
-                return s3Service.uploadFile("photo.jpg", fileBytes);
+                return s3Service.uploadFile(fileName + fileId, fileBytes);
             }
         }
         return null;
