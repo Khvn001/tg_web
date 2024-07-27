@@ -26,6 +26,7 @@ import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.product.description.Product;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class PhotoCommand implements Command {
 
     private final UserService userService;
@@ -101,17 +103,17 @@ public class PhotoCommand implements Command {
             ProductSubcategory subcategory = productSubcategoryService.findById(subcategoryId);
             Product product = productService.findById(productId);
 
-            String photoName = "COURIER:" + user.getChatId() + "COUNTRY:" + country.getName().name()
-                    + "CITY:" + city.getName() + "DISTRICT:" + district.getName()
-                    + "CATEGORY:" + category.getName().name() + "SUBCATEGORY:" + subcategory.getName().name()
-                    + "PRODUCT:" + product.getName() + "LATITUDE:" + latitude + "LONGITUDE:" + longitude
-                    + "AMOUNT:" + amount + "FILEID:";
-
             List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
             PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                     .orElse(null);
             if (largestPhoto != null) {
                 String fileId = largestPhoto.getFileId();
+                String photoName = "COURIER:" + user.getChatId() + "COUNTRY:" + country.getName().name()
+                        + "CITY:" + city.getName() + "DISTRICT:" + district.getName()
+                        + "CATEGORY:" + category.getName().name() + "SUBCATEGORY:" + subcategory.getName().name()
+                        + "PRODUCT:" + product.getName() + "LATITUDE:" + latitude + "LONGITUDE:" + longitude
+                        + "AMOUNT:" + amount + "FILEID:" + fileId;
+                log.info(photoName);
                 String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken(), photoName);
                 if (photoUrl != null) {
                     productPortionService.saveProductPortion(user, country, city, district, category, subcategory,
@@ -153,7 +155,7 @@ public class PhotoCommand implements Command {
             byte[] fileBytes = restTemplate.getForObject(fileUrl, byte[].class);
             if (fileBytes != null) {
                 // Upload to S3
-                return s3Service.uploadFile(fileName + fileId, fileBytes);
+                return s3Service.uploadFile(fileName, fileBytes);
             }
         }
         return null;
