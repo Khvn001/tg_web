@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -37,19 +41,37 @@ public class Bot extends TelegramLongPollingBot {
         log.info("Update received:");
         //Проверим, работает ли наш бот.
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            log.info("Message text: " + messageText);
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                String messageText = update.getMessage().getText();
+                log.info("Message text: " + messageText);
 
-            // Convert Telegram Update to ClassifiedUpdate
-            ClassifiedUpdate classifiedUpdate = new ClassifiedUpdate(update);
-            log.info(classifiedUpdate.toString());
+                // Convert Telegram Update to ClassifiedUpdate
+                ClassifiedUpdate classifiedUpdate = new ClassifiedUpdate(update);
+                log.info(classifiedUpdate.toString());
 
-            // Process the update
-            Answer answer = updateHandler.request(classifiedUpdate);
+                // Process the update
+                Answer answer = updateHandler.request(classifiedUpdate);
 
-            // Send a response (assuming Answer contains a method to get the response text)
-            sendMessage(answer);
+                // Send a response (assuming Answer contains a method to get the response text)
+                sendMessage(answer);
+            } else if (update.getMessage().hasPhoto()) {
+                List<PhotoSize> photos = update.getMessage().getPhoto();
+                PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
+                        .orElse(null);
+                if (largestPhoto != null) {
+                    String fileId = largestPhoto.getFileId();
+                    log.info("Message photo: " + fileId);
+                }
+                ClassifiedUpdate classifiedUpdate = new ClassifiedUpdate(update);
+                log.info(classifiedUpdate.toString());
+
+                // Process the update
+                Answer answer = updateHandler.request(classifiedUpdate);
+
+                // Send a response (assuming Answer contains a method to get the response text)
+                sendMessage(answer);
+            }
         }
 
         if (update.hasCallbackQuery()) {
@@ -68,7 +90,6 @@ public class Bot extends TelegramLongPollingBot {
             // Send a response (assuming Answer contains a method to get the response text)
             sendMessage(answer);
         }
-
     }
 
     private void sendMessage(final Answer answer) {
