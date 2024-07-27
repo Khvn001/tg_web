@@ -1,5 +1,6 @@
 package com.telegrambot.marketplace.config;
 
+import com.telegrambot.marketplace.command.PhotoCommand;
 import com.telegrambot.marketplace.command.TextCommand;
 import com.telegrambot.marketplace.command.admin.StatisticsCommand;
 import com.telegrambot.marketplace.command.admin.add.AddCityCommand;
@@ -27,14 +28,7 @@ import com.telegrambot.marketplace.command.user.pathway.ProductCommand;
 import com.telegrambot.marketplace.command.user.pathway.StartCommand;
 import com.telegrambot.marketplace.command.user.pathway.SubcategoryCommand;
 import com.telegrambot.marketplace.command.user.profile.ProfileInfoViewCommand;
-import com.telegrambot.marketplace.service.S3Service;
-import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
-import com.telegrambot.marketplace.service.entity.DistrictService;
-import com.telegrambot.marketplace.service.entity.ProductCategoryService;
-import com.telegrambot.marketplace.service.entity.ProductPortionService;
-import com.telegrambot.marketplace.service.entity.ProductService;
-import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
 import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -114,17 +108,8 @@ public class CommandConfig {
                                            final ProfileInfoViewCommand profileInfoViewCommand,
                                            final UserService userService,
                                            final StateService stateService,
-                                           final CountryService countryService,
-                                           final CityService cityService,
-                                           final DistrictService districtService,
-                                           final ProductCategoryService productCategoryService,
-                                           final ProductSubcategoryService productSubcategoryService,
-                                           final ProductService productService,
-                                           final ProductPortionService productPortionService,
-                                           final S3Service s3Service) {
-        CallbackHandler callbackHandler = new CallbackHandler(userService, stateService, countryService, cityService,
-                districtService, productCategoryService, productSubcategoryService,
-                productService, productPortionService, s3Service);
+                                           final CountryService countryService) {
+        CallbackHandler callbackHandler = new CallbackHandler(userService, stateService, countryService);
         callbackHandler.registerCallbackCommand("/basket_", basketCommand);
         callbackHandler.registerCallbackCommand("/buyBasket_", buyBasketCommand);
         callbackHandler.registerCallbackCommand("/deleteOrder_", deleteOrderCommand);
@@ -139,5 +124,13 @@ public class CommandConfig {
         callbackHandler.registerCallbackCommand("/profile_", profileInfoViewCommand);
         log.info(callbackHandler.toString());
         return callbackHandler;
+    }
+
+    @Bean
+    public PhotoHandler photoHandler(final PhotoCommand photoCommand) {
+        PhotoHandler photoHandler = new PhotoHandler();
+        photoHandler.registerPhotoCommand("PHOTO", photoCommand);
+        log.info(photoHandler.toString());
+        return photoHandler;
     }
 }

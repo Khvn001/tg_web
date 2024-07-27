@@ -1,6 +1,5 @@
 package com.telegrambot.marketplace.command;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.telegrambot.marketplace.config.TextHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
@@ -18,7 +17,6 @@ import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.ProductCategoryName;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.StateType;
-import com.telegrambot.marketplace.enums.TelegramType;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.service.S3Service;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
@@ -35,17 +33,12 @@ import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -211,7 +204,6 @@ public class TextCommand implements Command {
             case PRODUCT_PORTION_COUNTRY_CITY_DISTRICT -> handleCountryCityDistrictStep(update, user);
             case PRODUCT_PORTION_CATEGORY_SUBCATEGORY_PRODUCT -> handleCategorySubcategoryProductStep(update, user);
             case PRODUCT_PORTION_LATITUDE_LONGITUDE_AMOUNT -> handleLatitudeLongitudeAmountStep(update, user);
-            case PRODUCT_PORTION_PHOTO -> handlePhotoStep(update, user);
             default -> new SendMessageBuilder()
                     .chatId(user.getChatId())
                     .message("Please provide the required information for the ProductPortion.")
@@ -220,159 +212,99 @@ public class TextCommand implements Command {
     }
 
     private Answer handleCountryCityDistrictStep(final ClassifiedUpdate update, final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the country, city, and district separated by spaces.")
-                        .build();
-            }
-            Country country = countryService.findByCountryName(CountryName.valueOf(parts[0].toUpperCase()));
-            City city = cityService.findByCountryAndName(country, parts[1]);
-            District district = districtService.findByCountryAndCityAndName(country, city, parts[2]);
-            if (country == null || city == null || district == null) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid country, city, or district. Please try again.")
-                        .build();
-            }
-            productPortionService.saveCountryCityDistrict(user, country, city, district);
-
-            // Move to the next step
-            user.getState().setStateType(StateType.PRODUCT_PORTION_CATEGORY_SUBCATEGORY_PRODUCT);
-            stateService.save(user.getState());
-            userService.save(user);
-
+        String[] parts = update.getArgs().getFirst().split(" ");
+        if (parts.length != ARGS_SIZE) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Please provide the product category, subcategory, and product separated by spaces.")
+                    .message("Please provide the country, city, and district separated by spaces.")
                     .build();
         }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please provide the country, city, and district separated by spaces.")
-                .build();
-    }
-
-    private Answer handleCategorySubcategoryProductStep(final ClassifiedUpdate update,
-                                                        final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the product category, subcategory, and product separated by spaces.")
-                        .build();
-            }
-            ProductCategory category = productCategoryService.findByName(parts[0].toUpperCase());
-            ProductSubcategory subcategory = productSubcategoryService.findByName(parts[1].toUpperCase());
-            Product product = productService.findByName(category, subcategory, parts[2]);
-            if (category == null || subcategory == null || product == null) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid product category, subcategory, or product. Please try again.")
-                        .build();
-            }
-            productPortionService.saveCategorySubcategoryProduct(user, category, subcategory, product);
-
-            // Move to the next step
-            user.getState().setStateType(StateType.PRODUCT_PORTION_LATITUDE_LONGITUDE_AMOUNT);
-            stateService.save(user.getState());
-            userService.save(user);
-
+        Country country = countryService.findByCountryName(CountryName.valueOf(parts[0].toUpperCase()));
+        City city = cityService.findByCountryAndName(country, parts[1]);
+        District district = districtService.findByCountryAndCityAndName(country, city, parts[2]);
+        if (country == null || city == null || district == null) {
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
-                    .message("Please provide the latitude, longitude, and amount separated by spaces.")
+                    .message("Invalid country, city, or district. Please try again.")
                     .build();
         }
+
+        // Move to the next step
+        user.getState().setStateType(StateType.PRODUCT_PORTION_CATEGORY_SUBCATEGORY_PRODUCT);
+        user.getState().setValue(country.getId() + " " + city.getId() + " " + district.getId());
+        stateService.save(user.getState());
+        userService.save(user);
+
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Please provide the product category, subcategory, and product separated by spaces.")
                 .build();
     }
 
-    private Answer handleLatitudeLongitudeAmountStep(final ClassifiedUpdate update, final User user) {
-        if (update.getTelegramType() == TelegramType.TEXT) {
-            String[] parts = update.getArgs().getFirst().split(" ");
-            if (parts.length != ARGS_SIZE) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please provide the latitude, longitude, and amount separated by spaces.")
-                        .build();
-            }
-            try {
-                BigDecimal latitude = new BigDecimal(parts[0]);
-                BigDecimal longitude = new BigDecimal(parts[1]);
-                BigDecimal amount = new BigDecimal(parts[2]);
-                productPortionService.saveLatitudeLongitudeAmount(user, latitude, longitude, amount);
-
-                // Move to the next step
-                user.getState().setStateType(StateType.PRODUCT_PORTION_PHOTO);
-                stateService.save(user.getState());
-                userService.save(user);
-
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Please upload a photo.")
-                        .build();
-            } catch (NumberFormatException e) {
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("Invalid latitude, longitude, or amount. Please try again.")
-                        .build();
-            }
+    private Answer handleCategorySubcategoryProductStep(final ClassifiedUpdate update,
+                                                        final User user) {
+        String[] parts = update.getArgs().getFirst().split(" ");
+        if (parts.length != ARGS_SIZE) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Please provide the product category, subcategory, and product separated by spaces.")
+                    .build();
         }
+        ProductCategory category = productCategoryService.findByName(parts[0].toUpperCase());
+        ProductSubcategory subcategory = productSubcategoryService.findByName(parts[1].toUpperCase());
+        Product product = productService.findByName(category, subcategory, parts[2]);
+        if (category == null || subcategory == null || product == null) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Invalid product category, subcategory, or product. Please try again.")
+                    .build();
+        }
+
+        // Move to the next step
+        user.getState().setStateType(StateType.PRODUCT_PORTION_LATITUDE_LONGITUDE_AMOUNT);
+        String countryCityDistrict = user.getState().getValue();
+        user.getState().setValue(countryCityDistrict
+                + " " + category.getId() + " " + subcategory.getId() + " " + product.getId());
+        stateService.save(user.getState());
+        userService.save(user);
+
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Please provide the latitude, longitude, and amount separated by spaces.")
                 .build();
     }
 
-    private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) {
-        List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
-        PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
-
-        if (largestPhoto != null) {
-            String fileId = largestPhoto.getFileId();
-            String photoUrl = downloadPhotoFromTelegram(fileId, "token");
-            if (photoUrl != null) {
-                productPortionService.savePhoto(user, photoUrl);
-
-                // Finish the form
-                user.getState().setStateType(StateType.NONE);
-                stateService.save(user.getState());
-                userService.save(user);
-
-                return new SendMessageBuilder()
-                        .chatId(user.getChatId())
-                        .message("ProductPortion has been created successfully.")
-                        .build();
-            }
+    private Answer handleLatitudeLongitudeAmountStep(final ClassifiedUpdate update, final User user) {
+        String[] parts = update.getArgs().getFirst().split(" ");
+        if (parts.length != ARGS_SIZE) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Please provide the latitude, longitude, and amount separated by spaces.")
+                    .build();
         }
-        return new SendMessageBuilder()
-                .chatId(user.getChatId())
-                .message("Please upload a photo.")
-                .build();
-    }
+        try {
+            BigDecimal latitude = new BigDecimal(parts[0]);
+            BigDecimal longitude = new BigDecimal(parts[1]);
+            BigDecimal amount = new BigDecimal(parts[2]);
 
-    private String downloadPhotoFromTelegram(final String fileId, final String botToken) {
-        RestTemplate restTemplate = new RestTemplate();
-        String filePathUrl = "https://api.telegram.org/bot" + botToken + "/getFile?file_id=" + fileId;
-        ResponseEntity<JsonNode> response = restTemplate.getForEntity(filePathUrl, JsonNode.class);
+            // Move to the next step
+            user.getState().setStateType(StateType.PRODUCT_PORTION_PHOTO);
+            String countryCityDistrictCategorySubcategoryProduct = user.getState().getValue();
+            user.getState().setValue(countryCityDistrictCategorySubcategoryProduct
+                    + " " + latitude + " " + longitude + " " + amount);
+            stateService.save(user.getState());
+            userService.save(user);
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            String filePath = response.getBody().get("result").get("file_path").asText();
-            String fileUrl = "https://api.telegram.org/file/bot" + botToken + "/" + filePath;
-
-            // Download the file from the fileUrl
-            byte[] fileBytes = restTemplate.getForObject(fileUrl, byte[].class);
-            if (fileBytes != null) {
-                // Upload to S3
-                return s3Service.uploadFile("photo.jpg", fileBytes);
-            }
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Please upload a photo.")
+                    .build();
+        } catch (NumberFormatException e) {
+            return new SendMessageBuilder()
+                    .chatId(user.getChatId())
+                    .message("Invalid latitude, longitude, or amount. Please try again.")
+                    .build();
         }
-        return null;
     }
 
     private List<InlineKeyboardButton> getCountryButtons() {

@@ -158,4 +158,25 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         userService.save(user);
     }
 
+    @Override
+    public void saveProductPortion(final User user, final Country country, final City city, final District district,
+                                   final ProductCategory category, final ProductSubcategory subcategory,
+                                   final Product product, final BigDecimal latitude, final BigDecimal longitude,
+                                   final BigDecimal amount, final String photoUrl) {
+        ProductPortion productPortion = new ProductPortion();
+        productPortion.setUser(user);
+        productPortion.setCountry(country);
+        productPortion.setCity(city);
+        productPortion.setDistrict(district);
+        productPortion.setProductCategory(category);
+        productPortion.setProductSubcategory(subcategory);
+        productPortion.setProduct(product);
+        productPortion.setLatitude(latitude);
+        productPortion.setLongitude(longitude);
+        productPortion.setAmount(amount);
+        productPortion.setPhotoUrl(photoUrl);
+
+        productPortionRepository.save(productPortion);
+    }
+
 }

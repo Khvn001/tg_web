@@ -50,7 +50,7 @@ public class ProductPortion {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
     @ToString.Exclude
     private Order order;
 
@@ -93,7 +93,7 @@ public class ProductPortion {
     @Column(nullable = false)
     private BigDecimal longitude;
 
-    @Column(name = "photo_url", nullable = false)
+    @Column(name = "photo_url")
     private String photoUrl;
 
     @Column(nullable = false)
