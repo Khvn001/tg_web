@@ -25,4 +25,9 @@ public class ProductSubcategoryServiceImpl implements ProductSubcategoryService 
     public ProductSubcategory save(final ProductSubcategory subcategory) {
         return productSubcategoryRepository.save(subcategory);
     }
+
+    @Override
+    public ProductSubcategory findById(final Long subcategoryId) {
+        return productSubcategoryRepository.findById(subcategoryId).orElse(null);
+    }
 }

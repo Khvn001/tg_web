@@ -9,10 +9,8 @@ import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
-import com.telegrambot.marketplace.enums.CountryName;
-import com.telegrambot.marketplace.enums.ProductCategoryName;
-import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.StateType;
+import com.telegrambot.marketplace.repository.CountryRepository;
 import com.telegrambot.marketplace.service.S3Service;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
@@ -63,6 +61,7 @@ public class PhotoCommand implements Command {
     private static final int SIX_NUMBER = 6;
     private static final int SEVEN_NUMBER = 7;
     private static final int EIGHT_NUMBER = 8;
+    private final CountryRepository countryRepository;
 
     @Override
     public Class<?> handler() {
@@ -85,28 +84,28 @@ public class PhotoCommand implements Command {
             String stateValue = user.getState().getValue();
             String[] parts = stateValue.split(" ");
 
-            CountryName countryName = CountryName.valueOf(parts[ZERO_NUMBER]);
-            String cityName = parts[ONE_NUMBER];
-            String districtName = parts[TWO_NUMBER];
-            ProductCategoryName categoryName = ProductCategoryName.valueOf(parts[THREE_NUMBER]);
-            ProductSubcategoryName subcategoryName = ProductSubcategoryName.valueOf(parts[FOUR_NUMBER]);
-            String productName = parts[FIVE_NUMBER];
+            Long countryId = Long.valueOf(parts[ZERO_NUMBER]);
+            Long cityId = Long.valueOf(parts[ONE_NUMBER]);
+            Long districtId = Long.valueOf(parts[TWO_NUMBER]);
+            Long categoryId = Long.valueOf(parts[THREE_NUMBER]);
+            Long subcategoryId = Long.valueOf(parts[FOUR_NUMBER]);
+            Long productId = Long.valueOf(parts[FIVE_NUMBER]);
             BigDecimal latitude = new BigDecimal(parts[SIX_NUMBER]);
             BigDecimal longitude = new BigDecimal(parts[SEVEN_NUMBER]);
             BigDecimal amount = new BigDecimal(parts[EIGHT_NUMBER]);
 
-            Country country = countryService.findByCountryName(countryName);
-            City city = cityService.findByCountryAndName(country, cityName);
-            District district = districtService.findByCountryAndCityAndName(country, city, districtName);
-            ProductCategory category = productCategoryService.findByName(String.valueOf(categoryName));
-            ProductSubcategory subcategory = productSubcategoryService
-                    .findByName(String.valueOf(subcategoryName));
-            Product product = productService.findByName(category, subcategory, productName);
+            Country country = countryService.findById(countryId);
+            City city = cityService.findById(cityId);
+            District district = districtService.findById(districtId);
+            ProductCategory category = productCategoryService.findById(categoryId);
+            ProductSubcategory subcategory = productSubcategoryService.findById(subcategoryId);
+            Product product = productService.findById(productId);
 
-            String photoName = "COURIER:" + user.getChatId() + "COUNTRY:" + countryName.name() + "CITY:" + cityName
-                    + "DISTRICT:" + districtName + "CATEGORY:" + categoryName.name()
-                    + "SUBCATEGORY:" + subcategoryName.name() + "PRODUCT:" + productName + "LATITUDE:" + latitude
-                    + "LONGITUDE:" + longitude + "AMOUNT:" + amount + "FILEID:";
+            String photoName = "COURIER:" + user.getChatId() + "COUNTRY:" + country.getName().name()
+                    + "CITY:" + city.getName() + "DISTRICT:" + district.getName()
+                    + "CATEGORY:" + category.getName().name() + "SUBCATEGORY:" + subcategory.getName().name()
+                    + "PRODUCT:" + product.getName() + "LATITUDE:" + latitude + "LONGITUDE:" + longitude
+                    + "AMOUNT:" + amount + "FILEID:";
 
             List<PhotoSize> photos = update.getUpdate().getMessage().getPhoto();
             PhotoSize largestPhoto = photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))

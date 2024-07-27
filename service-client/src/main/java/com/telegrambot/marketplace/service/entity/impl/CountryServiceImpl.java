@@ -30,5 +30,10 @@ public class CountryServiceImpl implements CountryService {
     public Country save(final Country country) {
         return countryRepository.save(country);
     }
+
+    @Override
+    public Country findById(final Long countryId) {
+        return countryRepository.findById(countryId).orElse(null);
+    }
 }
 

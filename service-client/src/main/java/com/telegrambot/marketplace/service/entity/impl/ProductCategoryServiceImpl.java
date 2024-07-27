@@ -25,4 +25,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return productCategoryRepository.save(category);
     }
 
+    @Override
+    public ProductCategory findById(final Long categoryId) {
+        return productCategoryRepository.findById(categoryId).orElse(null);
+    }
+
 }

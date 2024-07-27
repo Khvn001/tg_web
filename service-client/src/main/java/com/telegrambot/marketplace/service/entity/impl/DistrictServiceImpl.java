@@ -16,8 +16,8 @@ public class DistrictServiceImpl implements DistrictService {
     private final DistrictRepository districtRepository;
 
     @Override
-    public District findById(final Long productId) {
-        return districtRepository.findById(productId).orElse(null);
+    public District findById(final Long districtId) {
+        return districtRepository.findById(districtId).orElse(null);
     }
 
     @Override

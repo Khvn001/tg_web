@@ -12,4 +12,6 @@ public interface CountryService {
     List<Country> findAllByAllowedIsTrue();
 
     Country save(Country country);
+
+    Country findById(Long countryId);
 }

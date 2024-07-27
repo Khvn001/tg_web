@@ -6,7 +6,7 @@ import com.telegrambot.marketplace.entity.location.District;
 
 public interface DistrictService {
 
-    District findById(Long productId);
+    District findById(Long districtId);
 
     District findByCountryAndCityAndName(Country country, City city, String name);
 

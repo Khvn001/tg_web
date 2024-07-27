@@ -11,7 +11,7 @@ public interface CityService {
 
     City findByCountryAndName(Country country, String name);
 
-    City findById(Long countryId);
+    City findById(Long cityId);
 
     City save(City city);
 

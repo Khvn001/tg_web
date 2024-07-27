@@ -7,4 +7,6 @@ public interface ProductCategoryService {
     ProductCategory findByName(String productCategoryName);
 
     ProductCategory save(ProductCategory category);
+
+    ProductCategory findById(Long categoryId);
 }
