@@ -175,7 +175,8 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         productPortion.setLongitude(longitude);
         productPortion.setAmount(amount);
         productPortion.setPhotoUrl(photoUrl);
-
+        productPortion.setCreatedAt(LocalDateTime.now());
+        productPortion.setReserved(false);
         productPortionRepository.save(productPortion);
     }
 
