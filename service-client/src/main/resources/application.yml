@@ -52,10 +52,10 @@ aws:
   s3:
     publicEndpoint: https://104.194.214.119:9000
     privateEndpoint: http://104.194.214.119:9000
-    bucketName: d
+    bucketName: productportion
     stuffPlaceFolder: productPortion
     accessKey: marketplace420
-    secretKey: marketplace420
+    secretKey: marketplace420_secret
 bot:
   name: ${BOT_NAME:BotName}
   token: ${BOT_TOKEN:BotToken}
