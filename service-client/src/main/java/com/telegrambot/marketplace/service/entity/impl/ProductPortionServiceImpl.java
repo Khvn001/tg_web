@@ -183,8 +183,9 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         productPortion.setAmount(amount);
         productPortion.setPhotoUrl(photoUrl);
         productPortion.setCreatedAt(LocalDateTime.now());
-        productPortionRepository.save(productPortion);
+        ProductPortion savedProductPortion = productPortionRepository.save(productPortion);
         log.info(productPortion.toString());
+        log.info(savedProductPortion.toString());
 
         // Increase the quantity in ProductInventoryDistrict
         ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictRepository
