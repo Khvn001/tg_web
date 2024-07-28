@@ -17,6 +17,8 @@ import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryDistrictService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import com.telegrambot.marketplace.service.entity.UserService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,12 +35,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductPortionServiceImpl implements ProductPortionService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final ProductPortionRepository productPortionRepository;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductInventoryDistrictService productInventoryDistrictService;
     private final ProductInventoryCityRepository productInventoryCityRepository;
     private final ProductInventoryDistrictRepository productInventoryDistrictRepository;
-    private final UserService userService;
 
     @Override
     public List<ProductPortion> findAvailableProducts(final City city, final Product product) {
@@ -110,8 +114,12 @@ public class ProductPortionServiceImpl implements ProductPortionService {
                                              final ProductSubcategory subcategory, final Product product,
                                              final BigDecimal latitude, final BigDecimal longitude,
                                              final BigDecimal amount, final String photoUrl) {
+
+        // Ensure user is managed by merging
+        User managedCourier = entityManager.merge(user);
+
         ProductPortion productPortion = new ProductPortion();
-        productPortion.setCourier(user);
+        productPortion.setCourier(managedCourier);
         productPortion.setCountry(country);
         productPortion.setCity(city);
         productPortion.setDistrict(district);

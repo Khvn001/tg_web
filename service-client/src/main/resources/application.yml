@@ -47,7 +47,7 @@ logging:
     org:
       springframework: DEBUG
       flywaydb: DEBUG
-      hibernate: DEBUG
+      # hibernate: DEBUG
 aws:
   s3:
     publicEndpoint: https://104.194.214.119:9000
