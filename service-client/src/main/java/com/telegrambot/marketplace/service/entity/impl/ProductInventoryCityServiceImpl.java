@@ -48,6 +48,7 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
     public Map<ProductSubcategory, List<ProductInventoryCity>> findAvailableProductSubcategoriesByCategory(
             final City city, final ProductCategory productCategory) {
         List<ProductInventoryCity> availableProducts = findAvailableProducts(city);
+        log.info(availableProducts.toString());
         Map<ProductSubcategory, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
                 .filter(cityInventoryProductUnit ->
                         cityInventoryProductUnit.getProductCategory().equals(productCategory))
@@ -55,6 +56,8 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProduct().isAllowed())
                 .collect(Collectors.groupingBy(ProductInventoryCity::getProductSubcategory));
+        log.info(categoryMap.keySet().toString());
+        log.info(categoryMap.values().toString());
 
         // Remove subcategories with less than 1 product
         categoryMap.entrySet().removeIf(entry -> entry.getValue().isEmpty());
