@@ -18,6 +18,7 @@ import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,8 +31,8 @@ import java.util.Set;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class CategoryCommand implements Command {
-    private static final Logger log = LoggerFactory.getLogger(CategoryCommand.class);
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductCategoryService productCategoryService;
