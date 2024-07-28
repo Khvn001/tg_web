@@ -34,8 +34,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -111,27 +113,31 @@ public class PhotoCommand implements Command {
                         + "CITY:" + city.getName() + "DISTRICT:" + district.getName()
                         + "CATEGORY:" + category.getName().name() + "SUBCATEGORY:" + subcategory.getName().name()
                         + "PRODUCT:" + product.getName() + "LATITUDE:" + latitude + "LONGITUDE:" + longitude
-                        + "AMOUNT:" + amount + "FILEID:" + fileId;
-                log.info(photoName);
+                        + "AMOUNT:" + amount + "FILEID:" + fileId + ".jpg";
                 String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken(), photoName);
                 if (photoUrl != null) {
                     log.info(photoUrl);
-                    ProductPortion savedProductPortion =
-                            productPortionService.saveProductPortion(
-                                    user, country, city, district, category, subcategory,
-                                    product, latitude, longitude, amount, photoUrl);
+                    ProductPortion savedProductPortion = productPortionService.saveProductPortion(
+                            user, country, city, district, category, subcategory,
+                            product, latitude, longitude, amount, photoUrl);
+                    log.info(savedProductPortion.toString());
 
                     // Finish the form
                     user.getState().setStateType(StateType.NONE);
                     user.getState().setValue(null);
                     stateService.save(user.getState());
                     userService.save(user);
-                    ProductPortion res = productPortionRepository.save(savedProductPortion);
-                    log.info(res.toString());
+
+                    List<InlineKeyboardButton> buttons = new ArrayList<>();
+                    buttons.add(InlineKeyboardButton.builder()
+                            .text("Start New ProductPortion Form")
+                            .callbackData("/start_productportion_form")
+                            .build());
 
                     return new SendMessageBuilder()
                             .chatId(user.getChatId())
                             .message("ProductPortion has been created successfully.")
+                            .buttons(buttons)
                             .build();
                 }
             }
