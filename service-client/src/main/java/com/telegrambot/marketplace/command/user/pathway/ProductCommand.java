@@ -89,7 +89,7 @@ public class ProductCommand implements Command {
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Available products in " + subcategory.getName() + " subcategory:")
+                .message("Districts with available product " + product.getName() + ":")
                 .buttons(getProductButtons(availableProducts.keySet(), product, subcategoryName,
                         categoryName, cityId, countryName))
                 .build();
