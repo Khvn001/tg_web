@@ -10,7 +10,6 @@ import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.StateType;
-import com.telegrambot.marketplace.repository.CountryRepository;
 import com.telegrambot.marketplace.service.S3Service;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
@@ -30,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
@@ -63,7 +63,6 @@ public class PhotoCommand implements Command {
     private static final int SIX_NUMBER = 6;
     private static final int SEVEN_NUMBER = 7;
     private static final int EIGHT_NUMBER = 8;
-    private final CountryRepository countryRepository;
 
     @Override
     public Class<?> handler() {
@@ -76,11 +75,8 @@ public class PhotoCommand implements Command {
     }
 
     @Override
+    @Transactional
     public Answer getAnswer(final ClassifiedUpdate update, final User user) {
-        return handlePhotoStep(update, user);
-    }
-
-    private Answer handlePhotoStep(final ClassifiedUpdate update, final User user) {
         if (StateType.PRODUCT_PORTION_PHOTO.equals(user.getState().getStateType())) {
 
             String stateValue = user.getState().getValue();
