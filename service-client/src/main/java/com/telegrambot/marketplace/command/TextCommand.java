@@ -153,7 +153,9 @@ public class TextCommand implements Command {
             List<ProductPortion> productPortions = productPortionService
                     .findAvailableByDistrictAndProductOrderByCreatedAt(district, product);
 
-            int availableAmount = productPortions.size();
+            int availableAmount = productPortions.stream()
+                    .map(ProductPortion::getAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add).intValue();
 
             if (availableAmount < requestedAmount) {
                 return new SendMessageBuilder()

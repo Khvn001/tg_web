@@ -43,7 +43,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setProduct(product);
-        order.setAmount(BigDecimal.valueOf(productPortions.size()));
+        order.setAmount(productPortions.stream()
+                .map(ProductPortion::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
         order.setProductSubcategory(productSubcategory);
         order.setProductCategory(productCategory);
         order.setCountry(country);
