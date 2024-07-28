@@ -5,11 +5,13 @@ import com.telegrambot.marketplace.config.BotConfig;
 import com.telegrambot.marketplace.config.PhotoHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.StateType;
+import com.telegrambot.marketplace.repository.ProductPortionRepository;
 import com.telegrambot.marketplace.service.S3Service;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
@@ -63,6 +65,7 @@ public class PhotoCommand implements Command {
     private static final int SIX_NUMBER = 6;
     private static final int SEVEN_NUMBER = 7;
     private static final int EIGHT_NUMBER = 8;
+    private final ProductPortionRepository productPortionRepository;
 
     @Override
     public Class<?> handler() {
@@ -113,14 +116,18 @@ public class PhotoCommand implements Command {
                 String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken(), photoName);
                 if (photoUrl != null) {
                     log.info(photoUrl);
-                    productPortionService.saveProductPortion(user, country, city, district, category, subcategory,
-                            product, latitude, longitude, amount, photoUrl);
+                    ProductPortion savedProductPortion =
+                            productPortionService.saveProductPortion(
+                                    user, country, city, district, category, subcategory,
+                                    product, latitude, longitude, amount, photoUrl);
 
                     // Finish the form
                     user.getState().setStateType(StateType.NONE);
                     user.getState().setValue(null);
                     stateService.save(user.getState());
                     userService.save(user);
+                    ProductPortion res = productPortionRepository.save(savedProductPortion);
+                    log.info(res.toString());
 
                     return new SendMessageBuilder()
                             .chatId(user.getChatId())

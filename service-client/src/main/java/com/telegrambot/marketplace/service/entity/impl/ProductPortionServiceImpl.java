@@ -167,10 +167,11 @@ public class ProductPortionServiceImpl implements ProductPortionService {
 
     @Override
     @Transactional
-    public void saveProductPortion(final User user, final Country country, final City city, final District district,
-                                   final ProductCategory category, final ProductSubcategory subcategory,
-                                   final Product product, final BigDecimal latitude, final BigDecimal longitude,
-                                   final BigDecimal amount, final String photoUrl) {
+    public ProductPortion saveProductPortion(final User user, final Country country, final City city,
+                                             final District district, final ProductCategory category,
+                                             final ProductSubcategory subcategory, final Product product,
+                                             final BigDecimal latitude, final BigDecimal longitude,
+                                             final BigDecimal amount, final String photoUrl) {
         ProductPortion productPortion = new ProductPortion();
         productPortion.setUser(user);
         productPortion.setCountry(country);
@@ -185,7 +186,6 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         productPortion.setPhotoUrl(photoUrl);
         productPortion.setCreatedAt(LocalDateTime.now());
         ProductPortion savedProductPortion = productPortionRepository.save(productPortion);
-        log.info(productPortion.toString());
         log.info(savedProductPortion.toString());
 
         // Increase the quantity in ProductInventoryDistrict
@@ -195,8 +195,9 @@ public class ProductPortionServiceImpl implements ProductPortionService {
                         new ProductInventoryDistrict(
                                 null, product, subcategory, category, district, city, country, BigDecimal.ZERO));
         productInventoryDistrict.setQuantity(productInventoryDistrict.getQuantity().add(amount));
-        productInventoryDistrictRepository.save(productInventoryDistrict);
-        log.info(productInventoryDistrict.toString());
+        ProductInventoryDistrict savedProductInventoryDistrict =
+                productInventoryDistrictRepository.save(productInventoryDistrict);
+        log.info(savedProductInventoryDistrict.toString());
 
         // Increase the quantity in ProductInventoryCity
         ProductInventoryCity productInventoryCity = productInventoryCityRepository
@@ -205,8 +206,10 @@ public class ProductPortionServiceImpl implements ProductPortionService {
                         new ProductInventoryCity(
                                 null, product, subcategory, category, city, country, BigDecimal.ZERO));
         productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(amount));
-        productInventoryCityRepository.save(productInventoryCity);
-        log.info(productInventoryCity.toString());
+        ProductInventoryCity savedProductInventoryCity =
+                productInventoryCityRepository.save(productInventoryCity);
+        log.info(savedProductInventoryCity.toString());
+        return savedProductPortion;
     }
 
 }

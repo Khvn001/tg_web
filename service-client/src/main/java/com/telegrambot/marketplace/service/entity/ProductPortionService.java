@@ -36,7 +36,7 @@ public interface ProductPortionService {
 
     void savePhoto(User user, String photoUrl);
 
-    void saveProductPortion(User user, Country country, City city, District district, ProductCategory category,
-                            ProductSubcategory subcategory, Product product, BigDecimal latitude, BigDecimal longitude,
-                            BigDecimal amount, String photoUrl);
+    ProductPortion saveProductPortion(User user, Country country, City city, District district,
+                                      ProductCategory category, ProductSubcategory subcategory, Product product,
+                                      BigDecimal latitude, BigDecimal longitude, BigDecimal amount, String photoUrl);
 }
