@@ -8,6 +8,7 @@ import com.telegrambot.marketplace.entity.product.description.ProductSubcategory
 import com.telegrambot.marketplace.repository.ProductInventoryCityRepository;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductInventoryCityServiceImpl implements ProductInventoryCityService {
     private final ProductInventoryCityRepository repository;
 
@@ -29,6 +31,7 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
     @Override
     public Map<ProductCategory, List<ProductInventoryCity>> findAvailableProductCategories(final City city) {
         List<ProductInventoryCity> availableProducts = findAvailableProducts(city);
+        log.info(availableProducts.toString());
         Map<ProductCategory, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().isAllowed())
