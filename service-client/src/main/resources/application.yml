@@ -47,7 +47,12 @@ logging:
     org:
       springframework: DEBUG
       flywaydb: DEBUG
-      hibernate: DEBUG
+      hibernate:
+        sql: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
 aws:
   s3:
     publicEndpoint: https://104.194.214.119:9000
