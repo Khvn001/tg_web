@@ -52,7 +52,8 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
         log.info(productCategory.toString());
         Map<ProductSubcategory, List<ProductInventoryCity>> categoryMap = availableProducts.stream()
                 .filter(cityInventoryProductUnit ->
-                        cityInventoryProductUnit.getProductCategory().equals(productCategory))
+                        cityInventoryProductUnit.getProductCategory().getName().name()
+                                .equals(productCategory.getName().name()))
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductCategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProductSubcategory().isAllowed())
                 .filter(cityInventoryProductUnit -> cityInventoryProductUnit.getProduct().isAllowed())
