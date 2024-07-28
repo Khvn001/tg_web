@@ -96,16 +96,20 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     @Transactional
     public void unreserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(false);
-        productPortionRepository.save(productPortion);
+        ProductPortion savedProductPortion = productPortionRepository.save(productPortion);
+        log.info(savedProductPortion.toString());
         ProductInventoryCity productInventoryCity = productInventoryCityService
                 .findByCityAndProduct(productPortion.getCity(), productPortion.getProduct());
         productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(productPortion.getAmount()));
-        productInventoryCityService.save(productInventoryCity);
+        ProductInventoryCity savedProductInventoryCity = productInventoryCityService.save(productInventoryCity);
+        log.info(savedProductInventoryCity.toString());
 
         ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
                 .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
         productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().add(productPortion.getAmount()));
-        productInventoryDistrictService.save(productInventoryDistrict);
+        ProductInventoryDistrict savedProductInventoryDistrict =
+                productInventoryDistrictService.save(productInventoryDistrict);
+        log.info(savedProductInventoryDistrict.toString());
     }
 
     @Override

@@ -34,6 +34,7 @@ public class ExpiredOrderScheduler {
                 for (ProductPortion productPortion : order.getProductPortions()) {
                     productPortionService.unreserveProductPortion(productPortion);
                 }
+                log.info("Starting deletion of expired order {}", order);
                 orderRepository.delete(order);
                 log.info("Deleted expired order with ID: {}", order.getId());
             } catch (Exception e) {

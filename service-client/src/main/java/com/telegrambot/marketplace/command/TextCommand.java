@@ -176,6 +176,10 @@ public class TextCommand implements Command {
 
             Order order = orderService.createOrder(user, selectedProductPortions);
             basketService.addOrderToBasket(user, order);
+            user.getState().setStateType(StateType.NONE);
+            user.getState().setValue(null);
+            stateService.save(user.getState());
+            userService.save(user);
 
             return new SendMessageBuilder()
                     .chatId(user.getChatId())
