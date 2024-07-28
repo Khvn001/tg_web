@@ -105,75 +105,13 @@ public class ProductPortionServiceImpl implements ProductPortionService {
 
     @Override
     @Transactional
-    public void saveCountryCityDistrict(final User user,
-                                        final Country country,
-                                        final City city,
-                                        final District district) {
-        ProductPortion productPortion = new ProductPortion();
-        productPortion.setCountry(country);
-        productPortion.setCity(city);
-        productPortion.setDistrict(district);
-        // Save the productPortion associated with the user in a temporary storage
-        user.setCourierTemporaryProductPortion(productPortion);
-    }
-
-    @Override
-    @Transactional
-    public void saveCategorySubcategoryProduct(final User user,
-                                               final ProductCategory category,
-                                               final ProductSubcategory subcategory,
-                                               final Product product) {
-        ProductPortion productPortion = user.getCourierTemporaryProductPortion();
-        productPortion.setProductCategory(category);
-        productPortion.setProductSubcategory(subcategory);
-        productPortion.setProduct(product);
-    }
-
-    @Override
-    @Transactional
-    public void saveLatitudeLongitudeAmount(final User user,
-                                            final BigDecimal latitude,
-                                            final BigDecimal longitude,
-                                            final BigDecimal amount) {
-        ProductPortion productPortion = user.getCourierTemporaryProductPortion();
-        productPortion.setLatitude(latitude);
-        productPortion.setLongitude(longitude);
-        productPortion.setAmount(amount);
-    }
-
-    @Override
-    @Transactional
-    public void savePhoto(final User user, final String photoUrl) {
-        ProductPortion productPortion = user.getCourierTemporaryProductPortion();
-        productPortion.setPhotoUrl(photoUrl);
-        productPortion.setCreatedAt(LocalDateTime.now());
-        productPortion.setReserved(false);
-        // Persist the productPortion in the repository
-        productPortionRepository.save(productPortion);
-
-        ProductInventoryCity productInventoryCity = productInventoryCityService
-                .findByCityAndProduct(productPortion.getCity(), productPortion.getProduct());
-        productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
-        productInventoryCityService.save(productInventoryCity);
-
-        ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
-                .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
-        productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().add(BigDecimal.valueOf(1)));
-        productInventoryDistrictService.save(productInventoryDistrict);
-
-        user.setCourierTemporaryProductPortion(null); // Clear the temporary storage
-        userService.save(user);
-    }
-
-    @Override
-    @Transactional
     public ProductPortion saveProductPortion(final User user, final Country country, final City city,
                                              final District district, final ProductCategory category,
                                              final ProductSubcategory subcategory, final Product product,
                                              final BigDecimal latitude, final BigDecimal longitude,
                                              final BigDecimal amount, final String photoUrl) {
         ProductPortion productPortion = new ProductPortion();
-        productPortion.setUser(user);
+        productPortion.setCourier(user);
         productPortion.setCountry(country);
         productPortion.setCity(city);
         productPortion.setDistrict(district);

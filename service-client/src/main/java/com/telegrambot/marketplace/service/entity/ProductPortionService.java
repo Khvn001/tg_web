@@ -25,17 +25,6 @@ public interface ProductPortionService {
 
     void unreserveProductPortion(ProductPortion productPortion);
 
-    void saveCountryCityDistrict(User user, Country country, City city, District district);
-
-    void saveCategorySubcategoryProduct(User user,
-                                        ProductCategory category,
-                                        ProductSubcategory subcategory,
-                                        Product product);
-
-    void saveLatitudeLongitudeAmount(User user, BigDecimal latitude, BigDecimal longitude, BigDecimal amount);
-
-    void savePhoto(User user, String photoUrl);
-
     ProductPortion saveProductPortion(User user, Country country, City city, District district,
                                       ProductCategory category, ProductSubcategory subcategory, Product product,
                                       BigDecimal latitude, BigDecimal longitude, BigDecimal amount, String photoUrl);
