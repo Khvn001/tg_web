@@ -103,7 +103,7 @@ public class Order {
     @ToString.Exclude
     private Basket basket;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<ProductPortion> productPortions = new ArrayList<>();
 
