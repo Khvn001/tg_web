@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductInventoryCityRepository extends JpaRepository<ProductInventoryCity, Long> {
 
@@ -18,5 +19,5 @@ public interface ProductInventoryCityRepository extends JpaRepository<ProductInv
             "GROUP BY pic.product, pic.city")
     List<Object[]> findGroupedByCityAndProduct();
 
-    ProductInventoryCity findByCityAndProduct(City city, Product product);
+    Optional<ProductInventoryCity> findByCityAndProduct(City city, Product product);
 }

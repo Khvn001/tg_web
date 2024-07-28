@@ -87,7 +87,7 @@ public class ProductInventoryCityServiceImpl implements ProductInventoryCityServ
 
     @Override
     public ProductInventoryCity findByCityAndProduct(final City city, final Product product) {
-        return repository.findByCityAndProduct(city, product);
+        return repository.findByCityAndProduct(city, product).orElse(null);
     }
 
 }

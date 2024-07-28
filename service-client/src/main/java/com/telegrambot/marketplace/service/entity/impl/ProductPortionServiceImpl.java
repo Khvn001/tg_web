@@ -10,6 +10,8 @@ import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
+import com.telegrambot.marketplace.repository.ProductInventoryCityRepository;
+import com.telegrambot.marketplace.repository.ProductInventoryDistrictRepository;
 import com.telegrambot.marketplace.repository.ProductPortionRepository;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryDistrictService;
@@ -32,6 +34,8 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     private final ProductPortionRepository productPortionRepository;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductInventoryDistrictService productInventoryDistrictService;
+    private final ProductInventoryCityRepository productInventoryCityRepository;
+    private final ProductInventoryDistrictRepository productInventoryDistrictRepository;
     private final UserService userService;
 
     @Override
@@ -176,8 +180,26 @@ public class ProductPortionServiceImpl implements ProductPortionService {
         productPortion.setAmount(amount);
         productPortion.setPhotoUrl(photoUrl);
         productPortion.setCreatedAt(LocalDateTime.now());
-        productPortion.setReserved(false);
         productPortionRepository.save(productPortion);
+
+        // Increase the quantity in ProductInventoryDistrict
+        ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictRepository
+                .findByDistrictAndProduct(district, product)
+                .orElse(
+                        new ProductInventoryDistrict(
+                                null, product, subcategory, category, district, city, country, BigDecimal.ZERO));
+        productInventoryDistrict.setQuantity(productInventoryDistrict.getQuantity().add(amount));
+        productInventoryDistrictRepository.save(productInventoryDistrict);
+
+        // Increase the quantity in ProductInventoryCity
+        ProductInventoryCity productInventoryCity = productInventoryCityRepository
+                .findByCityAndProduct(city, product)
+                .orElse(
+                        new ProductInventoryCity(
+                                null, product, subcategory, category, city, country, BigDecimal.ZERO));
+        productInventoryCity.setQuantity(productInventoryCity.getQuantity().add(amount));
+        productInventoryCityRepository.save(productInventoryCity);
+
     }
 
 }

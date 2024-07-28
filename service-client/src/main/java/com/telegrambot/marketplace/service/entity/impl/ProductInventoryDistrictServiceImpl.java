@@ -23,6 +23,6 @@ public class ProductInventoryDistrictServiceImpl implements ProductInventoryDist
 
     @Override
     public ProductInventoryDistrict findByDistrictAndProduct(final District district, final Product product) {
-        return repository.findByDistrictAndProduct(district, product);
+        return repository.findByDistrictAndProduct(district, product).orElse(null);
     }
 }
