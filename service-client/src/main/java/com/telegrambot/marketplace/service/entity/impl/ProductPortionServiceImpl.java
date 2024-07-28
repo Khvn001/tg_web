@@ -16,7 +16,6 @@ import com.telegrambot.marketplace.repository.ProductPortionRepository;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryDistrictService;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
-import com.telegrambot.marketplace.service.entity.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
