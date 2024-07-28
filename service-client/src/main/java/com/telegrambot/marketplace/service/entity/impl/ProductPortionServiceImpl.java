@@ -166,6 +166,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
+    @Transactional
     public void saveProductPortion(final User user, final Country country, final City city, final District district,
                                    final ProductCategory category, final ProductSubcategory subcategory,
                                    final Product product, final BigDecimal latitude, final BigDecimal longitude,
