@@ -18,6 +18,8 @@ import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -29,6 +31,7 @@ import java.util.Set;
 @Component
 @AllArgsConstructor
 public class CategoryCommand implements Command {
+    private static final Logger log = LoggerFactory.getLogger(CategoryCommand.class);
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductCategoryService productCategoryService;
@@ -68,13 +71,14 @@ public class CategoryCommand implements Command {
 
         Map<ProductSubcategory, List<ProductInventoryCity>> availableSubcategories = productInventoryCityService
                 .findAvailableProductSubcategoriesByCategory(city, category);
+        log.info(availableSubcategories.keySet().toString());
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Available subcategories in " + category + " category:")
+                .message("Available subcategories in " + category.getName().name() + " category:")
                 .buttons(
                         getProductButtons(
-                        availableSubcategories.keySet(), String.valueOf(category.getName()), cityId, countryName))
+                        availableSubcategories.keySet(), category.getName().name(), cityId, countryName))
                 .build();
     }
 
