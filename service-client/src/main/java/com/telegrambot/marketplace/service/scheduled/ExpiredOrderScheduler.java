@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ExpiredOrderScheduler {
     private static final int INTERVAL_MINUTES = 30;
 
     @Scheduled(fixedRate = MINUTE)  // Run every minute
+    @Transactional
     public void deleteExpiredOrders() {
         LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(INTERVAL_MINUTES);
         List<Order> expiredOrders = orderRepository.findByCreatedAtBefore(expirationTime);
