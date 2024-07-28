@@ -112,6 +112,7 @@ public class PhotoCommand implements Command {
                 log.info(photoName);
                 String photoUrl = downloadPhotoFromTelegram(fileId, botConfig.getToken(), photoName);
                 if (photoUrl != null) {
+                    log.info(photoUrl);
                     productPortionService.saveProductPortion(user, country, city, district, category, subcategory,
                             product, latitude, longitude, amount, photoUrl);
 
