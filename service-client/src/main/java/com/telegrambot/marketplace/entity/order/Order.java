@@ -55,6 +55,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
