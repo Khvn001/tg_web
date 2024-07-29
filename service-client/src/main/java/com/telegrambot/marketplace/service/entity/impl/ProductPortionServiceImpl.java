@@ -107,7 +107,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
 
         ProductInventoryDistrict productInventoryDistrict = productInventoryDistrictService
                 .findByDistrictAndProduct(productPortion.getDistrict(), productPortion.getProduct());
-        productInventoryDistrict.setQuantity(productInventoryCity.getQuantity().add(productPortion.getAmount()));
+        productInventoryDistrict.setQuantity(productInventoryDistrict.getQuantity().add(productPortion.getAmount()));
         ProductInventoryDistrict savedProductInventoryDistrict =
                 productInventoryDistrictService.save(productInventoryDistrict);
         log.info(savedProductInventoryDistrict.toString());
