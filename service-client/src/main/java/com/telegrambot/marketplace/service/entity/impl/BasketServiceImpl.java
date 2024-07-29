@@ -80,7 +80,6 @@ public class BasketServiceImpl implements BasketService {
             log.info(orderToRemove.toString());
             orderToRemove.setBasket(null);
             orderToRemove.setProductPortions(null);
-            orderToRemove.setUser(null);
             orderToRemove.setCity(null);
             orderToRemove.setCountry(null);
             orderToRemove.setDistrict(null);
