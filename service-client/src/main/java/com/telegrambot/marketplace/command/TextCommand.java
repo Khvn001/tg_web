@@ -18,6 +18,7 @@ import com.telegrambot.marketplace.enums.ProductCategoryName;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.StateType;
 import com.telegrambot.marketplace.enums.UserType;
+import com.telegrambot.marketplace.repository.ProductPortionRepository;
 import com.telegrambot.marketplace.service.S3Service;
 import com.telegrambot.marketplace.service.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
@@ -66,6 +67,7 @@ public class TextCommand implements Command {
     private static final int THREE_NUMBER = 3;
     private static final int FOUR_NUMBER = 4;
     private static final int FIVE_NUMBER = 5;
+    private final ProductPortionRepository productPortionRepository;
 
     @Override
     public Class handler() {
@@ -175,6 +177,8 @@ public class TextCommand implements Command {
             }
 
             Order order = orderService.createOrder(user, selectedProductPortions);
+            selectedProductPortions.forEach(productPortion -> productPortion.setOrder(order));
+            productPortionRepository.saveAll(selectedProductPortions);
             basketService.addOrderToBasket(user, order);
             user.getState().setStateType(StateType.NONE);
             user.getState().setValue(null);
