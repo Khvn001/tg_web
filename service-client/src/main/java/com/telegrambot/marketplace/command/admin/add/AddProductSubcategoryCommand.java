@@ -8,10 +8,10 @@ import com.telegrambot.marketplace.entity.product.description.ProductSubcategory
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.ProductCategoryService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.config.CommandHandler;
+import com.telegrambot.marketplace.config.typehandlers.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +22,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AddProductSubcategoryCommand implements AdminCommand {
 
-    private static final int ARGS_SIZE = 2;
     private final ProductSubcategoryService productSubcategoryService;
     private final ProductCategoryService productCategoryService;
+
+    private static final int ARGS_SIZE = 2;
 
     @Override
     public Class handler() {

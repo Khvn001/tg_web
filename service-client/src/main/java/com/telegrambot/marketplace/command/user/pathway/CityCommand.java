@@ -1,7 +1,7 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
 import com.telegrambot.marketplace.entity.location.City;
@@ -9,11 +9,11 @@ import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.repository.UserRepository;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class CityCommand implements Command {
 
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public Class handler() {
@@ -60,14 +60,14 @@ public class CityCommand implements Command {
         City city = cityService.findById(cityId);
         user.setCity(city);
         user.setCountry(city.getCountry());
-        userRepository.save(user);
+        userService.save(user);
 
         Map<ProductCategory, List<ProductInventoryCity>> availableCategories = productInventoryCityService
                 .findAvailableProductCategories(city);
 
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Please select a product category:")
+                .message("Please select a Product Category:")
                 .buttons(getCategoryButtons(user, availableCategories.keySet()))
                 .build();
     }
@@ -76,14 +76,26 @@ public class CityCommand implements Command {
                                                           final Set<ProductCategory> categories) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         buttons.add(InlineKeyboardButton.builder()
-                .text("Go back to country selection")
+                .text("Change Country")
                 .callbackData("/start")
                 .build()
         );
         buttons.add(InlineKeyboardButton
                 .builder()
-                .text("Go back to city selection")
+                .text("Change City")
                 .callbackData("/country_" + user.getCountry().getName())
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Basket")
+                .callbackData("/basket_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Profile")
+                .callbackData("/profile_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Add Balance")
+                .callbackData("/add_balance_")
                 .build());
         for (ProductCategory category : categories) {
             buttons.add(InlineKeyboardButton.builder()

@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.config;
+package com.telegrambot.marketplace.config.typehandlers;
 
 import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.command.user.pathway.StartCommand;
@@ -6,7 +6,7 @@ import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.TelegramType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;

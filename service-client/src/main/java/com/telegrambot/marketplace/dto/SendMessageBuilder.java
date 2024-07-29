@@ -1,6 +1,5 @@
-package com.telegrambot.marketplace.service;
+package com.telegrambot.marketplace.dto;
 
-import com.telegrambot.marketplace.dto.Answer;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -41,7 +40,6 @@ public class SendMessageBuilder {
     public Answer build() {
         Answer answer = new Answer();
         answer.setBotApiMethod(sendMessage);
-
         return answer;
     }
 }

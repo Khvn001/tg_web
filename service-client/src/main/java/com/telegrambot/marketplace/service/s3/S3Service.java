@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.service;
+package com.telegrambot.marketplace.service.s3;
 
 import java.util.List;
 

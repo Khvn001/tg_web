@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.config;
+package com.telegrambot.marketplace.config.typehandlers;
 
 import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.dto.Answer;

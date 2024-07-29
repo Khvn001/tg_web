@@ -9,11 +9,11 @@ import com.telegrambot.marketplace.entity.location.District;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.DistrictService;
-import com.telegrambot.marketplace.config.CommandHandler;
+import com.telegrambot.marketplace.config.typehandlers.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +24,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AddDistrictCommand implements AdminCommand {
 
-    private static final int ARGS_SIZE = 3;
     private final CityService cityService;
     private final CountryService countryService;
     private final DistrictService districtService;
+
+    private static final int ARGS_SIZE = 3;
 
     @Override
     public Class handler() {

@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.config;
+package com.telegrambot.marketplace.config.typehandlers;
 
 import com.telegrambot.marketplace.command.admin.AdminCommand;
 import com.telegrambot.marketplace.dto.Answer;
@@ -7,7 +7,7 @@ import com.telegrambot.marketplace.enums.TelegramType;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

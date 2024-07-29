@@ -1,4 +1,4 @@
-package com.telegrambot.marketplace.service;
+package com.telegrambot.marketplace.service.s3;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

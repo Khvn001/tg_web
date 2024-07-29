@@ -1,14 +1,14 @@
 package com.telegrambot.marketplace.command.user.basket;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -92,13 +92,19 @@ public class BasketCommand implements Command {
                 .build());
 
         buttons.add(InlineKeyboardButton.builder()
-                .text("Choose location")
+                .text("Change Country")
                 .callbackData("/start")
                 .build());
-
+        if (user.getCountry() != null) {
+            buttons.add(InlineKeyboardButton
+                    .builder()
+                    .text("Change City")
+                    .callbackData("/country_" + user.getCountry().getName())
+                    .build());
+        }
         if (user.getCountry() != null && user.getCity() != null) {
             buttons.add(InlineKeyboardButton.builder()
-                    .text("Go back to category selection")
+                    .text("Change Category")
                     .callbackData("/city_" + user.getCity().getId() + "_" + user.getCountry().getName())
                     .build());
         }

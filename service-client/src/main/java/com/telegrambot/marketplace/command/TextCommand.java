@@ -1,6 +1,6 @@
 package com.telegrambot.marketplace.command;
 
-import com.telegrambot.marketplace.config.TextHandler;
+import com.telegrambot.marketplace.config.typehandlers.TextHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
@@ -19,8 +19,7 @@ import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.StateType;
 import com.telegrambot.marketplace.enums.UserType;
 import com.telegrambot.marketplace.repository.ProductPortionRepository;
-import com.telegrambot.marketplace.service.S3Service;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
@@ -34,6 +33,7 @@ import com.telegrambot.marketplace.service.entity.StateService;
 import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -45,7 +45,9 @@ import java.util.Objects;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class TextCommand implements Command {
+
     private final UserService userService;
     private final StateService stateService;
     private final CountryService countryService;
@@ -57,7 +59,6 @@ public class TextCommand implements Command {
     private final CityService cityService;
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
-    private final S3Service s3Service;
 
     private static final int ARGS_SIZE = 3;
 
@@ -154,7 +155,7 @@ public class TextCommand implements Command {
 
             List<ProductPortion> productPortions = productPortionService
                     .findAvailableByDistrictAndProductOrderByCreatedAt(district, product);
-
+            log.info(productPortions.toString());
             int availableAmount = productPortions.stream()
                     .map(ProductPortion::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add).intValue();

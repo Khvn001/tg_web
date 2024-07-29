@@ -1,12 +1,12 @@
 package com.telegrambot.marketplace.command.user.profile;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -73,7 +73,7 @@ public class ProfileInfoViewCommand implements Command {
         }
 
         buttons.add(InlineKeyboardButton.builder()
-                .text("Choose location")
+                .text("Change Country")
                 .callbackData("/start")
                 .build());
 
@@ -86,7 +86,7 @@ public class ProfileInfoViewCommand implements Command {
         }
 
         buttons.add(InlineKeyboardButton.builder()
-                .text("Add balance")
+                .text("Add Balance")
                 .callbackData("/add_balance_")
                 .build());
 

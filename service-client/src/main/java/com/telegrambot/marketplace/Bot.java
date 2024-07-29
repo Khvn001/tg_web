@@ -1,6 +1,6 @@
 package com.telegrambot.marketplace;
 
-import com.telegrambot.marketplace.command.ClassifiedUpdateHandler;
+import com.telegrambot.marketplace.config.typehandlers.ClassifiedUpdateHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import jakarta.validation.constraints.NotNull;

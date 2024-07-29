@@ -1,14 +1,14 @@
 package com.telegrambot.marketplace.command.user.basket;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -51,6 +51,18 @@ public class OrdersCommand implements Command {
         buttons.add(InlineKeyboardButton.builder()
                 .text("Back to Basket")
                 .callbackData("/basket_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Profile")
+                .callbackData("/profile_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Spend balance to buy basket")
+                .callbackData("/buyBasket_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Add balance")
+                .callbackData("/add_balance_")
                 .build());
         buttons.add(InlineKeyboardButton.builder()
                 .text("Delete All Orders")

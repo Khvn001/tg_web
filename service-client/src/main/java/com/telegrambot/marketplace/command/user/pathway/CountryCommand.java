@@ -1,19 +1,19 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.location.City;
 import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.repository.UserRepository;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class CountryCommand implements Command {
     private final CountryService countryService;
     private final CityService cityService;
     private final ProductInventoryCityService productInventoryCityService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public Class handler() {
@@ -58,10 +58,10 @@ public class CountryCommand implements Command {
         CountryName countryName = CountryName.valueOf(update.getArgs().getFirst().toUpperCase());
         log.info(countryName.getCountry());
         user.setCountry(countryService.findByCountryName(countryName));
-        userRepository.save(user);
+        userService.save(user);
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
-                .message("Please select a city or go back:")
+                .message("Please select a City or go back:")
                 .buttons(getCityButtons(countryName))
                 .build();
     }
@@ -73,6 +73,18 @@ public class CountryCommand implements Command {
         buttons.add(InlineKeyboardButton.builder()
                 .text("Change Country")
                 .callbackData("/start")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Basket")
+                .callbackData("/basket_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Profile")
+                .callbackData("/profile_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Add Balance")
+                .callbackData("/add_balance_")
                 .build());
         if (country != null) {
             List<City> cities = cityService.findByCountryIdAndAllowed(country.getId());

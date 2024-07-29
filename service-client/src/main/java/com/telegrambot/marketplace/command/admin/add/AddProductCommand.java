@@ -7,10 +7,10 @@ import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.ProductService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
-import com.telegrambot.marketplace.config.CommandHandler;
+import com.telegrambot.marketplace.config.typehandlers.CommandHandler;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,10 @@ import java.math.BigDecimal;
 @Slf4j
 public class AddProductCommand implements AdminCommand {
 
-    private static final int ARGS_SIZE = 3;
     private final ProductService productService;
     private final ProductSubcategoryService productSubcategoryService;
+
+    private static final int ARGS_SIZE = 3;
 
     @Override
     public Class handler() {

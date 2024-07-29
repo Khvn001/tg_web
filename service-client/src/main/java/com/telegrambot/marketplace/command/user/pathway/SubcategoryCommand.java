@@ -1,10 +1,11 @@
 package com.telegrambot.marketplace.command.user.pathway;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.entity.inventory.ProductInventoryCity;
 import com.telegrambot.marketplace.entity.location.City;
+import com.telegrambot.marketplace.entity.location.Country;
 import com.telegrambot.marketplace.entity.product.description.Product;
 import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
@@ -13,8 +14,9 @@ import com.telegrambot.marketplace.enums.CountryName;
 import com.telegrambot.marketplace.enums.ProductCategoryName;
 import com.telegrambot.marketplace.enums.ProductSubcategoryName;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
+import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.ProductCategoryService;
 import com.telegrambot.marketplace.service.entity.ProductInventoryCityService;
 import com.telegrambot.marketplace.service.entity.ProductSubcategoryService;
@@ -32,7 +34,9 @@ import java.util.Set;
 @Component
 @AllArgsConstructor
 public class SubcategoryCommand implements Command {
+
     private final CityService cityService;
+    private final CountryService countryService;
     private final ProductInventoryCityService productInventoryCityService;
     private final ProductCategoryService productCategoryService;
     private final ProductSubcategoryService productSubcategoryService;
@@ -86,22 +90,52 @@ public class SubcategoryCommand implements Command {
         return new SendMessageBuilder()
                 .chatId(user.getChatId())
                 .message("Available products in " + subcategory.getName() + " subcategory:")
-                .buttons(getProductButtons(availableProducts.keySet(), subcategoryName,
-                        categoryName, cityId, countryName))
+                .buttons(getProductButtons(availableProducts.keySet(), subcategory,
+                        category, cityId, countryName))
                 .build();
     }
 
     private List<InlineKeyboardButton> getProductButtons(final Set<Product> products,
-                                                         final ProductSubcategoryName subcategoryName,
-                                                         final ProductCategoryName categoryName,
+                                                         final ProductSubcategory subcategory,
+                                                         final ProductCategory category,
                                                          final Long cityId,
                                                          final CountryName countryName) {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
+        Country country = countryService.findByCountryName(countryName);
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Change Country")
+                .callbackData("/start")
+                .build());
+        buttons.add(InlineKeyboardButton
+                .builder()
+                .text("Change City")
+                .callbackData("/country_" + country.getName())
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Change Category")
+                .callbackData("/city_" + cityId + "_" + country.getName())
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Change Subcategory")
+                .callbackData("/category_" + category.getName() + "_" + cityId + "_" + country.getName())
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Basket")
+                .callbackData("/basket_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("View Profile")
+                .callbackData("/profile_")
+                .build());
+        buttons.add(InlineKeyboardButton.builder()
+                .text("Add Balance")
+                .callbackData("/add_balance_")
+                .build());
         for (Product product : products) {
             buttons.add(InlineKeyboardButton.builder()
                     .text(product.getName())
-                    .callbackData("/product_" + product.getId() + "_" + subcategoryName
-                            + "_" + categoryName + "_" + cityId + "_" + countryName)
+                    .callbackData("/product_" + product.getId() + "_" + subcategory.getName()
+                            + "_" + category.getName() + "_" + cityId + "_" + countryName)
                     .build());
         }
         return buttons;

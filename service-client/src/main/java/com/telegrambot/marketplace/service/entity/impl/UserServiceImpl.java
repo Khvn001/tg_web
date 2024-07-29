@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final StateRepository stateRepository;
     private final BasketRepository basketRepository;
 

@@ -1,6 +1,6 @@
-package com.telegrambot.marketplace.config;
+package com.telegrambot.marketplace.config.typehandlers;
 
-import com.telegrambot.marketplace.command.PhotoCommand;
+import com.telegrambot.marketplace.command.courier.PhotoCommand;
 import com.telegrambot.marketplace.command.TextCommand;
 import com.telegrambot.marketplace.command.admin.StatisticsCommand;
 import com.telegrambot.marketplace.command.admin.add.AddCityCommand;

@@ -1,7 +1,7 @@
 package com.telegrambot.marketplace.command.user.basket;
 
 import com.telegrambot.marketplace.command.Command;
-import com.telegrambot.marketplace.config.CallbackHandler;
+import com.telegrambot.marketplace.config.typehandlers.CallbackHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
@@ -9,9 +9,9 @@ import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.UserType;
-import com.telegrambot.marketplace.repository.UserRepository;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.BasketService;
+import com.telegrambot.marketplace.service.entity.UserService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ import java.util.List;
 public class BuyBasketCommand implements Command {
 
     private final BasketService basketService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public Class handler() {
@@ -55,7 +55,7 @@ public class BuyBasketCommand implements Command {
         boolean success;
         if (user.getBalance().compareTo(basket.getTotalSum()) >= 0) {
             user.setBalance(user.getBalance().subtract(basket.getTotalSum()));
-            userRepository.save(user);
+            userService.save(user);
             StringBuilder message = new StringBuilder("Basket purchased successfully! Thank you for your order.\n");
             for (Order order : basket.getOrders()) {
                 message.append("\n");
@@ -92,20 +92,20 @@ public class BuyBasketCommand implements Command {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
 
         buttons.add(InlineKeyboardButton.builder()
-                .text("Choose location")
+                .text("Change country:")
                 .callbackData("/start")
                 .build());
 
         if (user.getCountry() != null && user.getCity() != null) {
             buttons.add(InlineKeyboardButton.builder()
-                    .text("Go back to category selection")
+                    .text("Go back to Category selection")
                     .callbackData("/city_" + user.getCity().getId() + "_" + user.getCountry().getName())
                     .build());
         }
 
         if (!success) {
             buttons.add(InlineKeyboardButton.builder()
-                    .text("Add balance")
+                    .text("Add Balance")
                     .callbackData("/add_balance_")
                     .build());
             buttons.add(InlineKeyboardButton.builder()

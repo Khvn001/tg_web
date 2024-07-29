@@ -1,8 +1,9 @@
-package com.telegrambot.marketplace.command;
+package com.telegrambot.marketplace.command.courier;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.telegrambot.marketplace.command.Command;
 import com.telegrambot.marketplace.config.BotConfig;
-import com.telegrambot.marketplace.config.PhotoHandler;
+import com.telegrambot.marketplace.config.typehandlers.PhotoHandler;
 import com.telegrambot.marketplace.dto.Answer;
 import com.telegrambot.marketplace.dto.ClassifiedUpdate;
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
@@ -11,9 +12,8 @@ import com.telegrambot.marketplace.entity.product.description.ProductCategory;
 import com.telegrambot.marketplace.entity.product.description.ProductSubcategory;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.enums.StateType;
-import com.telegrambot.marketplace.repository.ProductPortionRepository;
-import com.telegrambot.marketplace.service.S3Service;
-import com.telegrambot.marketplace.service.SendMessageBuilder;
+import com.telegrambot.marketplace.service.s3.S3Service;
+import com.telegrambot.marketplace.dto.SendMessageBuilder;
 import com.telegrambot.marketplace.service.entity.CityService;
 import com.telegrambot.marketplace.service.entity.CountryService;
 import com.telegrambot.marketplace.service.entity.DistrictService;
@@ -67,7 +67,6 @@ public class PhotoCommand implements Command {
     private static final int SIX_NUMBER = 6;
     private static final int SEVEN_NUMBER = 7;
     private static final int EIGHT_NUMBER = 8;
-    private final ProductPortionRepository productPortionRepository;
 
     @Override
     public Class<?> handler() {
