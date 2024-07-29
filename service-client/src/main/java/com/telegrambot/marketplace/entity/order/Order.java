@@ -92,6 +92,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id")
+    @ToString.Exclude
     private Basket basket;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, orphanRemoval = true)
