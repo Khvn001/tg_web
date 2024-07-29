@@ -38,10 +38,10 @@ public class ExpiredOrderScheduler {
                     productPortionService.unreserveProductPortion(productPortion);
                 }
                 log.info("Starting deletion of expired order {}", order);
-                orderRepository.delete(order);
                 Basket basket = order.getBasket();
                 basket.setTotalSum(basket.getTotalSum().subtract(order.getTotalSum()));
                 basketRepository.save(basket);
+                orderRepository.delete(order);
                 log.info("Deleted expired order with ID: {}", order.getId());
             } catch (Exception e) {
                 log.error("Failed to delete expired order with ID: {}", order.getId(), e);
