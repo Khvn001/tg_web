@@ -1,0 +1,6 @@
+apiVersion: v2
+name: marketplace
+description: marketplace backend app
+type: application
+version: 0.0.1
+appVersion: "1.0"

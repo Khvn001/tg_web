@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: marketplace-{{ .Values.env }}
+spec:
+  replicas: 3
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        imagePullPolicy: Always
+        image: {{ .Values.registry }}/{{ .Chart.Name }}:{{ .Values.backend.image.tag }}
+        ports:
+          - containerPort: 8080
+        env:
+         {{- range $key, $value := .Values.backend.envs }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        resources:
+          requests:
+            cpu: {{ .Values.resources.backend.requests.cpu }}
+            memory: {{ .Values.resources.backend.requests.memory }}
+          limits:
+            memory: {{ .Values.resources.backend.limits.memory }}
+            cpu: {{ .Values.resources.backend.requests.cpu }}
+      nodeSelector:
+        node-role.kubernetes.io/worker: worker
+      imagePullSecrets:
+      - name: registrysecret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: backend
+  name: backend
+  namespace: marketplace-{{ .Values.env }}
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: backend
+  sessionAffinity: None
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 301m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: backend-ingress
+spec:
+  rules:
+  - host: {{ .Values.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - {{ .Values.host }}
+    secretName: {{ .Chart.Name }}-{{ .Values.env }}-ssl
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.env }}
+spec:
+  secretName: {{ .Chart.Name }}-{{ .Values.env }}-ssl
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-vetcity
+  commonName: {{ .Values.host }}
+  dnsNames:
+  - "{{ .Values.host }}"
