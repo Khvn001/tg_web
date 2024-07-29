@@ -78,8 +78,9 @@ public class BasketServiceImpl implements BasketService {
             Basket savedBasket = basketRepository.save(basket);
             log.info(savedBasket.toString());
             log.info(orderToRemove.toString());
+            orderToRemove.getProductPortions().forEach(pp -> pp.setOrder(null));
             orderToRemove.setBasket(null);
-            orderToRemove.setProductPortions(null);
+            orderToRemove.setProductPortions(new ArrayList<>());
             orderToRemove.setCity(null);
             orderToRemove.setCountry(null);
             orderToRemove.setDistrict(null);
@@ -87,9 +88,7 @@ public class BasketServiceImpl implements BasketService {
             orderToRemove.setProductCategory(null);
             orderToRemove.setProductSubcategory(null);
             orderRepository.save(orderToRemove);
-            orderRepository.flush();
-            orderRepository.deleteById(orderId);
-            orderRepository.flush();
+            orderRepository.deleteByIdCustom(orderId);
         }
         log.info("User: {}. Order: {} was deleted", user.getChatId(), orderId);
     }
