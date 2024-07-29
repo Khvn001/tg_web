@@ -21,6 +21,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -76,7 +77,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void reserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(true);
         productPortionRepository.save(productPortion);
@@ -93,7 +94,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void unreserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(false);
         ProductPortion savedProductPortion = productPortionRepository.save(productPortion);
@@ -113,7 +114,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public ProductPortion saveProductPortion(final User user, final Country country, final City city,
                                              final District district, final ProductCategory category,
                                              final ProductSubcategory subcategory, final Product product,
