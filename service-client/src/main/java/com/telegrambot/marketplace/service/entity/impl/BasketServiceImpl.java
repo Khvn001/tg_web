@@ -78,16 +78,6 @@ public class BasketServiceImpl implements BasketService {
             Basket savedBasket = basketRepository.save(basket);
             log.info(savedBasket.toString());
             log.info(orderToRemove.toString());
-            orderToRemove.getProductPortions().forEach(pp -> pp.setOrder(null));
-            orderToRemove.setBasket(null);
-            orderToRemove.setProductPortions(new ArrayList<>());
-            orderToRemove.setCity(null);
-            orderToRemove.setCountry(null);
-            orderToRemove.setDistrict(null);
-            orderToRemove.setProduct(null);
-            orderToRemove.setProductCategory(null);
-            orderToRemove.setProductSubcategory(null);
-            orderRepository.save(orderToRemove);
             orderRepository.deleteByIdCustom(orderId);
         }
         log.info("User: {}. Order: {} was deleted", user.getChatId(), orderId);
@@ -107,7 +97,7 @@ public class BasketServiceImpl implements BasketService {
                 productPortionService.unreserveProductPortion(productPortion);
             }
         }
-        orderRepository.deleteAllByUser(user);
+        orderRepository.deleteByUserId(user.getId());
         log.info("User: {}. All Orders were deleted", user.getChatId());
     }
 
