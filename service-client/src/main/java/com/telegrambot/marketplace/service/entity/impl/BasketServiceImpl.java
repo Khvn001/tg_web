@@ -78,7 +78,10 @@ public class BasketServiceImpl implements BasketService {
             Basket savedBasket = basketRepository.save(basket);
             log.info(savedBasket.toString());
             log.info(orderToRemove.toString());
-            orderRepository.deleteById(orderToRemove.getId());
+            orderToRemove.setBasket(null);
+            orderToRemove.setProductPortions(null);
+            orderRepository.save(orderToRemove);
+            orderRepository.delete(orderToRemove);
         }
         log.info("User: {}. Order: {} was deleted", user.getChatId(), orderId);
     }
