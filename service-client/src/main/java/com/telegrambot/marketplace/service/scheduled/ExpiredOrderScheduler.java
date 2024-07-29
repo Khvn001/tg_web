@@ -1,7 +1,9 @@
 package com.telegrambot.marketplace.service.scheduled;
 
 import com.telegrambot.marketplace.entity.inventory.ProductPortion;
+import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
+import com.telegrambot.marketplace.repository.BasketRepository;
 import com.telegrambot.marketplace.repository.OrderRepository;
 import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class ExpiredOrderScheduler {
 
     private static final int MINUTE = 60000;
     private static final int INTERVAL_MINUTES = 30;
+    private final BasketRepository basketRepository;
 
     @Scheduled(fixedRate = MINUTE)  // Run every minute
     @Transactional
@@ -36,6 +39,9 @@ public class ExpiredOrderScheduler {
                 }
                 log.info("Starting deletion of expired order {}", order);
                 orderRepository.delete(order);
+                Basket basket = order.getBasket();
+                basket.setTotalSum(basket.getTotalSum().subtract(order.getTotalSum()));
+                basketRepository.save(basket);
                 log.info("Deleted expired order with ID: {}", order.getId());
             } catch (Exception e) {
                 log.error("Failed to delete expired order with ID: {}", order.getId(), e);

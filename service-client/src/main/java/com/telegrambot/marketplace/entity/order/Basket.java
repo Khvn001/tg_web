@@ -39,7 +39,6 @@ public class Basket {
     private Long id;
 
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @ToString.Exclude
     private List<Order> orders;
 
     @Column(name = "total_sum", nullable = false)

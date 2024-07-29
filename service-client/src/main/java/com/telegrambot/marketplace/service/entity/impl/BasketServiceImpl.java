@@ -9,6 +9,7 @@ import com.telegrambot.marketplace.service.entity.BasketService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -71,10 +72,11 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteAllOrdersFromBasket(final User user) {
         Basket basket = user.getBasket();
         basket.setOrders(new ArrayList<>());
+        basket.setTotalSum(BigDecimal.ZERO);
         basketRepository.save(basket);
         orderRepository.deleteAllByUser(user);
         log.info("User: {}. All Orders were deleted", user.getChatId());
