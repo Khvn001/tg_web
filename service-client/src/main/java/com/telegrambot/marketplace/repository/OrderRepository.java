@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCreatedAtBefore(LocalDateTime createdAt);
+    List<Order> findAllByUser(User user);
     void deleteAllByUser(User user);
 }

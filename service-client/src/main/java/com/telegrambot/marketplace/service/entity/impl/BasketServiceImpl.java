@@ -1,11 +1,13 @@
 package com.telegrambot.marketplace.service.entity.impl;
 
+import com.telegrambot.marketplace.entity.inventory.ProductPortion;
 import com.telegrambot.marketplace.entity.order.Basket;
 import com.telegrambot.marketplace.entity.order.Order;
 import com.telegrambot.marketplace.entity.user.User;
 import com.telegrambot.marketplace.repository.BasketRepository;
 import com.telegrambot.marketplace.repository.OrderRepository;
 import com.telegrambot.marketplace.service.entity.BasketService;
+import com.telegrambot.marketplace.service.entity.ProductPortionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 public class BasketServiceImpl implements BasketService {
     private final BasketRepository basketRepository;
     private final OrderRepository orderRepository;
+    private final ProductPortionService productPortionService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -63,6 +67,10 @@ public class BasketServiceImpl implements BasketService {
                 .findFirst()
                 .orElse(null);
         if (orderToRemove != null) {
+            List<ProductPortion> productPortions = orderToRemove.getProductPortions();
+            for (ProductPortion productPortion : productPortions) {
+                productPortionService.unreserveProductPortion(productPortion);
+            }
             basket.getOrders().remove(orderToRemove);
             basket.setTotalSum(basket.getTotalSum().subtract(orderToRemove.getTotalSum()));
             basketRepository.save(basket);
@@ -78,6 +86,13 @@ public class BasketServiceImpl implements BasketService {
         basket.setOrders(new ArrayList<>());
         basket.setTotalSum(BigDecimal.ZERO);
         basketRepository.save(basket);
+        List<Order> orders = orderRepository.findAllByUser(user);
+        for (Order order : orders) {
+            List<ProductPortion> productPortions = order.getProductPortions();
+            for (ProductPortion productPortion : productPortions) {
+                productPortionService.unreserveProductPortion(productPortion);
+            }
+        }
         orderRepository.deleteAllByUser(user);
         log.info("User: {}. All Orders were deleted", user.getChatId());
     }
