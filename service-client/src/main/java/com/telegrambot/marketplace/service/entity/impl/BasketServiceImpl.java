@@ -67,14 +67,18 @@ public class BasketServiceImpl implements BasketService {
                 .findFirst()
                 .orElse(null);
         if (orderToRemove != null) {
+            log.info(orderToRemove.toString());
             List<ProductPortion> productPortions = orderToRemove.getProductPortions();
             for (ProductPortion productPortion : productPortions) {
                 productPortionService.unreserveProductPortion(productPortion);
+                log.info(productPortion.toString());
             }
             basket.getOrders().remove(orderToRemove);
             basket.setTotalSum(basket.getTotalSum().subtract(orderToRemove.getTotalSum()));
-            basketRepository.save(basket);
-            orderRepository.delete(orderToRemove);
+            Basket savedBasket = basketRepository.save(basket);
+            log.info(savedBasket.toString());
+            log.info(orderToRemove.toString());
+            orderRepository.deleteById(orderToRemove.getId());
         }
         log.info("User: {}. Order: {} was deleted", user.getChatId(), orderId);
     }
