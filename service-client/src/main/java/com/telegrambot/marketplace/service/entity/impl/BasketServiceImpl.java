@@ -23,7 +23,7 @@ public class BasketServiceImpl implements BasketService {
     private final OrderRepository orderRepository;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Basket addOrderToBasket(final User user, final Order order) {
         Basket basket = user.getBasket();
         if (basket == null) {
@@ -44,7 +44,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void completePurchase(final User user) {
         Basket basket = user.getBasket();
         basket.getOrders().clear();
@@ -55,7 +55,7 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteOrderFromBasket(final User user, final Long orderId) {
         Basket basket = user.getBasket();
         Order orderToRemove = basket.getOrders().stream()
