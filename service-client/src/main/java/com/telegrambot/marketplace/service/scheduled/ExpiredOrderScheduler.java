@@ -39,6 +39,7 @@ public class ExpiredOrderScheduler {
                 }
                 log.info("Starting deletion of expired order {}", order);
                 Basket basket = order.getBasket();
+                basket.getOrders().remove(order);
                 basket.setTotalSum(basket.getTotalSum().subtract(order.getTotalSum()));
                 Basket savedBasket = basketRepository.save(basket);
                 log.info(savedBasket.toString());

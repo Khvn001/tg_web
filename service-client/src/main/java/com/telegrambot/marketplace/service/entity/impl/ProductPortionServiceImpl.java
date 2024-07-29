@@ -97,6 +97,7 @@ public class ProductPortionServiceImpl implements ProductPortionService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void unreserveProductPortion(final ProductPortion productPortion) {
         productPortion.setReserved(false);
+        productPortion.setOrder(null);
         ProductPortion savedProductPortion = productPortionRepository.save(productPortion);
         log.info(savedProductPortion.toString());
         ProductInventoryCity productInventoryCity = productInventoryCityService
