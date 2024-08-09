@@ -39,7 +39,13 @@ jobs:
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
           EOF
 
-      - name: Copy files to First Server via SSH
+      - name: Create directory on the remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            mkdir -p /usr/bot
+          EOF
+
+      - name: Copy files via SSH
         run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
 
       - name: Execute SSH command on First Server
@@ -66,7 +72,13 @@ jobs:
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
           EOF
 
-      - name: Copy files to Second Server via SSH
+      - name: Create directory on the remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }} << 'EOF'
+            mkdir -p /usr/bot
+          EOF
+
+      - name: Copy files via SSH
         run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
 
       - name: Execute SSH command on Second Server
