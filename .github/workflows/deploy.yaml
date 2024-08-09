@@ -27,46 +27,56 @@ jobs:
         # or for Gradle
         # run: ./gradlew build
 
-      # Set up SSH
-      - name: Set up SSH
+        # Deploy to First Server
+      - name: Set up SSH for First Server
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-      # Execute SSH command to shut down the application
-      - name: Shutdown application
+      - name: Shutdown application on First Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
             pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
           EOF
 
-      # Copy files via SSH
-      - name: Copy files via SSH
+      - name: Copy files to First Server via SSH
         run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
 
-      # Execute SSH command
-      - name: Execute SSH command
+      - name: Execute SSH command on First Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            # Export environment variables
             export POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}
             export POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export BOT_NAME=${{ secrets.BOT_NAME }}
             export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
-          
-            # Navigate to application directory
             cd /usr/bot
-          
-            # Start application with nohup
             nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
           EOF
 
-      # Set environment variables for application
-      - name: Set environment variables for application
+      # Deploy to Second Server
+      - name: Set up SSH for Second Server
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY_2 }}
+
+      - name: Shutdown application on Second Server
         run: |
-          echo "POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}" >> $GITHUB_ENV
-          echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
-          echo "BOT_NAME=${{ secrets.BOT_NAME }}" >> $GITHUB_ENV
-          echo "BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> $GITHUB_ENV
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }} << 'EOF'
+            pkill -f 'java -jar service-client-0.0.1-SNAPSHOT.jar' || true
+          EOF
+
+      - name: Copy files to Second Server via SSH
+        run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
+
+      - name: Execute SSH command on Second Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }} << 'EOF'
+            export POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL_2 }}
+            export POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_2 }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_2 }}
+            export BOT_NAME=${{ secrets.BOT_NAME_2 }}
+            export BOT_TOKEN=${{ secrets.BOT_TOKEN_2 }}
+            cd /usr/bot
+            nohup java -jar service-client-0.0.1-SNAPSHOT.jar > bot.log 2>&1 &
+          EOF
