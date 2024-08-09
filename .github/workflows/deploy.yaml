@@ -46,7 +46,7 @@ jobs:
           EOF
 
       - name: Copy files via SSH
-        run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
+        run: scp -v -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
 
       - name: Execute SSH command on First Server
         run: |
@@ -79,7 +79,7 @@ jobs:
           EOF
 
       - name: Copy files via SSH
-        run: scp -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
+        run: scp -v -o StrictHostKeyChecking=no service-client/target/service-client-0.0.1-SNAPSHOT.jar ${{ secrets.SERVER_USER_2 }}@${{ secrets.SERVER_HOST_2 }}:/usr/bot/service-client-0.0.1-SNAPSHOT.jar
 
       - name: Execute SSH command on Second Server
         run: |
