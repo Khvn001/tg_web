@@ -54,6 +54,11 @@ jobs:
             export POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL }}
             export POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export S3_PUBLIC_URL=${{ secrets.S3_PUBLIC_URL }}
+            export S3_PRIVATE_URL=${{ secrets.S3_PRIVATE_URL }}
+            export S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}
+            export S3_PRIVATE_KEY=${{ secrets.S3_PRIVATE_KEY }}
+            export S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
             export BOT_NAME=${{ secrets.BOT_NAME }}
             export BOT_TOKEN=${{ secrets.BOT_TOKEN }}
             cd /usr/bot
@@ -87,6 +92,11 @@ jobs:
             export POSTGRES_JDBC_URL=${{ secrets.POSTGRES_JDBC_URL_2 }}
             export POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_2 }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_2 }}
+            export S3_PUBLIC_URL=${{ secrets.S3_PUBLIC_URL_2 }}
+            export S3_PRIVATE_URL=${{ secrets.S3_PRIVATE_URL_2 }}
+            export S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY_2 }}
+            export S3_PRIVATE_KEY=${{ secrets.S3_PRIVATE_KEY_2 }}
+            export S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME_2 }}
             export BOT_NAME=${{ secrets.BOT_NAME_2 }}
             export BOT_TOKEN=${{ secrets.BOT_TOKEN_2 }}
             cd /usr/bot
