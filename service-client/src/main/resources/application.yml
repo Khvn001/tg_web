@@ -55,12 +55,11 @@ logging:
               BasicBinder: TRACE
 aws:
   s3:
-    publicEndpoint: https://104.194.214.119:9000
-    privateEndpoint: http://104.194.214.119:9000
-    bucketName: productportion
-    stuffPlaceFolder: productPortion
-    accessKey: B072BVXCPsnfXNlr9HaS
-    secretKey: e5hX9a7WSDFB5GPa9AlVA53HxHFdJBFdDCGTAxpG
+    publicEndpoint: ${S3_PUBLIC_URL:publicEndpoint:9000}
+    privateEndpoint: ${S3_PRIVATE_URL:privateEndpoint:9000}
+    bucketName: ${S3_BUCKET_NAME:bucketName}
+    accessKey: ${S3_ACCESS_KEY:accessKey}
+    secretKey: ${S3_PRIVATE_KEY:privateKey}
 bot:
   name: ${BOT_NAME:BotName}
   token: ${BOT_TOKEN:BotToken}

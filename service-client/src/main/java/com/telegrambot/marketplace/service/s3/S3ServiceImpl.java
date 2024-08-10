@@ -37,9 +37,6 @@ public class S3ServiceImpl implements S3Service {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
-    @Value("${aws.s3.stuffPlaceFolder}")
-    private String stuffPlaceFolder;
-
     @Value("${aws.s3.accessKey}")
     private String accessKey;
 
