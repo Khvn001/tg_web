@@ -13,4 +13,4 @@ RUN apk add --no-cache fontconfig ttf-dejavu
 EXPOSE 8080
 
 # Define the entrypoint to run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/service-client-0.0.1.jar"]
